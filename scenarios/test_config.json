@@ -1,0 +1,81 @@
+{
+  "scenario_name": "LEO_Debris_Avoidance",
+  "description": "Standard LEO debris avoidance scenario with 50 debris objects",
+  "satellites": [
+    {
+      "name": "MainSatellite",
+      "orbit": {
+        "altitude_km": 400,
+        "inclination_deg": 51.6,
+        "eccentricity": 0.0,
+        "raan_deg": 0.0,
+        "arg_periapsis_deg": 0.0,
+        "mean_anomaly_deg": 0.0,
+        "epoch_mjd": 59945.0
+      },
+      "mass_kg": 1000,
+      "drag_area_m2": 10.0,
+      "drag_coefficient": 2.2,
+      "radiation_area_m2": 10.0,
+      "radiation_coefficient": 1.8,
+      "is_controllable": true,
+      "max_thrust_n": 1.0,
+      "fuel_capacity_kg": 100,
+      "collision_radius_m": 10.0
+    }
+  ],
+  "debris_fields": [
+    {
+      "num_objects": 50,
+      "altitude_range_km": [
+        380,
+        420
+      ],
+      "inclination_range_deg": [
+        45,
+        60
+      ],
+      "eccentricity_range": [
+        0,
+        0.1
+      ],
+      "mass_range_kg": [
+        1,
+        100
+      ],
+      "size_range_m": [
+        0.1,
+        2.0
+      ],
+      "distribution_type": "uniform"
+    }
+  ],
+  "static_debris": [],
+  "physics": {
+    "propagator_type": "orekit_keplerian",
+    "time_step_seconds": 60,
+    "simulation_duration_seconds": 3600,
+    "include_drag": true,
+    "include_solar_radiation": true,
+    "include_j2_perturbation": true,
+    "collision_detection_method": "spherical",
+    "collision_threshold_km": 0.001
+  },
+  "rewards": {
+    "reward_type": "distance_based",
+    "collision_penalty": -1000,
+    "fuel_cost_weight": 0.1,
+    "safety_distance_km": 1.0,
+    "close_approach_penalty_weight": 10.0,
+    "mission_success_reward": 100.0
+  },
+  "observations": {
+    "include_relative_positions": true,
+    "include_relative_velocities": true,
+    "include_fuel_levels": true,
+    "include_time_to_collision": true,
+    "max_tracked_objects": 10,
+    "observation_radius_km": 100.0
+  },
+  "random_seed": null
+}

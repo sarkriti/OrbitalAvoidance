@@ -1,0 +1,93 @@
+{
+  "scenario_name": "Multi_Satellite_Constellation",
+  "description": "Multiple satellites in constellation with shared debris avoidance challenge",
+  "satellites": [
+    {
+      "name": "Satellite_Alpha",
+      "orbit": {
+        "altitude_km": 550,
+        "inclination_deg": 53.0,
+        "eccentricity": 0.0001,
+        "raan_deg": 0,
+        "arg_periapsis_deg": 0,
+        "mean_anomaly_deg": 0
+      },
+      "mass_kg": 800,
+      "is_controllable": true,
+      "max_thrust_n": 2.0,
+      "fuel_capacity_kg": 150,
+      "collision_radius_m": 4.0
+    },
+    {
+      "name": "Satellite_Beta", 
+      "orbit": {
+        "altitude_km": 550,
+        "inclination_deg": 53.0,
+        "eccentricity": 0.0001,
+        "raan_deg": 120,
+        "arg_periapsis_deg": 0,
+        "mean_anomaly_deg": 0
+      },
+      "mass_kg": 800,
+      "is_controllable": true,
+      "max_thrust_n": 2.0,
+      "fuel_capacity_kg": 150,
+      "collision_radius_m": 4.0
+    },
+    {
+      "name": "Satellite_Gamma",
+      "orbit": {
+        "altitude_km": 550,
+        "inclination_deg": 53.0,
+        "eccentricity": 0.0001,
+        "raan_deg": 240,
+        "arg_periapsis_deg": 0,
+        "mean_anomaly_deg": 0
+      },
+      "mass_kg": 800,
+      "is_controllable": true,
+      "max_thrust_n": 2.0,
+      "fuel_capacity_kg": 150,
+      "collision_radius_m": 4.0
+    }
+  ],
+  "debris_fields": [
+    {
+      "num_objects": 100,
+      "altitude_range_km": [500, 600],
+      "inclination_range_deg": [50, 56],
+      "eccentricity_range": [0, 0.02],
+      "mass_range_kg": [0.1, 50],
+      "size_range_m": [0.05, 1.0],
+      "distribution_type": "realistic"
+    }
+  ],
+  "static_debris": [],
+  "physics": {
+    "propagator_type": "orekit_numerical",
+    "time_step_seconds": 30,
+    "simulation_duration_seconds": 7200,
+    "include_drag": true,
+    "include_solar_radiation": true,
+    "include_j2_perturbation": true,
+    "collision_detection_method": "spherical",
+    "collision_threshold_km": 0.0005
+  },
+  "rewards": {
+    "reward_type": "multi_objective",
+    "collision_penalty": -2000,
+    "fuel_cost_weight": 0.2,
+    "safety_distance_km": 2.0,
+    "close_approach_penalty_weight": 15.0,
+    "mission_success_reward": 500.0
+  },
+  "observations": {
+    "include_relative_positions": true,
+    "include_relative_velocities": true,
+    "include_fuel_levels": true,
+    "include_time_to_collision": true,
+    "max_tracked_objects": 15,
+    "observation_radius_km": 50.0
+  },
+  "random_seed": 123
+}

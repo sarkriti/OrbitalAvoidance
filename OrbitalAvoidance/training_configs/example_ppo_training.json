@@ -1,0 +1,31 @@
+{
+  "algorithm": "ppo",
+  "scenario_file": "scenarios/leo_debris_avoidance.json",
+  "reward_function": "balanced",
+  "training": {
+    "total_timesteps": 100000,
+    "checkpoint_freq": 10000,
+    "eval_freq": 5000,
+    "reward_threshold": null
+  },
+  "environment": {
+    "max_debris_tracked": 10,
+    "render_mode": null
+  },
+  "output": {
+    "log_dir": "./training_logs",
+    "save_dir": "./trained_models",
+    "experiment_name": "debris_avoidance_ppo"
+  },
+  "ppo": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "n_epochs": 10,
+    "policy_kwargs": {
+      "net_arch": [
+        {"pi": [256, 256], "vf": [256, 256]}
+      ]
+    }
+  }
+}

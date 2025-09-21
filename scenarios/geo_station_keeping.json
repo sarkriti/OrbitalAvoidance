@@ -1,0 +1,80 @@
+{
+  "scenario_name": "GEO_Station_Keeping",
+  "description": "Geostationary orbit station-keeping with solar radiation pressure and debris",
+  "satellites": [
+    {
+      "name": "GEO_Satellite",
+      "orbit": {
+        "altitude_km": 35786,
+        "inclination_deg": 0.1,
+        "eccentricity": 0.0001,
+        "raan_deg": 0,
+        "arg_periapsis_deg": 0,
+        "mean_anomaly_deg": 0
+      },
+      "mass_kg": 5000,
+      "drag_area_m2": 50,
+      "radiation_area_m2": 100,
+      "radiation_coefficient": 1.2,
+      "is_controllable": true,
+      "max_thrust_n": 10.0,
+      "fuel_capacity_kg": 1000,
+      "collision_radius_m": 10.0
+    }
+  ],
+  "debris_fields": [
+    {
+      "num_objects": 30,
+      "altitude_range_km": [35700, 35900],
+      "inclination_range_deg": [0, 5],
+      "eccentricity_range": [0, 0.01],
+      "mass_range_kg": [10, 1000],
+      "size_range_m": [1.0, 5.0],
+      "distribution_type": "gaussian"
+    }
+  ],
+  "static_debris": [
+    {
+      "name": "Dead_GEO_Satellite",
+      "orbit": {
+        "altitude_km": 35800,
+        "inclination_deg": 0.2,
+        "eccentricity": 0.002,
+        "raan_deg": 15,
+        "arg_periapsis_deg": 90,
+        "mean_anomaly_deg": 270
+      },
+      "mass_kg": 3000,
+      "drag_area_m2": 30,
+      "is_controllable": false,
+      "collision_radius_m": 8.0
+    }
+  ],
+  "physics": {
+    "propagator_type": "orekit_numerical",
+    "time_step_seconds": 300,
+    "simulation_duration_seconds": 86400,
+    "include_drag": false,
+    "include_solar_radiation": true,
+    "include_j2_perturbation": true,
+    "collision_detection_method": "spherical",
+    "collision_threshold_km": 0.01
+  },
+  "rewards": {
+    "reward_type": "fuel_efficiency",
+    "collision_penalty": -5000,
+    "fuel_cost_weight": 1.0,
+    "safety_distance_km": 10.0,
+    "close_approach_penalty_weight": 50.0,
+    "mission_success_reward": 1000.0
+  },
+  "observations": {
+    "include_relative_positions": true,
+    "include_relative_velocities": true,
+    "include_fuel_levels": true,
+    "include_time_to_collision": false,
+    "max_tracked_objects": 5,
+    "observation_radius_km": 500.0
+  },
+  "random_seed": 456
+}
