@@ -1,6 +1,6 @@
 {
   "algorithm": "ppo",
-  "scenario_file": "scenarios/leo_debris_avoidance.json",
+  "scenario_file": "../scenarios/leo_debris_avoidance.json",
   "reward_function": "balanced",
   "training": {
     "total_timesteps": 100000,
@@ -23,9 +23,7 @@
     "batch_size": 64,
     "n_epochs": 10,
     "policy_kwargs": {
-      "net_arch": [
-        {"pi": [256, 256], "vf": [256, 256]}
-      ]
+      "net_arch": {"pi": [256, 256], "vf": [256, 256]}
     }
   }
 }

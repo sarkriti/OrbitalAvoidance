@@ -97,7 +97,7 @@ class PPOAlgorithm(RLAlgorithmBase):
             'use_sde': False,
             'policy': 'MlpPolicy',
             'policy_kwargs': {
-                'net_arch': [dict(pi=[256, 256], vf=[256, 256])]
+                'net_arch': dict(pi=[256, 256], vf=[256, 256])
             }
         }
         
@@ -142,7 +142,7 @@ class PPOAlgorithm(RLAlgorithmBase):
             'algorithm': 'PPO',
             'total_timesteps': total_timesteps,
             'training_time': training_time,
-            'final_reward': getattr(self.model, 'ep_info_buffer', [])
+            'final_reward': list(getattr(self.model, 'ep_info_buffer', []))
         }
         
         self.training_history.append(training_info)
@@ -236,7 +236,7 @@ class SACAlgorithm(RLAlgorithmBase):
             'algorithm': 'SAC',
             'total_timesteps': total_timesteps,
             'training_time': training_time,
-            'final_reward': getattr(self.model, 'ep_info_buffer', [])
+            'final_reward': list(getattr(self.model, 'ep_info_buffer', []))
         }
         
         self.training_history.append(training_info)
@@ -327,7 +327,7 @@ class TD3Algorithm(RLAlgorithmBase):
             'algorithm': 'TD3',
             'total_timesteps': total_timesteps,
             'training_time': training_time,
-            'final_reward': getattr(self.model, 'ep_info_buffer', [])
+            'final_reward': list(getattr(self.model, 'ep_info_buffer', []))
         }
         
         self.training_history.append(training_info)

@@ -23,12 +23,11 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 
-from .config_system import (
+from config_system import (
     SimulationConfig, ConfigurationLoader, DebrisGenerator,
     SpacecraftConfig, OrbitConfig, PhysicsConfig, RewardConfig
 )
-from .orekit_physics import create_propagator, OrekitOrbitPropagator
-from .multiagent_env import MultiAgentOrbitalAvoidance
+from orekit_physics import create_propagator, OrekitOrbitPropagator
 
 logger = logging.getLogger(__name__)
 
@@ -92,38 +91,65 @@ class ConfigurableOrbitalEnvironment(gym.Env):
     
     def _setup_objects(self):
         """Setup satellites and debris objects from configuration."""
-        # Initialize satellites
-        self.satellites = {}
-        self.satellite_configs = {}
+        # Extract satellite configs from main config
+        self.satellite_configs = {sat.name: sat for sat in self.config.satellites}
         
-        for sat_config in self.config.satellites:
-            self.satellite_configs[sat_config.name] = sat_config
-            # Will create actual objects in reset()
-        
-        # Generate debris from fields
-        self.debris_objects = {}
+        # Extract static debris configs (these have individual names)
         self.debris_configs = {}
+        if hasattr(self.config, 'static_debris') and self.config.static_debris:
+            self.debris_configs.update({debris.name: debris for debris in self.config.static_debris})
         
-        # Add static debris
-        for debris_config in self.config.static_debris:
-            self.debris_configs[debris_config.name] = debris_config
+        # For debris fields, we'll generate individual debris objects later
+        # TODO: Handle debris field generation
         
-        # Generate debris fields
-        for i, field_config in enumerate(self.config.debris_fields):
-            generated_debris = DebrisGenerator.generate_debris_field(
-                field_config, seed=self.config.random_seed
-            )
-            for j, debris in enumerate(generated_debris):
-                name = f"Generated_Debris_{i}_{j}"
-                debris.name = name
-                self.debris_configs[name] = debris
+        # Initialize physics
+        self.satellites = {}
+        self.debris_objects = {}
         
-        logger.info(f"Setup {len(self.satellite_configs)} satellites and {len(self.debris_configs)} debris objects")
+        # Create single shared propagator for all objects
+        self.shared_propagator = create_propagator()
+        
+        # Create satellites
+        for name, sat_config in self.satellite_configs.items():
+            try:
+                # Initialize state using shared propagator
+                orbit_elements = sat_config.orbit.to_orbit_elements()
+                pos, vel = self.shared_propagator.propagate_orbit(orbit_elements, 0.0)
+                
+                self.satellites[name] = {
+                    'config': sat_config,
+                    'position': pos,
+                    'velocity': vel,
+                    'fuel_remaining': sat_config.fuel_capacity_kg,
+                    'orbit_elements': orbit_elements
+                }
+                
+                logger.debug(f"Created satellite {name} at altitude {np.linalg.norm(pos) - 6371:.1f} km")
+                
+            except Exception as e:
+                logger.error(f"Failed to create satellite {name}: {e}")
+                raise
+        
+        # Create debris objects
+        for name, debris_config in self.debris_configs.items():
+            try:
+                orbit_elements = debris_config.orbit.to_orbit_elements()
+                pos, vel = self.shared_propagator.propagate_orbit(orbit_elements, 0.0)
+                
+                self.debris_objects[name] = {
+                    'config': debris_config,
+                    'position': pos,
+                    'velocity': vel,
+                    'orbit_elements': orbit_elements
+                }
+                
+            except Exception as e:
+                logger.error(f"Failed to create debris {name}: {e}")
+                raise
     
     def _setup_physics(self):
-        """Setup physics propagators."""
-        self.propagators = {}
-        # Will create propagators for each object in reset()
+        """Setup physics - using shared propagator initialized in reset()."""
+        pass  # Physics setup is now handled in reset() with shared propagator
     
     def _setup_spaces(self):
         """Setup observation and action spaces."""
@@ -190,17 +216,16 @@ class ConfigurableOrbitalEnvironment(gym.Env):
         # Create actual satellite and debris objects
         self.satellites = {}
         self.debris_objects = {}
-        self.propagators = {}
+        
+        # Create single shared propagator for all objects
+        self.shared_propagator = create_propagator()
         
         # Create satellites
         for name, sat_config in self.satellite_configs.items():
             try:
-                propagator = create_propagator()
-                self.propagators[name] = propagator
-                
-                # Initialize state
+                # Initialize state using shared propagator
                 orbit_elements = sat_config.orbit.to_orbit_elements()
-                pos, vel = propagator.propagate_orbit(orbit_elements, 0.0)
+                pos, vel = self.shared_propagator.propagate_orbit(orbit_elements, 0.0)
                 
                 self.satellites[name] = {
                     'config': sat_config,
@@ -219,11 +244,8 @@ class ConfigurableOrbitalEnvironment(gym.Env):
         # Create debris objects
         for name, debris_config in self.debris_configs.items():
             try:
-                propagator = create_propagator()
-                self.propagators[name] = propagator
-                
                 orbit_elements = debris_config.orbit.to_orbit_elements()
-                pos, vel = propagator.propagate_orbit(orbit_elements, 0.0)
+                pos, vel = self.shared_propagator.propagate_orbit(orbit_elements, 0.0)
                 
                 self.debris_objects[name] = {
                     'config': debris_config,
@@ -322,21 +344,19 @@ class ConfigurableOrbitalEnvironment(gym.Env):
         dt = self.config.physics.time_step_seconds
         self.current_time += dt
         
-        # Propagate satellites
+        # Propagate satellites using shared propagator
         for name, satellite in self.satellites.items():
             try:
-                propagator = self.propagators[name]
-                pos, vel = propagator.propagate_orbit(satellite['orbit_elements'], self.current_time)
+                pos, vel = self.shared_propagator.propagate_orbit(satellite['orbit_elements'], self.current_time)
                 satellite['position'] = pos
                 satellite['velocity'] = vel
             except Exception as e:
                 logger.warning(f"Failed to propagate satellite {name}: {e}")
         
-        # Propagate debris
+        # Propagate debris using shared propagator
         for name, debris in self.debris_objects.items():
             try:
-                propagator = self.propagators[name]
-                pos, vel = propagator.propagate_orbit(debris['orbit_elements'], self.current_time)
+                pos, vel = self.shared_propagator.propagate_orbit(debris['orbit_elements'], self.current_time)
                 debris['position'] = pos
                 debris['velocity'] = vel
             except Exception as e:

@@ -21,11 +21,51 @@ import gymnasium as gym
 from gymnasium import spaces
 import logging
 
-from .configurable_env import ConfigurableOrbitalEnvironment
-from .config_system import SimulationConfig, SpacecraftConfig, OrbitConfig
-from .orekit_physics import OrekitOrbitPropagator, OrbitElements
+from configurable_env import ConfigurableOrbitalEnvironment
+from config_system import SimulationConfig, SpacecraftConfig, OrbitConfig
+from orekit_physics import OrekitOrbitPropagator, OrbitElements
 
 logger = logging.getLogger(__name__)
+
+
+class StateWrapper:
+    """Simple wrapper to convert dictionary state to attribute access."""
+    def __init__(self, state_dict):
+        self.position_km = state_dict['position']
+        self.velocity_km_s = state_dict['velocity']
+        self.fuel_remaining_kg = state_dict.get('fuel_remaining', 0)
+        # Default mass for spacecraft or debris
+        self.mass_kg = state_dict.get('config').mass_kg if 'config' in state_dict else 1000
+        self._dict = state_dict
+        
+    def update_from_dict(self, state_dict):
+        """Update wrapper from dictionary."""
+        self.position_km = state_dict['position']
+        self.velocity_km_s = state_dict['velocity'] 
+        self.fuel_remaining_kg = state_dict.get('fuel_remaining', 0)
+        self.mass_kg = state_dict.get('config').mass_kg if 'config' in state_dict else 1000
+        self._dict = state_dict
+        
+    def __getitem__(self, key):
+        """Support dictionary-style access."""
+        if key == 'position':
+            return self.position_km
+        elif key == 'velocity':
+            return self.velocity_km_s
+        elif key == 'fuel_remaining':
+            return self.fuel_remaining_kg
+        else:
+            return self._dict[key]
+            
+    def __setitem__(self, key, value):
+        """Support dictionary-style assignment."""
+        if key == 'position':
+            self.position_km = value
+        elif key == 'velocity':
+            self.velocity_km_s = value
+        elif key == 'fuel_remaining':
+            self.fuel_remaining_kg = value
+        self._dict[key] = value
 
 
 class RLOrbitalEnvironment(gym.Env):
@@ -64,9 +104,9 @@ class RLOrbitalEnvironment(gym.Env):
         if config is not None:
             self.config = config
         elif config_file is not None:
-            from .config_system import ConfigurationLoader
+            from config_system import ConfigurationLoader
             loader = ConfigurationLoader()
-            self.config = loader.load_config(config_file)
+            self.config = loader.load_from_file(config_file)
         else:
             raise ValueError("Must provide either config_file or config")
         
@@ -74,8 +114,9 @@ class RLOrbitalEnvironment(gym.Env):
         self.max_debris_tracked = max_debris_tracked
         self.render_mode = render_mode
         
-        # Initialize physics engine
-        self.physics = OrekitOrbitPropagator()
+        # Lazy initialization - don't create base environment until needed
+        self._base_env = None
+        self._initialized = False
         
         # Find controllable satellite
         self.controllable_satellites = [
@@ -87,12 +128,14 @@ class RLOrbitalEnvironment(gym.Env):
             logger.warning("Multiple controllable satellites found, using first one")
         
         self.main_satellite = self.controllable_satellites[0]
+        self.main_satellite_name = self.main_satellite.name
+        self.initial_fuel = self.main_satellite.fuel_capacity_kg
         
         # Reward function setup
         self.reward_config = reward_config or self._default_reward_config()
         self.reward_function = self._create_reward_function()
         
-        # Action and observation spaces
+        # Action and observation spaces (can be calculated without Orekit)
         self.action_space = spaces.Box(
             low=-1.0, high=1.0, shape=(3,), dtype=np.float32
         )
@@ -103,17 +146,32 @@ class RLOrbitalEnvironment(gym.Env):
             low=-np.inf, high=np.inf, shape=(obs_size,), dtype=np.float32
         )
         
-        # Initialize state
-        self._reset_simulation()
-        
-        # Mission tracking
-        self.step_count = 0
-        self.max_steps = self.config.simulation.max_steps_per_episode
-        self.initial_fuel = self.main_satellite.fuel_capacity_kg
-        self.collision_free_steps = 0
+        # Calculate max steps from simulation duration and time step  
+        self.max_steps = int(self.config.physics.simulation_duration_seconds / self.config.physics.time_step_seconds)
         
         # Reference orbital elements for orbit maintenance reward
         self.reference_orbit = self._get_reference_orbit()
+        
+        # Mission tracking (will be initialized on first reset)
+        self.step_count = 0
+        self.collision_free_steps = 0
+        
+    def _ensure_initialized(self):
+        """Lazy initialization of expensive Orekit/physics components."""
+        if not self._initialized:
+            logger.info("🔄 Lazy initializing Orekit physics engine...")
+            
+            # Create base environment with expensive Orekit initialization
+            self._base_env = ConfigurableOrbitalEnvironment(config=self.config)
+            self._initialized = True
+            
+            logger.info("✅ Orekit physics engine initialized successfully")
+    
+    @property 
+    def base_env(self):
+        """Property to access base environment with lazy initialization."""
+        self._ensure_initialized()
+        return self._base_env
         
     def _default_reward_config(self) -> Dict:
         """Default reward configuration matching user specifications."""
@@ -170,13 +228,31 @@ class RLOrbitalEnvironment(gym.Env):
     
     def _reset_simulation(self):
         """Reset simulation state."""
-        # Initialize base environment
-        self.base_env = ConfigurableOrbitalEnvironment(config=self.config)
+        
+        # Ensure base environment is initialized
+        self._ensure_initialized()
+        
+        # Reset the existing base environment instead of creating a new one
         self.base_env.reset()
         
-        # Get initial state
-        self.current_satellite_state = self.base_env.satellites[0]  # Main satellite
-        self.current_debris_states = self.base_env.debris_objects
+        # Initialize state wrappers if not already done
+        if not hasattr(self, 'current_satellite_state'):
+            # Get initial state using the main satellite - wrap in StateWrapper
+            satellite_dict = self.base_env.satellites[self.main_satellite_name]
+            self.current_satellite_state = StateWrapper(satellite_dict)
+            
+            # Convert debris objects to wrapped objects
+            self.current_debris_states = []
+            for debris_dict in self.base_env.debris_objects.values():
+                self.current_debris_states.append(StateWrapper(debris_dict))
+        else:
+            # Update existing state wrappers
+            satellite_dict = self.base_env.satellites[self.main_satellite_name]
+            self.current_satellite_state.update_from_dict(satellite_dict)
+            
+            for i, debris_dict in enumerate(self.base_env.debris_objects.values()):
+                if i < len(self.current_debris_states):
+                    self.current_debris_states[i].update_from_dict(debris_dict)
         
         # Reset counters
         self.step_count = 0
@@ -184,15 +260,23 @@ class RLOrbitalEnvironment(gym.Env):
         
         # Reset fuel
         self.current_satellite_state.fuel_remaining_kg = self.initial_fuel
+        self.current_satellite_state._dict['fuel_remaining'] = self.initial_fuel
     
     def reset(self, seed: Optional[int] = None, options: Optional[Dict] = None) -> Tuple[np.ndarray, Dict]:
         """Reset environment and return initial observation."""
+        import gc
+        import psutil
+        import os
+        
         super().reset(seed=seed)
         
         if seed is not None:
             np.random.seed(seed)
         
         self._reset_simulation()
+        
+        # Force garbage collection after simulation reset
+        gc.collect()
         
         observation = self._get_observation()
         info = self._get_info()
@@ -215,11 +299,20 @@ class RLOrbitalEnvironment(gym.Env):
         # Convert action to actual thrust (scale by max thrust)
         thrust_newtons = action * self.main_satellite.max_thrust_n
         
-        # Apply action to satellite
-        self._apply_thrust(thrust_newtons)
+        # Base environment expects simple thrust array for single satellite scenarios
+        base_action = thrust_newtons
         
-        # Propagate physics
-        self._propagate_physics()
+        # Use base environment to step physics
+        base_obs, base_reward, base_terminated, base_truncated, base_info = self.base_env.step(base_action)
+        
+        # Update our wrapped states from the base environment
+        satellite_dict = self.base_env.satellites[self.main_satellite_name]
+        self.current_satellite_state.update_from_dict(satellite_dict)
+        
+        # Update debris states
+        for i, (debris_name, debris_dict) in enumerate(self.base_env.debris_objects.items()):
+            if i < len(self.current_debris_states):
+                self.current_debris_states[i].update_from_dict(debris_dict)
         
         # Calculate reward
         reward = self.reward_function(action)
@@ -243,7 +336,7 @@ class RLOrbitalEnvironment(gym.Env):
         """Apply thrust to satellite and update fuel consumption."""
         # Calculate delta-v
         mass_kg = self.current_satellite_state.mass_kg
-        dt = self.config.physics.time_step_s
+        dt = self.config.physics.time_step_seconds
         
         # F = ma, so a = F/m
         acceleration = thrust_newtons / mass_kg
@@ -251,6 +344,8 @@ class RLOrbitalEnvironment(gym.Env):
         
         # Apply delta-v to velocity
         self.current_satellite_state.velocity_km_s += delta_v / 1000.0  # Convert m/s to km/s
+        # Update the underlying dictionary
+        self.current_satellite_state._dict['velocity'] = self.current_satellite_state.velocity_km_s
         
         # Calculate fuel consumption (simplified rocket equation)
         thrust_magnitude = np.linalg.norm(thrust_newtons)
@@ -266,13 +361,16 @@ class RLOrbitalEnvironment(gym.Env):
     
     def _propagate_physics(self):
         """Propagate orbital mechanics for all objects."""
-        dt = self.config.physics.time_step_s
+        dt = self.config.physics.time_step_seconds
         
         # Propagate satellite
         sat_elements = self._state_to_orbit_elements(self.current_satellite_state)
         new_pos, new_vel = self.physics.propagate_orbit(sat_elements, dt)
         self.current_satellite_state.position_km = new_pos
         self.current_satellite_state.velocity_km_s = new_vel
+        # Update underlying dictionary
+        self.current_satellite_state._dict['position'] = new_pos
+        self.current_satellite_state._dict['velocity'] = new_vel
         
         # Propagate debris (Keplerian motion - no thrust)
         for debris in self.current_debris_states:
@@ -280,6 +378,9 @@ class RLOrbitalEnvironment(gym.Env):
             new_pos, new_vel = self.physics.propagate_orbit(debris_elements, dt)
             debris.position_km = new_pos
             debris.velocity_km_s = new_vel
+            # Update underlying dictionary
+            debris._dict['position'] = new_pos
+            debris._dict['velocity'] = new_vel
     
     def _state_to_orbit_elements(self, spacecraft_state) -> OrbitElements:
         """Convert spacecraft state to orbital elements for propagation."""
@@ -336,7 +437,8 @@ class RLOrbitalEnvironment(gym.Env):
             obs.extend([miss_distance, time_to_collision])
         
         # Pad with zeros if fewer debris than max_debris_tracked
-        while len(closest_debris) < self.max_debris_tracked:
+        debris_count = len(closest_debris)
+        for i in range(debris_count, self.max_debris_tracked):
             obs.extend([0.0] * 8)  # 8 zeros for missing debris
         
         return np.array(obs, dtype=np.float32)
@@ -469,7 +571,7 @@ class RLOrbitalEnvironment(gym.Env):
         # Delta-v magnitude calculation
         thrust_magnitude = np.linalg.norm(action) * self.main_satellite.max_thrust_n
         mass_kg = self.current_satellite_state.mass_kg
-        dt = self.config.physics.time_step_s
+        dt = self.config.physics.time_step_seconds
         
         delta_v_magnitude = (thrust_magnitude / mass_kg) * dt  # m/s
         

@@ -30,13 +30,11 @@ try:
     jar_files = [os.path.join(orekit_jar_dir, f) for f in os.listdir(orekit_jar_dir) if f.endswith(".jar")]
     
     # Initialize JVM with Orekit JAR files
-    print("🚀 Initializing Orekit JVM with proper classpath...")
     if not jpype.isJVMStarted():
         jpype.startJVM(classpath=jar_files)  # ✅ Use jpype.startJVM, not oj.initVM
     
     # Now initialize Orekit helper
     oj.initVM()  # This just tells orekit_jpype that JVM is ready
-    print("✓ Orekit JVM initialized successfully with JAR files")
     
     # Setup Orekit data directory using Java API directly
     from org.orekit.data import DataContext, DirectoryCrawler
@@ -112,8 +110,6 @@ class OrekitOrbitPropagator:
         if not OREKIT_AVAILABLE:
             raise RuntimeError("❌ OREKIT IS REQUIRED but not available. Please install orekit-jpype properly.")
         
-        print("🚀 Initializing Orekit OrbitalPropagator...")
-        
         # Initialize data context (minimal setup for basic operations)
         self._setup_minimal_data()
         
@@ -128,14 +124,13 @@ class OrekitOrbitPropagator:
         # Default spacecraft properties
         self.spacecraft_props = SpacecraftProperties()
         
-        print("✓ OrekitOrbitPropagator initialized successfully with OREKIT BACKEND")
         logging.info("OrekitOrbitPropagator initialized successfully")
     
     def _setup_minimal_data(self):
         """Setup minimal data context for Orekit operations."""
         try:
             # Data should already be configured via setup_orekit_curdir
-            print("✓ Using Orekit data from configured directory")
+            pass
             
         except Exception as e:
             logging.warning(f"Could not setup Orekit data context: {e}")
@@ -231,7 +226,6 @@ class OrekitOrbitPropagator:
 
 def create_propagator() -> OrekitOrbitPropagator:
     """Factory function to create OREKIT propagator - NO FALLBACKS."""
-    print("🎯 Creating Orekit propagator (strict mode - no fallbacks)")
     return OrekitOrbitPropagator()
 
 

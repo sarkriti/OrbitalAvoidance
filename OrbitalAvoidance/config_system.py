@@ -22,7 +22,7 @@ from typing import Dict, List, Optional, Union, Any
 from enum import Enum
 import numpy as np
 
-from .orekit_physics import OrbitElements, SpacecraftProperties
+from orekit_physics import OrbitElements, SpacecraftProperties
 
 
 class PropagatorType(Enum):

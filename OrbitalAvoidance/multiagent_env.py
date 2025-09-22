@@ -16,8 +16,8 @@ from pettingzoo import ParallelEnv
 from pettingzoo.utils import parallel_to_aec, wrappers
 import logging
 
-from .research_grade_env import make_env, OrbitalDebrisAvoidanceEnv, EnvConfig
-from .algorithms import Policy
+from configurable_env import ConfigurableOrbitalEnvironment
+from algorithms import Policy
 
 
 class MultiAgentOrbitalAvoidance(ParallelEnv):
