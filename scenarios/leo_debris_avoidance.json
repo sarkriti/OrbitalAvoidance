@@ -55,8 +55,8 @@
     }
   ],
   "physics": {
-    "propagator_type": "orekit_keplerian",
-    "time_step_seconds": 60,
+    "propagator_type": "orekit_numerical",
+    "time_step_seconds": 10,
     "simulation_duration_seconds": 3600,
     "include_drag": true,
     "include_solar_radiation": true,
@@ -77,7 +77,7 @@
     "include_relative_velocities": true,
     "include_fuel_levels": true,
     "include_time_to_collision": true,
-    "max_tracked_objects": 10,
+    "max_tracked_objects": 15,
     "observation_radius_km": 100.0
   },
   "random_seed": 42

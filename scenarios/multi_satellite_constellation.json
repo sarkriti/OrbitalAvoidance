@@ -65,7 +65,7 @@
   "static_debris": [],
   "physics": {
     "propagator_type": "orekit_numerical",
-    "time_step_seconds": 30,
+    "time_step_seconds": 15,
     "simulation_duration_seconds": 7200,
     "include_drag": true,
     "include_solar_radiation": true,
@@ -86,7 +86,7 @@
     "include_relative_velocities": true,
     "include_fuel_levels": true,
     "include_time_to_collision": true,
-    "max_tracked_objects": 15,
+    "max_tracked_objects": 20,
     "observation_radius_km": 50.0
   },
   "random_seed": 123
