@@ -141,8 +141,9 @@ def train_agent(config: Dict[str, Any]) -> Dict[str, Any]:
     # Setup environment
     env = setup_environment(config)
     
-    # Setup evaluation environment (same as training for now)
-    eval_env = setup_environment(config)
+    # Setup evaluation environment - DISABLED to prevent JVM conflicts
+    # eval_env = setup_environment(config)
+    eval_env = None
     
     # Setup algorithm
     algorithm = setup_algorithm(env, config)

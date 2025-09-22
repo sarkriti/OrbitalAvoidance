@@ -171,9 +171,21 @@ class ConfigurationLoader:
         # Convert satellites
         satellites = []
         for sat_data in data.get('satellites', []):
-            orbit = OrbitConfig(**sat_data['orbit'])
+            orbit_data = sat_data['orbit'].copy()
+            # Handle parameter name conversion
+            if 'semi_major_axis_km' in orbit_data:
+                orbit_data['altitude_km'] = orbit_data.pop('semi_major_axis_km') - 6371.0
+            if 'argument_of_perigee_deg' in orbit_data:
+                orbit_data['arg_periapsis_deg'] = orbit_data.pop('argument_of_perigee_deg')
+            if 'true_anomaly_deg' in orbit_data:
+                orbit_data['mean_anomaly_deg'] = orbit_data.pop('true_anomaly_deg')
+            
+            orbit = OrbitConfig(**orbit_data)
             sat_data_copy = sat_data.copy()
             sat_data_copy['orbit'] = orbit
+            # Handle spacecraft parameter conversion
+            if 'thrust_capacity_n' in sat_data_copy:
+                sat_data_copy['max_thrust_n'] = sat_data_copy.pop('thrust_capacity_n')
             satellites.append(SpacecraftConfig(**sat_data_copy))
         
         # Convert debris fields
@@ -184,18 +196,66 @@ class ConfigurationLoader:
         # Convert static debris
         static_debris = []
         for debris_data in data.get('static_debris', []):
-            orbit = OrbitConfig(**debris_data['orbit'])
+            orbit_data = debris_data['orbit'].copy()
+            # Handle parameter name conversion
+            if 'semi_major_axis_km' in orbit_data:
+                orbit_data['altitude_km'] = orbit_data.pop('semi_major_axis_km') - 6371.0
+            if 'argument_of_perigee_deg' in orbit_data:
+                orbit_data['arg_periapsis_deg'] = orbit_data.pop('argument_of_perigee_deg')
+            if 'true_anomaly_deg' in orbit_data:
+                orbit_data['mean_anomaly_deg'] = orbit_data.pop('true_anomaly_deg')
+                
+            orbit = OrbitConfig(**orbit_data)
             debris_data_copy = debris_data.copy()
             debris_data_copy['orbit'] = orbit
+            # Handle spacecraft parameter conversion
+            if 'thrust_capacity_n' in debris_data_copy:
+                debris_data_copy['max_thrust_n'] = debris_data_copy.pop('thrust_capacity_n')
+            # Remove parameters not supported by SpacecraftConfig
+            debris_data_copy.pop('size_m', None)
+            static_debris.append(SpacecraftConfig(**debris_data_copy))
+            
+        # Convert debris (legacy field name handling)
+        for debris_data in data.get('debris', []):
+            orbit_data = debris_data['orbit'].copy()
+            # Handle parameter name conversion
+            if 'semi_major_axis_km' in orbit_data:
+                orbit_data['altitude_km'] = orbit_data.pop('semi_major_axis_km') - 6371.0
+            if 'argument_of_perigee_deg' in orbit_data:
+                orbit_data['arg_periapsis_deg'] = orbit_data.pop('argument_of_perigee_deg')
+            if 'true_anomaly_deg' in orbit_data:
+                orbit_data['mean_anomaly_deg'] = orbit_data.pop('true_anomaly_deg')
+                
+            orbit = OrbitConfig(**orbit_data)
+            debris_data_copy = debris_data.copy()
+            debris_data_copy['orbit'] = orbit
+            # Handle spacecraft parameter conversion
+            if 'thrust_capacity_n' in debris_data_copy:
+                debris_data_copy['max_thrust_n'] = debris_data_copy.pop('thrust_capacity_n')
+            # Remove parameters not supported by SpacecraftConfig
+            debris_data_copy.pop('size_m', None)
             static_debris.append(SpacecraftConfig(**debris_data_copy))
         
         # Convert sub-configurations
         physics = PhysicsConfig(**data.get('physics', {}))
-        rewards = RewardConfig(**data.get('rewards', {}))
+        
+        # Handle rewards configuration conversion
+        rewards_data = data.get('rewards', {})
+        if 'collision' in rewards_data and 'penalty' in rewards_data['collision']:
+            # Extract from nested structure
+            reward_params = {
+                'collision_penalty': rewards_data['collision'].get('penalty', -1000.0),
+                'fuel_cost_weight': rewards_data.get('fuel', {}).get('efficiency_weight', 0.1)
+            }
+            rewards = RewardConfig(**reward_params)
+        else:
+            # Use flat structure or defaults
+            rewards = RewardConfig(**rewards_data)
+        
         observations = ObservationConfig(**data.get('observations', {}))
         
         return SimulationConfig(
-            scenario_name=data['scenario_name'],
+            scenario_name=data.get('scenario_name', data.get('name', 'Unknown Scenario')),
             description=data.get('description', ''),
             satellites=satellites,
             debris_fields=debris_fields,

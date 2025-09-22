@@ -504,7 +504,17 @@ class ConfigurableOrbitalEnvironment(gym.Env):
     
     def close(self):
         """Clean up resources."""
-        pass
+        # Clear references to help with garbage collection
+        if hasattr(self, 'shared_propagator'):
+            self.shared_propagator = None
+        if hasattr(self, 'satellites'):
+            self.satellites.clear()
+        if hasattr(self, 'debris_objects'):
+            self.debris_objects.clear()
+        
+        # Force garbage collection
+        import gc
+        gc.collect()
 
 
 # Convenience functions for loading scenarios

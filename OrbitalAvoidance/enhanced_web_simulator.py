@@ -31,12 +31,11 @@ if __package__ in (None, ""):
     if project_root not in sys.path:
         sys.path.insert(0, project_root)
 
-from OrbitalAvoidance.research_grade_env import make_env
+from OrbitalAvoidance.rl_training_env import create_rl_environment
 from OrbitalAvoidance.algorithms import ZeroPolicy
 from OrbitalAvoidance.orekit_physics import (
     create_propagator, OrbitElements, convert_to_orbit_elements
 )
-from OrbitalAvoidance.multiagent_env import make_multiagent_env
 from OrbitalAvoidance.rl_web_integration import WebRLController, RLWebAgent
 import numpy as np
 
@@ -62,7 +61,7 @@ class OrbitingObject:
             inclination_deg=inclination_deg,
             eccentricity=eccentricity,
             mean_anomaly_deg=mean_anomaly_deg,
-            omega_deg=omega_deg,
+            arg_periapsis_deg=omega_deg,
             raan_deg=raan_deg
         )
         
@@ -139,7 +138,7 @@ class OrbitingObject:
             inclination_deg=self.inclination_deg,
             eccentricity=self.eccentricity,
             mean_anomaly_deg=self.mean_anomaly_deg,
-            omega_deg=self.omega_deg,
+            arg_periapsis_deg=self.omega_deg,
             raan_deg=self.raan_deg
         )
 
@@ -150,8 +149,8 @@ class EnhancedWebSimulator:
     def __init__(self):
         print("Initializing enhanced web simulator with RL integration...")
         
-        # Create environment for physics reference
-        self.env = make_env(seed=42)
+                # Create environment for physics reference  
+        self.env = create_rl_environment(config_file="scenarios/leo_debris_avoidance.json")
         self.obs, self.info = self.env.reset()
         
         # Initialize RL controller
@@ -166,6 +165,11 @@ class EnhancedWebSimulator:
         self.last_encounter_step = -1
         self.total_collisions = 0
         self.last_collision_step = -1
+        
+        # Start automatic stepping thread
+        self._stop_auto_step = False
+        self._auto_step_thread = threading.Thread(target=self._auto_step_loop, daemon=True)
+        self._auto_step_thread.start()
         
         # Action tracking for visualization
         self.last_action_info = {
@@ -185,20 +189,37 @@ class EnhancedWebSimulator:
             raan_deg=0
         )
         
-        # Create debris with varying orbital parameters
+        # Create debris with varying orbital parameters, well separated from satellite
         self.debris_objects = []
+        satellite_altitude = 400  # km
+        debris_altitudes = [320, 350, 380, 450, 480, 520, 550, 580]  # Well separated altitudes
+        
         for i in range(8):  # 8 debris objects
             debris = OrbitingObject(
                 name=f"Debris_{i}",
-                altitude_km=380 + i * 20,  # Different altitudes (380-520 km)
-                inclination_deg=51.6 + (i - 4) * 3,  # Different inclinations
-                eccentricity=0.002 + i * 0.001,  # Varying eccentricity
-                mean_anomaly_deg=i * 45,  # Spread around orbit
-                raan_deg=i * 20  # Different orbital planes
+                altitude_km=debris_altitudes[i],
+                inclination_deg=51.6 + (i - 4) * 8,  # Much more varied inclinations (-28 to +24 degrees)
+                eccentricity=0.001 + i * 0.004,  # More varying eccentricity
+                mean_anomaly_deg=i * 45,  # Spread around orbit every 45 degrees
+                omega_deg=i * 25,  # Vary argument of periapsis
+                raan_deg=i * 40  # Much more different orbital planes
             )
             self.debris_objects.append(debris)
         
         print("✅ Enhanced simulator initialized successfully")
+    
+    def _auto_step_loop(self):
+        """Automatic stepping loop that runs in a separate thread."""
+        import time
+        while not self._stop_auto_step:
+            if self.running:
+                try:
+                    self.step_simulation()
+                    time.sleep(0.1)  # 10 FPS update rate
+                except Exception as e:
+                    print(f"Error in auto-step: {e}")
+            else:
+                time.sleep(0.1)  # Check every 100ms when paused
     
     def get_simulation_state(self):
         """Get current simulation state including RL action info."""
@@ -271,8 +292,7 @@ class EnhancedWebSimulator:
     
     def step_simulation(self):
         """Execute one simulation step with RL integration."""
-        if not self.running:
-            return
+        print(f"🔧 Step {self.step_count}: Running={self.running}")
         
         # Get current state for RL agent
         satellite_state = {
@@ -333,7 +353,9 @@ class EnhancedWebSimulator:
     def toggle_running(self):
         """Toggle simulation running state."""
         self.running = not self.running
-        print(f"Simulation {'started' if self.running else 'paused'}")
+        print(f"🔄 Simulation {'started' if self.running else 'paused'}")
+        print(f"   Step count: {self.step_count}")
+        print(f"   Current time: {self.simulation_time_s}s")
 
 
 # Global enhanced simulator instance
@@ -652,17 +674,27 @@ class EnhancedWebHandler(BaseHTTPRequestHandler):
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x000011);
             
-            // Create camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
+            // Create camera with proper aspect ratio
+            const container = document.getElementById('visualization');
+            const aspect = container.clientWidth / container.clientHeight;
+            camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100000);
             camera.position.set(15000, 10000, 15000);
             camera.lookAt(0, 0, 0);
             
             // Create renderer
-            const container = document.getElementById('visualization');
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            
+            // Handle window resize to maintain proper aspect ratio
+            window.addEventListener('resize', () => {
+                const newAspect = container.clientWidth / container.clientHeight;
+                camera.aspect = newAspect;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+            
             container.appendChild(renderer.domElement);
             
             // Add orbit controls
@@ -1015,6 +1047,11 @@ def run_enhanced_server(port=8080):
         print("\n🛑 Server stopped by user")
     except Exception as e:
         print(f"❌ Server error: {e}")
+
+
+def main():
+    """Main entry point for the enhanced web simulator."""
+    run_enhanced_server()
 
 
 if __name__ == "__main__":

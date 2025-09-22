@@ -3,9 +3,9 @@
   "scenario_file": "../scenarios/leo_debris_avoidance.json",
   "reward_function": "balanced",
   "training": {
-    "total_timesteps": 100000,
-    "checkpoint_freq": 10000,
-    "eval_freq": 5000,
+    "total_timesteps": 500000,
+    "checkpoint_freq": 50000,
+    "eval_freq": 25000,
     "reward_threshold": null
   },
   "environment": {
