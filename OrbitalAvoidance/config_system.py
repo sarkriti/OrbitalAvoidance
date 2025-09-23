@@ -105,7 +105,7 @@ class DebrisFieldConfig:
 @dataclass
 class PhysicsConfig:
     """Configuration for physics models and propagation."""
-    propagator_type: str = "orekit_keplerian"
+    propagator_type: str = "orekit_numerical"  # Use realistic physics by default
     time_step_seconds: float = 60.0
     simulation_duration_seconds: float = 86400.0  # 24 hours
     include_drag: bool = True

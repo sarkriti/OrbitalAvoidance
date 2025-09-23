@@ -2,9 +2,12 @@
   "name": "LEO Debris Avoidance",
   "description": "Low Earth Orbit satellite avoiding space debris",
   "physics": {
-    "propagator_type": "keplerian",
-    "time_step_seconds": 60,
-    "simulation_duration_seconds": 21600
+    "propagator_type": "orekit_numerical",
+    "time_step_seconds": 10,
+    "simulation_duration_seconds": 21600,
+    "include_drag": true,
+    "include_solar_radiation": true,
+    "include_j2_perturbation": true
   },
   "satellites": [
     {

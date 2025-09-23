@@ -173,6 +173,11 @@ class RLOrbitalEnvironment(gym.Env):
         self._ensure_initialized()
         return self._base_env
         
+    @property
+    def physics(self):
+        """Property to access the Orekit physics engine."""
+        return self.base_env.shared_propagator
+        
     def _default_reward_config(self) -> Dict:
         """Default reward configuration matching user specifications."""
         return {
