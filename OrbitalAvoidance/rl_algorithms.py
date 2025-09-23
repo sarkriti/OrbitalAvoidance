@@ -426,19 +426,21 @@ class TrainingManager:
     def setup_callbacks(self, 
                        checkpoint_freq: int = 10000,
                        eval_freq: int = 5000,
-                       reward_threshold: Optional[float] = None) -> CallbackList:
+                       reward_threshold: Optional[float] = None,
+                       save_best_only: bool = True) -> CallbackList:
         """Setup training callbacks."""
         callbacks = []
         
-        # Checkpoint callback
-        checkpoint_callback = CheckpointCallback(
-            save_freq=checkpoint_freq,
-            save_path=str(self.save_dir),
-            name_prefix='model_checkpoint'
-        )
-        callbacks.append(checkpoint_callback)
+        # Only add checkpoint callback if not saving best only
+        if not save_best_only:
+            checkpoint_callback = CheckpointCallback(
+                save_freq=checkpoint_freq,
+                save_path=str(self.save_dir),
+                name_prefix='model_checkpoint'
+            )
+            callbacks.append(checkpoint_callback)
         
-        # Evaluation callback
+        # Evaluation callback - this will save the best model
         if self.eval_env is not None:
             eval_callback = EvalCallback(
                 self.eval_env,
@@ -446,9 +448,20 @@ class TrainingManager:
                 log_path=str(self.log_dir),
                 eval_freq=eval_freq,
                 deterministic=True,
-                render=False
+                render=False,
+                verbose=1  # Print when new best model is found
             )
             callbacks.append(eval_callback)
+        else:
+            # If no eval environment, we need at least some saving mechanism
+            if save_best_only:
+                logger.warning("save_best_only=True but no eval_env provided. Adding checkpoint callback.")
+                checkpoint_callback = CheckpointCallback(
+                    save_freq=checkpoint_freq,
+                    save_path=str(self.save_dir),
+                    name_prefix='model_checkpoint'
+                )
+                callbacks.append(checkpoint_callback)
         
         # Stop training on reward threshold
         if reward_threshold is not None:
@@ -464,15 +477,17 @@ class TrainingManager:
               total_timesteps: int,
               checkpoint_freq: int = 10000,
               eval_freq: int = 5000,
-              reward_threshold: Optional[float] = None) -> Dict[str, Any]:
+              reward_threshold: Optional[float] = None,
+              save_best_only: bool = True) -> Dict[str, Any]:
         """
         Train the RL algorithm with full management.
         
         Args:
             total_timesteps: Total training timesteps
-            checkpoint_freq: Frequency of model checkpoints
+            checkpoint_freq: Frequency of model checkpoints (ignored if save_best_only=True)
             eval_freq: Frequency of evaluation
             reward_threshold: Stop training when this reward is reached
+            save_best_only: If True, only save the best model based on evaluation performance
             
         Returns:
             Training information dictionary
@@ -483,7 +498,7 @@ class TrainingManager:
             self.algorithm.model.set_logger(logger_obj)
         
         # Setup callbacks
-        callbacks = self.setup_callbacks(checkpoint_freq, eval_freq, reward_threshold)
+        callbacks = self.setup_callbacks(checkpoint_freq, eval_freq, reward_threshold, save_best_only)
         
         # Train
         training_info = self.algorithm.train(
@@ -491,9 +506,13 @@ class TrainingManager:
             callback=callbacks
         )
         
-        # Save final model
-        final_model_path = self.save_dir / "final_model"
-        self.algorithm.save(str(final_model_path))
+        # Save final model only if not using best-only saving or no eval environment
+        if not save_best_only or self.eval_env is None:
+            final_model_path = self.save_dir / "final_model"
+            self.algorithm.save(str(final_model_path))
+            logger.info(f"Final model saved to: {final_model_path}")
+        else:
+            logger.info(f"Best model saved during training to: {self.save_dir}/best_model.zip")
         
         return training_info
 

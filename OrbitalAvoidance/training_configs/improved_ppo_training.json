@@ -1,0 +1,50 @@
+{
+  "algorithm": "ppo",
+  "scenario_file": "../scenarios/leo_debris_avoidance_fixed.json",
+  "reward_function": "balanced_fixed",
+  "training": {
+    "total_timesteps": 1000000,
+    "checkpoint_freq": 50000,
+    "eval_freq": 10000,
+    "reward_threshold": 15.0,
+    "save_best_only": true
+  },
+  "environment": {
+    "max_debris_tracked": 5,
+    "render_mode": null,
+    "normalize_observations": true,
+    "episode_length": 200
+  },
+  "output": {
+    "log_dir": "./training_logs",
+    "save_dir": "./trained_models",
+    "experiment_name": "debris_avoidance_ppo_fixed"
+  },
+  "ppo": {
+    "learning_rate": 5e-05,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "n_epochs": 10,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "policy_kwargs": {
+      "net_arch": {
+        "pi": [
+          256,
+          256,
+          128
+        ],
+        "vf": [
+          256,
+          256,
+          128
+        ]
+      },
+      "activation_fn": "tanh"
+    }
+  }
+}

@@ -50,6 +50,9 @@ def load_training_config(config_file: str) -> Dict[str, Any]:
 
 def create_training_config(args) -> Dict[str, Any]:
     """Create training configuration from command line arguments."""
+    # Determine save strategy
+    save_best_only = not args.save_all_checkpoints  # Default is True unless explicitly saving all
+    
     config = {
         'algorithm': args.algorithm,
         'scenario_file': args.scenario,
@@ -58,7 +61,8 @@ def create_training_config(args) -> Dict[str, Any]:
             'total_timesteps': args.timesteps,
             'checkpoint_freq': args.checkpoint_freq,
             'eval_freq': args.eval_freq,
-            'reward_threshold': args.reward_threshold
+            'reward_threshold': args.reward_threshold,
+            'save_best_only': save_best_only
         },
         'environment': {
             'max_debris_tracked': args.max_debris,
@@ -97,19 +101,29 @@ def create_training_config(args) -> Dict[str, Any]:
 
 def setup_environment(config: Dict[str, Any]) -> RLOrbitalEnvironment:
     """Setup the RL training environment."""
-    logger.info(f"Setting up environment with scenario: {config['scenario_file']}")
+    logger.info(f"Setting up environment with scenario: {config['environment']['scenario_file']}")
     
-    # Get reward configuration
-    reward_manager = RewardFunctionManager()
-    reward_config = reward_manager.get_reward_config(config['reward_function'])
+    # Get reward configuration - support both old and new formats
+    reward_config = None
+    if 'environment' in config and 'use_improved_rewards' in config['environment']:
+        # New format with improved rewards
+        reward_config = config['environment'].copy()
+    elif 'reward_function' in config:
+        # Old format
+        reward_manager = RewardFunctionManager()
+        reward_config = reward_manager.get_reward_config(config['reward_function'])
     
-    # Create environment
-    env = create_rl_environment(
-        config_file=config['scenario_file'],
-        max_debris_tracked=config['environment']['max_debris_tracked'],
-        reward_config=reward_config,
-        render_mode=config['environment']['render_mode']
-    )
+    # Create environment with proper parameters
+    env_params = {
+        'config_file': config['environment']['scenario_file'],
+        'max_debris_tracked': config['environment'].get('max_debris_tracked', 10),
+        'render_mode': config['environment'].get('render_mode', None)
+    }
+    
+    if reward_config:
+        env_params['reward_config'] = reward_config
+    
+    env = create_rl_environment(**env_params)
     
     logger.info(f"Environment created successfully")
     logger.info(f"Observation space: {env.observation_space}")
@@ -141,9 +155,16 @@ def train_agent(config: Dict[str, Any]) -> Dict[str, Any]:
     # Setup environment
     env = setup_environment(config)
     
-    # Setup evaluation environment - DISABLED to prevent JVM conflicts
-    # eval_env = setup_environment(config)
-    eval_env = None
+    # Setup evaluation environment - needed for best model saving
+    training_config = config['training']
+    save_best_only = training_config.get('save_best_only', True)
+    
+    if save_best_only:
+        logger.info("Creating evaluation environment for best model selection")
+        eval_env = setup_environment(config)
+    else:
+        logger.info("Skipping evaluation environment (checkpoint-based saving)")
+        eval_env = None
     
     # Setup algorithm
     algorithm = setup_algorithm(env, config)
@@ -164,11 +185,19 @@ def train_agent(config: Dict[str, Any]) -> Dict[str, Any]:
     training_config = config['training']
     logger.info(f"Starting training for {training_config['total_timesteps']} timesteps")
     
+    # Check for save_best_only option
+    save_best_only = training_config.get('save_best_only', True)  # Default to True
+    if save_best_only:
+        logger.info("Save mode: Best model only (based on evaluation performance)")
+    else:
+        logger.info("Save mode: All checkpoint models")
+    
     training_info = training_manager.train(
         total_timesteps=training_config['total_timesteps'],
         checkpoint_freq=training_config['checkpoint_freq'],
         eval_freq=training_config['eval_freq'],
-        reward_threshold=training_config.get('reward_threshold')
+        reward_threshold=training_config.get('reward_threshold'),
+        save_best_only=save_best_only
     )
     
     logger.info("Training completed successfully")
@@ -297,6 +326,10 @@ def main():
                        help='Evaluation frequency')
     parser.add_argument('--reward-threshold', type=float,
                        help='Stop training when this reward is reached')
+    parser.add_argument('--save-best-only', action='store_true', default=False,
+                       help='Only save the best model based on evaluation performance (default: True)')
+    parser.add_argument('--save-all-checkpoints', action='store_true', default=False,
+                       help='Save all checkpoint models during training (overrides save-best-only)')
     
     # Environment parameters
     parser.add_argument('--max-debris', type=int, default=10,

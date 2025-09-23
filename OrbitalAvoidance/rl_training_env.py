@@ -193,7 +193,8 @@ class RLOrbitalEnvironment(gym.Env):
                 'small_reward': 1.0
             },
             'fuel': {
-                'efficiency_weight': 0.1
+                'efficiency_weight': 1.0,    # Increased from 0.1 for better signal
+                'conservation_bonus': 0.01   # Increased from 0.001 for better signal
             },
             'orbit': {
                 'tolerances': {
@@ -202,7 +203,8 @@ class RLOrbitalEnvironment(gym.Env):
                     'inclination_rad': 0.01,        # 0.01 rad
                     'raan_rad': 0.01,               # 0.01 rad (Ω)
                     'arg_periapsis_rad': 0.01       # 0.01 rad (ω)
-                }
+                },
+                'maintenance_bonus': 0.01    # Increased from 0.001 for better signal
             },
             'mission': {
                 'survival_reward_interval': 500,   # Every 500 steps
@@ -219,7 +221,7 @@ class RLOrbitalEnvironment(gym.Env):
         return 6 + 2 + (self.max_debris_tracked * 8)
     
     def _get_reference_orbit(self) -> OrbitElements:
-        """Get reference orbital elements for orbit maintenance."""
+        """Get reference orbital elements for orbit maintenance (from config - deprecated)."""
         sat_orbit = self.main_satellite.orbit
         return OrbitElements(
             semi_major_axis_km=sat_orbit.altitude_km + 6371.0,  # Convert to semi-major axis
@@ -230,6 +232,25 @@ class RLOrbitalEnvironment(gym.Env):
             mean_anomaly_deg=sat_orbit.mean_anomaly_deg,
             epoch_mjd=sat_orbit.epoch_mjd
         )
+    
+    def _calculate_reference_orbit_from_state(self) -> OrbitElements:
+        """Calculate reference orbital elements from actual initial spacecraft state.
+        
+        This gives us the true orbital elements that the spacecraft should maintain
+        based on its actual starting position and velocity.
+        """
+        # Get the actual spacecraft position and velocity at start
+        initial_position = self.current_satellite_state.position_km
+        initial_velocity = self.current_satellite_state.velocity_km_s
+        
+        # Convert to orbital elements using our fixed conversion function
+        default_epoch_mjd = 59945.0  # Could be made configurable
+        
+        reference_elements = self.physics.cartesian_to_orbit_elements(
+            initial_position, initial_velocity, default_epoch_mjd
+        )
+        
+        return reference_elements
     
     def _reset_simulation(self):
         """Reset simulation state."""
@@ -279,6 +300,10 @@ class RLOrbitalEnvironment(gym.Env):
             np.random.seed(seed)
         
         self._reset_simulation()
+        
+        # Calculate reference orbital elements from actual initial spacecraft position
+        # This should be done AFTER _reset_simulation() so we have the actual spacecraft state
+        self.reference_orbit = self._calculate_reference_orbit_from_state()
         
         # Force garbage collection after simulation reset
         gc.collect()
@@ -389,16 +414,16 @@ class RLOrbitalEnvironment(gym.Env):
     
     def _state_to_orbit_elements(self, spacecraft_state) -> OrbitElements:
         """Convert spacecraft state to orbital elements for propagation."""
-        # This would typically use orbital mechanics to convert Cartesian to Keplerian
-        # For now, use the stored orbital configuration as a placeholder
-        return OrbitElements(
-            semi_major_axis_km=6371.0 + 400.0,  # Approximate LEO
-            eccentricity=0.001,
-            inclination_deg=51.6,
-            raan_deg=0.0,
-            arg_periapsis_deg=0.0,
-            mean_anomaly_deg=0.0,
-            epoch_mjd=59945.0
+        # Use actual spacecraft position and velocity to calculate orbital elements
+        position_km = spacecraft_state.position_km  # numpy array [x, y, z] in km
+        velocity_km_s = spacecraft_state.velocity_km_s  # numpy array [vx, vy, vz] in km/s
+        
+        # Use a default epoch (this could be made configurable)
+        default_epoch_mjd = 59945.0  # 2023-01-01
+        
+        # Use Orekit's conversion capability through the physics engine
+        return self.physics.cartesian_to_orbit_elements(
+            position_km, velocity_km_s, default_epoch_mjd
         )
     
     def _get_observation(self) -> np.ndarray:
@@ -513,6 +538,21 @@ class RLOrbitalEnvironment(gym.Env):
     
     def _create_reward_function(self) -> Callable:
         """Create reward function based on configuration."""
+        
+        # Check if we should use the improved reward function
+        if self.reward_config.get('use_improved_rewards', False):
+            from improved_reward_function import ImprovedRewardFunction
+            
+            # Create the improved reward function instance
+            improved_reward = ImprovedRewardFunction(self.reward_config)
+            
+            # Return a wrapper that passes the environment instance
+            def improved_reward_wrapper(action: np.ndarray) -> float:
+                return improved_reward.calculate_reward(self, action)
+            
+            return improved_reward_wrapper
+        
+        # Use original reward function
         def reward_function(action: np.ndarray) -> float:
             """
             Calculate total reward: R_total = W_collision * R_collision + W_fuel * R_fuel + W_orbit * R_orbit + W_mission * R_mission
@@ -572,7 +612,13 @@ class RLOrbitalEnvironment(gym.Env):
             return config['small_reward']
     
     def _calculate_fuel_reward(self, action: np.ndarray) -> float:
-        """Calculate fuel efficiency reward component."""
+        """Calculate fuel efficiency reward component.
+        
+        Gives small positive reward for fuel conservation and small penalty for fuel usage.
+        This encourages the agent to only use thrust when necessary.
+        """
+        config = self.reward_config['fuel']
+        
         # Delta-v magnitude calculation
         thrust_magnitude = np.linalg.norm(action) * self.main_satellite.max_thrust_n
         mass_kg = self.current_satellite_state.mass_kg
@@ -580,40 +626,101 @@ class RLOrbitalEnvironment(gym.Env):
         
         delta_v_magnitude = (thrust_magnitude / mass_kg) * dt  # m/s
         
-        # Convert to km/s and apply penalty
-        efficiency_weight = self.reward_config['fuel']['efficiency_weight']
-        return -efficiency_weight * (delta_v_magnitude / 1000.0)
+        # Convert to km/s for consistent units
+        delta_v_km_s = delta_v_magnitude / 1000.0
+        
+        # Give small positive reward for not using fuel, small penalty for using fuel
+        if delta_v_km_s < 1e-8:  # Essentially no thrust
+            # Small conservation bonus for not using fuel
+            return config.get('conservation_bonus', 0.001)
+        else:
+            # Efficiency penalty for fuel usage
+            efficiency_weight = config['efficiency_weight']
+            return -efficiency_weight * delta_v_km_s
     
     def _calculate_orbit_reward(self) -> float:
-        """Calculate orbital element deviation penalty."""
-        # Get current orbital elements (simplified - would need proper conversion)
+        """Calculate orbital element deviation penalty using user's specified formula.
+        
+        R_orbit = -sum(orbital_element_deviations) 
+        Deviation tolerances: a=100m, e=0.01, i=0.01 rad, Ω=0.01 rad
+        
+        Penalizes deviations from the reference orbital elements (calculated from initial state).
+        NOTE: Only orbital shape/orientation elements are penalized:
+        - Semi-major axis (a): orbital size
+        - Eccentricity (e): orbital shape  
+        - Inclination (i): orbital plane orientation
+        - RAAN (Ω): orbital plane orientation
+        
+        Elements that naturally change during orbital motion are NOT penalized:
+        - Argument of periapsis (ω): changes as spacecraft moves along orbit
+        - Mean anomaly (M): changes as spacecraft moves along orbit
+        """
+        # Get current orbital elements from actual spacecraft state
         current_elements = self._state_to_orbit_elements(self.current_satellite_state)
+        
+        # Use the reference orbital elements calculated from initial state
         reference = self.reference_orbit
-        tolerances = self.reward_config['orbit']['tolerances']
+        
+        # Your specified tolerances
+        tolerances = {
+            'semi_major_axis_m': 100.0,      # 100 meters
+            'eccentricity': 0.01,            # 0.01
+            'inclination_rad': 0.01,         # 0.01 radians
+            'raan_rad': 0.01,                # Ω (RAAN) 0.01 radians  
+            'arg_periapsis_rad': 0.01        # ω (argument of periapsis) 0.01 radians
+        }
         
         deviations = []
         
-        # Semi-major axis deviation
-        a_dev = abs(current_elements.semi_major_axis_km * 1000 - reference.semi_major_axis_km * 1000)
-        deviations.append(max(0, a_dev - tolerances['semi_major_axis_m']) / tolerances['semi_major_axis_m'])
+        # Semi-major axis deviation (convert km to meters)
+        a_current_m = current_elements.semi_major_axis_km * 1000
+        a_reference_m = reference.semi_major_axis_km * 1000
+        a_deviation = abs(a_current_m - a_reference_m)
+        if a_deviation > tolerances['semi_major_axis_m']:
+            deviations.append((a_deviation - tolerances['semi_major_axis_m']) / tolerances['semi_major_axis_m'])
         
         # Eccentricity deviation
-        e_dev = abs(current_elements.eccentricity - reference.eccentricity)
-        deviations.append(max(0, e_dev - tolerances['eccentricity']) / tolerances['eccentricity'])
+        e_deviation = abs(current_elements.eccentricity - reference.eccentricity)
+        if e_deviation > tolerances['eccentricity']:
+            deviations.append((e_deviation - tolerances['eccentricity']) / tolerances['eccentricity'])
         
-        # Inclination deviation (convert to radians)
-        i_dev = abs(math.radians(current_elements.inclination_deg - reference.inclination_deg))
-        deviations.append(max(0, i_dev - tolerances['inclination_rad']) / tolerances['inclination_rad'])
+        # Inclination deviation (convert degrees to radians)
+        i_current_rad = math.radians(current_elements.inclination_deg)
+        i_reference_rad = math.radians(reference.inclination_deg)
+        i_deviation = abs(i_current_rad - i_reference_rad)
+        if i_deviation > tolerances['inclination_rad']:
+            deviations.append((i_deviation - tolerances['inclination_rad']) / tolerances['inclination_rad'])
         
-        # RAAN deviation
-        raan_dev = abs(math.radians(current_elements.raan_deg - reference.raan_deg))
-        deviations.append(max(0, raan_dev - tolerances['raan_rad']) / tolerances['raan_rad'])
+        # RAAN (Ω) deviation (convert degrees to radians)
+        # Note: RAAN may naturally precess due to J2 perturbations, but for short durations should be stable
+        raan_current_rad = math.radians(current_elements.raan_deg)
+        raan_reference_rad = math.radians(reference.raan_deg)
+        raan_deviation = abs(raan_current_rad - raan_reference_rad)
+        if raan_deviation > tolerances['raan_rad']:
+            deviations.append((raan_deviation - tolerances['raan_rad']) / tolerances['raan_rad'])
         
-        # Argument of periapsis deviation
-        argp_dev = abs(math.radians(current_elements.arg_periapsis_deg - reference.arg_periapsis_deg))
-        deviations.append(max(0, argp_dev - tolerances['arg_periapsis_rad']) / tolerances['arg_periapsis_rad'])
+        # Argument of periapsis (ω) deviation (convert degrees to radians)
+        # NOTE: Argument of periapsis naturally changes during orbital motion and should NOT be penalized
+        # as the spacecraft moves along its orbit. Only orbital shape/orientation should be penalized.
+        # argp_current_rad = math.radians(current_elements.arg_periapsis_deg)
+        # argp_reference_rad = math.radians(reference.arg_periapsis_deg)
+        # argp_deviation = abs(argp_current_rad - argp_reference_rad)
+        # if argp_deviation > tolerances['arg_periapsis_rad']:
+        #     deviations.append((argp_deviation - tolerances['arg_periapsis_rad']) / tolerances['arg_periapsis_rad'])
         
-        return -sum(deviations)
+        # NOTE: Mean anomaly is intentionally excluded as it naturally changes with orbital motion
+        # and should not be penalized
+        
+        # Calculate orbit reward: penalty for deviations, small bonus for staying in tolerance
+        if len(deviations) == 0:
+            # All orbital elements within tolerance - give small maintenance bonus
+            orbit_maintenance_bonus = self.reward_config.get('orbit', {}).get('maintenance_bonus', 0.001)
+            orbit_reward = orbit_maintenance_bonus
+        else:
+            # R_orbit = -sum(orbital_element_deviations) 
+            orbit_reward = -sum(deviations)
+        
+        return orbit_reward
     
     def _calculate_mission_reward(self) -> float:
         """Calculate mission progress reward component."""

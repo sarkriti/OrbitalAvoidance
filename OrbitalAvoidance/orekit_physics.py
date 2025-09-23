@@ -51,7 +51,8 @@ try:
     from org.orekit.frames import FramesFactory, TopocentricFrame
     from org.orekit.bodies import OneAxisEllipsoid, CelestialBodyFactory
     from org.orekit.utils import Constants, IERSConventions
-    from org.orekit.orbits import KeplerianOrbit, PositionAngleType, Orbit
+    from org.orekit.orbits import KeplerianOrbit, CartesianOrbit, PositionAngleType, Orbit
+    from org.orekit.utils import PVCoordinates
     from org.orekit.propagation import SpacecraftState
     from org.orekit.propagation.numerical import NumericalPropagator
     from org.orekit.propagation.analytical import KeplerianPropagator
@@ -389,6 +390,54 @@ class OrekitOrbitPropagator:
         mu = Constants.WGS84_EARTH_MU
         a = orbit.getA()
         return -mu / (2.0 * a)
+    
+    def cartesian_to_orbit_elements(self, position_km: np.ndarray, velocity_km_s: np.ndarray, 
+                                   epoch_mjd: float = 59945.0) -> OrbitElements:
+        """Convert Cartesian position/velocity to orbital elements using Orekit.
+        
+        Args:
+            position_km: Position vector in km [x, y, z] in GCRF frame
+            velocity_km_s: Velocity vector in km/s [vx, vy, vz] in GCRF frame  
+            epoch_mjd: Epoch in Modified Julian Date (default: 2023-01-01)
+            
+        Returns:
+            OrbitElements: Orbital elements derived from Cartesian state
+        """
+        # Convert to SI units (meters and m/s)
+        pos_m = position_km * 1000.0
+        vel_ms = velocity_km_s * 1000.0
+        
+        # Create Orekit Vector3D objects
+        position = Vector3D(float(pos_m[0]), float(pos_m[1]), float(pos_m[2]))
+        velocity = Vector3D(float(vel_ms[0]), float(vel_ms[1]), float(vel_ms[2]))
+        
+        # Create epoch
+        epoch = AbsoluteDate.createMJDDate(int(epoch_mjd), epoch_mjd % 1.0, self.utc)
+        
+        # Create PVCoordinates and CartesianOrbit
+        pv = PVCoordinates(position, velocity)
+        cartesian_orbit = CartesianOrbit(pv, self.gcrf, epoch, Constants.WGS84_EARTH_MU)
+        
+        # Convert to KeplerianOrbit for element extraction
+        keplerian_orbit = KeplerianOrbit(cartesian_orbit)
+        
+        # Extract orbital elements
+        semi_major_axis_km = keplerian_orbit.getA() / 1000.0  # Convert to km
+        eccentricity = keplerian_orbit.getE()
+        inclination_deg = math.degrees(keplerian_orbit.getI())
+        raan_deg = math.degrees(keplerian_orbit.getRightAscensionOfAscendingNode()) 
+        arg_periapsis_deg = math.degrees(keplerian_orbit.getPerigeeArgument())
+        mean_anomaly_deg = math.degrees(keplerian_orbit.getMeanAnomaly())
+        
+        return OrbitElements(
+            semi_major_axis_km=semi_major_axis_km,
+            eccentricity=eccentricity,
+            inclination_deg=inclination_deg,
+            raan_deg=raan_deg,
+            arg_periapsis_deg=arg_periapsis_deg,
+            mean_anomaly_deg=mean_anomaly_deg,
+            epoch_mjd=epoch_mjd
+        )
 
 
 def create_propagator() -> OrekitOrbitPropagator:
