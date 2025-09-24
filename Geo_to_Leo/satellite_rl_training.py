@@ -8,13 +8,26 @@ Demonstrates various RL algorithms for orbital transfer missions.
 
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import sys
+import time
+from pathlib import Path
+
+# Add parent directory for hardware detection
+sys.path.append(str(Path(__file__).parent.parent))
+
 from stable_baselines3 import PPO, SAC, TD3
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnRewardThreshold
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.results_plotter import load_results, ts2xy
-import os
-import time
+
+try:
+    from hardware_detection import print_hardware_info, configure_ml_frameworks, get_optimal_config
+    HARDWARE_DETECTION_AVAILABLE = True
+except ImportError:
+    HARDWARE_DETECTION_AVAILABLE = False
+    print("Warning: Hardware detection not available. Using default settings.")
 
 # Import our satellite environment
 try:
@@ -45,12 +58,42 @@ def train_ppo_agent(total_timesteps=50000, save_path="models/"):
     print("🚀 TRAINING PPO AGENT FOR SATELLITE CONTROL")
     print("=" * 50)
     
+    # Configure hardware if available
+    hardware_config = None
+    if HARDWARE_DETECTION_AVAILABLE:
+        try:
+            hardware_config = get_optimal_config(prefer_gpu=True, memory_fraction=0.8)
+            configure_ml_frameworks(hardware_config)
+            print(f"🔧 Hardware configured: {hardware_config.torch_device}")
+        except Exception as e:
+            print(f"⚠️ Hardware configuration failed: {e}")
+    
     # Create directories
     os.makedirs(save_path, exist_ok=True)
     os.makedirs("logs/", exist_ok=True)
     
+    # Determine number of environments based on hardware
+    if hardware_config and hardware_config.cpu_info.cores_logical >= 8:
+        n_envs = min(8, hardware_config.cpu_info.cores_logical // 2)
+    else:
+        n_envs = 4
+    
     # Create vectorized environment
-    env = make_vec_env(create_training_environment(), n_envs=4)
+    env = make_vec_env(create_training_environment(), n_envs=n_envs)
+    
+    # Configure PPO parameters based on hardware
+    batch_size = 64
+    if hardware_config:
+        if hardware_config.use_gpu and hardware_config.gpu_info:
+            # GPU optimization
+            gpu_memory_gb = hardware_config.gpu_info[0].memory_total_mb / 1024
+            if gpu_memory_gb >= 8:
+                batch_size = 128
+            elif gpu_memory_gb < 4:
+                batch_size = 32
+        elif hardware_config.cpu_info.memory_available_gb >= 16:
+            # CPU with lots of RAM
+            batch_size = 128
     
     # Create PPO model
     model = PPO(
@@ -60,17 +103,21 @@ def train_ppo_agent(total_timesteps=50000, save_path="models/"):
         tensorboard_log="./logs/ppo_satellite/",
         learning_rate=3e-4,
         n_steps=2048,
-        batch_size=64,
+        batch_size=batch_size,
         n_epochs=10,
         gamma=0.99,
         gae_lambda=0.95,
         clip_range=0.2,
         ent_coef=0.01,
+        device=hardware_config.torch_device if hardware_config else "auto"
     )
     
     print(f"✅ PPO Model created")
     print(f"   - Policy: MlpPolicy")
     print(f"   - Learning rate: {model.learning_rate}")
+    print(f"   - Batch size: {batch_size}")
+    print(f"   - Environments: {n_envs}")
+    print(f"   - Device: {model.device}")
     print(f"   - Training steps: {total_timesteps}")
     
     # Training callback for evaluation
@@ -113,11 +160,41 @@ def train_sac_agent(total_timesteps=50000, save_path="models/"):
     print("\n🚀 TRAINING SAC AGENT FOR SATELLITE CONTROL")
     print("=" * 50)
     
+    # Configure hardware if available
+    hardware_config = None
+    if HARDWARE_DETECTION_AVAILABLE:
+        try:
+            hardware_config = get_optimal_config(prefer_gpu=True, memory_fraction=0.8)
+            configure_ml_frameworks(hardware_config)
+            print(f"🔧 Hardware configured: {hardware_config.torch_device}")
+        except Exception as e:
+            print(f"⚠️ Hardware configuration failed: {e}")
+    
     # Create directories
     os.makedirs(save_path, exist_ok=True)
     
-    # Create environment
+    # Create environment (SAC works better with single environment)
     env = make_vec_env(create_training_environment(), n_envs=1)
+    
+    # Configure SAC parameters based on hardware
+    batch_size = 256
+    buffer_size = 100000
+    if hardware_config:
+        if hardware_config.use_gpu and hardware_config.gpu_info:
+            # GPU optimization
+            gpu_memory_gb = hardware_config.gpu_info[0].memory_total_mb / 1024
+            if gpu_memory_gb >= 8:
+                batch_size = 512
+                buffer_size = 200000
+            elif gpu_memory_gb < 4:
+                batch_size = 128
+                buffer_size = 50000
+        elif hardware_config.cpu_info.memory_available_gb >= 16:
+            # CPU with lots of RAM
+            batch_size = 512
+            buffer_size = 200000
+        elif hardware_config.cpu_info.memory_available_gb < 8:
+            buffer_size = 50000
     
     # Create SAC model
     model = SAC(
@@ -126,18 +203,21 @@ def train_sac_agent(total_timesteps=50000, save_path="models/"):
         verbose=1,
         tensorboard_log="./logs/sac_satellite/",
         learning_rate=3e-4,
-        buffer_size=100000,
+        buffer_size=buffer_size,
         learning_starts=1000,
-        batch_size=256,
+        batch_size=batch_size,
         tau=0.005,
         gamma=0.99,
         train_freq=1,
         gradient_steps=1,
+        device=hardware_config.torch_device if hardware_config else "auto"
     )
     
     print(f"✅ SAC Model created")
     print(f"   - Policy: MlpPolicy")
-    print(f"   - Buffer size: {model.buffer_size}")
+    print(f"   - Buffer size: {buffer_size:,}")
+    print(f"   - Batch size: {batch_size}")
+    print(f"   - Device: {model.device}")
     print(f"   - Training steps: {total_timesteps}")
     
     # Train the model
@@ -306,6 +386,18 @@ def main():
     
     print("🛰️ SATELLITE RL TRAINING PIPELINE")
     print("=" * 40)
+    
+    # Initialize hardware detection and optimization
+    if HARDWARE_DETECTION_AVAILABLE:
+        print("\n🔍 Detecting and configuring hardware resources...")
+        try:
+            hardware_config = print_hardware_info()
+            configure_ml_frameworks(hardware_config)
+            print("✅ Hardware configuration complete!\n")
+        except Exception as e:
+            print(f"⚠️ Hardware detection failed, using defaults: {e}\n")
+    else:
+        print("⚠️ Hardware detection not available, using default CPU settings\n")
     
     # Check environment
     try:

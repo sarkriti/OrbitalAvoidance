@@ -1,0 +1,141 @@
+{
+  "training_name": "advanced_research_dense_leo_training",
+  "description": "High-performance training configuration for dense LEO environment with 160+ debris objects",
+  "scenario_file": "scenarios/advanced_research_dense_leo.json",
+  "algorithm": {
+    "type": "ppo",
+    "policy": "MlpPolicy",
+    "learning_rate": 3e-4,
+    "n_steps": 4096,
+    "batch_size": 512,
+    "n_epochs": 20,
+    "gamma": 0.995,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "clip_range_vf": null,
+    "normalize_advantage": true,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "target_kl": 0.01,
+    "policy_kwargs": {
+      "net_arch": {
+        "pi": [512, 512, 256],
+        "vf": [512, 512, 256]
+      },
+      "activation_fn": "tanh",
+      "ortho_init": false
+    },
+    "device": "auto",
+    "verbose": 1,
+    "tensorboard_log": "./training_logs/advanced_dense_leo_tb/",
+    "create_eval_env": true,
+    "eval_freq": 10000,
+    "n_eval_episodes": 20,
+    "eval_log_path": "./training_logs/advanced_dense_leo_eval/"
+  },
+  "environment": {
+    "num_parallel_envs": 16,
+    "vec_env_type": "subproc",
+    "normalize_observations": true,
+    "normalize_rewards": true,
+    "reward_scale": 1.0,
+    "frame_stack": null,
+    "max_episode_steps": 720,
+    "env_kwargs": {
+      "render_mode": null,
+      "observation_space_type": "normalized_vector",
+      "action_space_type": "continuous"
+    }
+  },
+  "training": {
+    "total_timesteps": 5000000,
+    "save_freq": 50000,
+    "checkpoint_freq": 100000,
+    "eval_freq": 25000,
+    "log_interval": 100,
+    "save_path": "./trained_models/advanced_dense_leo/",
+    "model_name": "ppo_advanced_dense_leo",
+    "continue_training": false,
+    "pretrained_model_path": null
+  },
+  "callbacks": [
+    {
+      "type": "checkpoint",
+      "save_freq": 50000,
+      "save_path": "./training_logs/advanced_dense_leo_checkpoints/",
+      "name_prefix": "advanced_dense_checkpoint"
+    },
+    {
+      "type": "eval",
+      "eval_freq": 25000,
+      "n_eval_episodes": 20,
+      "eval_env": "same",
+      "best_model_save_path": "./trained_models/advanced_dense_leo/best/",
+      "log_path": "./training_logs/advanced_dense_leo_eval/",
+      "deterministic": true
+    },
+    {
+      "type": "stop_on_reward",
+      "reward_threshold": 150.0,
+      "verbose": 1
+    }
+  ],
+  "hardware_optimization": {
+    "enable_gpu_acceleration": true,
+    "preferred_gpus": [3, 5],
+    "cpu_cores": 32,
+    "memory_limit_gb": 128,
+    "enable_mixed_precision": true,
+    "optimize_for_throughput": true,
+    "parallel_physics_computation": true
+  },
+  "logging": {
+    "tensorboard_logging": true,
+    "wandb_logging": false,
+    "csv_logging": true,
+    "log_level": "INFO",
+    "log_frequency": 100,
+    "save_training_replay": true,
+    "custom_metrics": [
+      "collision_rate",
+      "fuel_efficiency",
+      "conjunction_events",
+      "maneuver_count",
+      "mission_success_rate",
+      "average_miss_distance"
+    ]
+  },
+  "research_features": {
+    "enable_curriculum_learning": true,
+    "curriculum_stages": [
+      {
+        "stage": "easy",
+        "timesteps": 1000000,
+        "debris_scale": 0.5,
+        "simulation_duration_scale": 0.5
+      },
+      {
+        "stage": "medium", 
+        "timesteps": 2000000,
+        "debris_scale": 0.75,
+        "simulation_duration_scale": 0.75
+      },
+      {
+        "stage": "full",
+        "timesteps": 2000000,
+        "debris_scale": 1.0,
+        "simulation_duration_scale": 1.0
+      }
+    ],
+    "enable_domain_randomization": true,
+    "domain_randomization": {
+      "physics_params": true,
+      "environment_conditions": true,
+      "initial_states": true,
+      "debris_configurations": true
+    },
+    "enable_meta_learning": false,
+    "enable_self_play": false
+  }
+}

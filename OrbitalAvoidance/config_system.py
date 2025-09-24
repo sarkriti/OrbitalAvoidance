@@ -45,96 +45,31 @@ class OrbitConfig:
     """Configuration for a single orbit."""
     altitude_km: float
     inclination_deg: float = 0.0
-    eccentricity: float = 0.0
-    raan_deg: float = 0.0  # Right Ascension of Ascending Node
-    arg_periapsis_deg: float = 0.0  # Argument of Periapsis
-    mean_anomaly_deg: float = 0.0
-    epoch_mjd: float = 59945.0  # Default epoch (2023-01-01)
-    
-    def to_orbit_elements(self) -> OrbitElements:
-        """Convert to OrbitElements for physics engine."""
-        return OrbitElements(
-            semi_major_axis_km=6371.0 + self.altitude_km,
-            eccentricity=self.eccentricity,
-            inclination_deg=self.inclination_deg,
-            raan_deg=self.raan_deg,
-            arg_periapsis_deg=self.arg_periapsis_deg,
-            mean_anomaly_deg=self.mean_anomaly_deg,
-            epoch_mjd=self.epoch_mjd
-        )
+    """Backward compatibility wrapper for configuration system.
 
-
-@dataclass 
-class SpacecraftConfig:
-    """Configuration for a spacecraft (satellite or debris)."""
-    name: str
-    orbit: OrbitConfig
-    mass_kg: float = 1000.0
-    drag_area_m2: float = 10.0
-    drag_coefficient: float = 2.2
-    radiation_area_m2: float = 10.0
-    radiation_coefficient: float = 1.8
-    is_controllable: bool = True  # Can apply thrust
-    max_thrust_n: float = 1.0  # Maximum thrust in Newtons
-    fuel_capacity_kg: float = 100.0
-    collision_radius_m: float = 10.0  # For collision detection
+    The implementation moved to `orbital_avoidance.config.config_system`.
+    """
+    import warnings
+    warnings.warn(
+        "Importing 'config_system' from the old location is deprecated. Use 'from orbital_avoidance.config import config_system' instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
+    from orbital_avoidance.config.config_system import *  # noqa: F401,F403
+                "velocities_normalized": True,
+                "safety_radius_normalization": True,
+                "time_features": True
+            }
     
-    def to_spacecraft_properties(self) -> SpacecraftProperties:
-        """Convert to SpacecraftProperties for physics engine."""
-        return SpacecraftProperties(
-            mass_kg=self.mass_kg,
-            drag_area_m2=self.drag_area_m2,
-            drag_coefficient=self.drag_coefficient,
-            radiation_area_m2=self.radiation_area_m2,
-            radiation_coefficient=self.radiation_coefficient
-        )
-
-
-@dataclass
-class DebrisFieldConfig:
-    """Configuration for generating debris fields."""
-    num_objects: int
-    altitude_range_km: List[float]  # [min, max]
-    inclination_range_deg: List[float] = field(default_factory=lambda: [0, 180])
-    eccentricity_range: List[float] = field(default_factory=lambda: [0, 0.1])
-    mass_range_kg: List[float] = field(default_factory=lambda: [1, 1000])
-    size_range_m: List[float] = field(default_factory=lambda: [0.1, 10])
-    distribution_type: str = "uniform"  # "uniform", "gaussian", "realistic"
-    
-    
-@dataclass
-class PhysicsConfig:
-    """Configuration for physics models and propagation."""
-    propagator_type: str = "orekit_numerical"  # Use realistic physics by default
-    time_step_seconds: float = 60.0
-    simulation_duration_seconds: float = 86400.0  # 24 hours
-    include_drag: bool = True
-    include_solar_radiation: bool = True
-    include_j2_perturbation: bool = True
-    collision_detection_method: str = "spherical"  # "spherical", "ellipsoidal", "mesh"
-    collision_threshold_km: float = 0.01  # 10 meters
-    
-
-@dataclass
-class RewardConfig:
-    """Configuration for reward functions."""
-    reward_type: str = "distance_based"
-    collision_penalty: float = -1000.0
-    fuel_cost_weight: float = 0.1
-    safety_distance_km: float = 1.0  # Minimum safe distance
-    close_approach_penalty_weight: float = 10.0
-    mission_success_reward: float = 100.0
-    
-
-@dataclass
-class ObservationConfig:
-    """Configuration for observation space."""
-    include_relative_positions: bool = True
-    include_relative_velocities: bool = True
-    include_fuel_levels: bool = True
-    include_time_to_collision: bool = True
-    max_tracked_objects: int = 10  # Limit observation space size
-    observation_radius_km: float = 100.0  # Only observe objects within this radius
+    def has_advanced_features(self) -> bool:
+        """Check if this observation config uses advanced features."""
+        return (self.include_collision_probability or
+                self.include_uncertainty_ellipsoids or
+                self.include_miss_distance or
+                self.include_delta_v_remaining or
+                self.include_orbital_elements or
+                self.enhanced_features is not None or
+                self.state_history_length > 1)
     
 
 @dataclass
@@ -186,12 +121,30 @@ class ConfigurationLoader:
             # Handle spacecraft parameter conversion
             if 'thrust_capacity_n' in sat_data_copy:
                 sat_data_copy['max_thrust_n'] = sat_data_copy.pop('thrust_capacity_n')
-            satellites.append(SpacecraftConfig(**sat_data_copy))
+            
+            # Filter out parameters that SpacecraftConfig doesn't support
+            sat_data_filtered = ConfigurationLoader._filter_supported_params(
+                sat_data_copy, SpacecraftConfig
+            )
+            satellites.append(SpacecraftConfig(**sat_data_filtered))
         
         # Convert debris fields
         debris_fields = []
         for field_data in data.get('debris_fields', []):
-            debris_fields.append(DebrisFieldConfig(**field_data))
+            # Filter out nested complex objects that aren't supported yet
+            field_data_simplified = field_data.copy()
+            
+            # Remove complex nested structures for now (can be added later)
+            unsupported_keys = ['covariance_matrix', 'dynamics']
+            for key in unsupported_keys:
+                if key in field_data_simplified:
+                    field_data_simplified.pop(key)
+            
+            # Filter supported parameters
+            field_data_filtered = ConfigurationLoader._filter_supported_params(
+                field_data_simplified, DebrisFieldConfig
+            )
+            debris_fields.append(DebrisFieldConfig(**field_data_filtered))
         
         # Convert static debris
         static_debris = []
@@ -211,9 +164,16 @@ class ConfigurationLoader:
             # Handle spacecraft parameter conversion
             if 'thrust_capacity_n' in debris_data_copy:
                 debris_data_copy['max_thrust_n'] = debris_data_copy.pop('thrust_capacity_n')
-            # Remove parameters not supported by SpacecraftConfig
-            debris_data_copy.pop('size_m', None)
-            static_debris.append(SpacecraftConfig(**debris_data_copy))
+            
+            # Remove legacy parameters and filter supported ones
+            debris_data_copy.pop('size_m', None)  # Legacy parameter
+            debris_data_copy.pop('covariance_matrix', None)  # Complex structure
+            
+            # Filter supported parameters
+            debris_data_filtered = ConfigurationLoader._filter_supported_params(
+                debris_data_copy, SpacecraftConfig
+            )
+            static_debris.append(SpacecraftConfig(**debris_data_filtered))
             
         # Convert debris (legacy field name handling)
         for debris_data in data.get('debris', []):
@@ -236,8 +196,10 @@ class ConfigurationLoader:
             debris_data_copy.pop('size_m', None)
             static_debris.append(SpacecraftConfig(**debris_data_copy))
         
-        # Convert sub-configurations
-        physics = PhysicsConfig(**data.get('physics', {}))
+        # Convert sub-configurations with filtering
+        physics_data = data.get('physics', {})
+        physics_filtered = ConfigurationLoader._filter_supported_params(physics_data, PhysicsConfig)
+        physics = PhysicsConfig(**physics_filtered)
         
         # Handle rewards configuration conversion
         rewards_data = data.get('rewards', {})
@@ -247,12 +209,16 @@ class ConfigurationLoader:
                 'collision_penalty': rewards_data['collision'].get('penalty', -1000.0),
                 'fuel_cost_weight': rewards_data.get('fuel', {}).get('efficiency_weight', 0.1)
             }
-            rewards = RewardConfig(**reward_params)
+            rewards_filtered = ConfigurationLoader._filter_supported_params(reward_params, RewardConfig)
+            rewards = RewardConfig(**rewards_filtered)
         else:
             # Use flat structure or defaults
-            rewards = RewardConfig(**rewards_data)
+            rewards_filtered = ConfigurationLoader._filter_supported_params(rewards_data, RewardConfig)
+            rewards = RewardConfig(**rewards_filtered)
         
-        observations = ObservationConfig(**data.get('observations', {}))
+        observations_data = data.get('observations', {})
+        observations_filtered = ConfigurationLoader._filter_supported_params(observations_data, ObservationConfig)
+        observations = ObservationConfig(**observations_filtered)
         
         return SimulationConfig(
             scenario_name=data.get('scenario_name', data.get('name', 'Unknown Scenario')),
@@ -265,6 +231,25 @@ class ConfigurationLoader:
             observations=observations,
             random_seed=data.get('random_seed')
         )
+    
+    @staticmethod
+    def _filter_supported_params(data: Dict[str, Any], config_class) -> Dict[str, Any]:
+        """Filter dictionary to only include parameters supported by the config class."""
+        import inspect
+        
+        # Get the parameter names for the dataclass constructor
+        signature = inspect.signature(config_class)
+        supported_params = set(signature.parameters.keys())
+        
+        # Filter the data to only include supported parameters
+        filtered_data = {k: v for k, v in data.items() if k in supported_params}
+        
+        # Log any ignored parameters (optional, for debugging)
+        ignored_params = set(data.keys()) - supported_params
+        if ignored_params:
+            print(f"Warning: Ignoring unsupported parameters for {config_class.__name__}: {ignored_params}")
+        
+        return filtered_data
     
     @staticmethod
     def save_to_file(config: SimulationConfig, filepath: str):

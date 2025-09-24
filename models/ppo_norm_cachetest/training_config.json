@@ -1,0 +1,41 @@
+{
+  "algorithm": "ppo",
+  "scenario_file": "scenarios/leo_debris_avoidance.json",
+  "reward_function": "balanced",
+  "training": {
+    "total_timesteps": 2048,
+    "checkpoint_freq": 10000,
+    "eval_freq": 5000,
+    "reward_threshold": null,
+    "save_best_only": true
+  },
+  "environment": {
+    "max_debris_tracked": 10,
+    "render_mode": null,
+    "scenario_file": "scenarios/leo_debris_avoidance.json"
+  },
+  "output": {
+    "log_dir": "./logs",
+    "save_dir": "./models",
+    "experiment_name": "ppo_norm_cachetest"
+  },
+  "prefer_gpu": true,
+  "gpu_memory_fraction": 0.8,
+  "max_threads": null,
+  "ppo": {
+    "learning_rate": 0.0003,
+    "n_steps": 512,
+    "batch_size": 128,
+    "n_epochs": 5,
+    "clip_range": 0.2,
+    "gae_lambda": 0.95,
+    "gamma": 0.995
+  },
+  "normalization": {
+    "enabled": true,
+    "norm_obs": true,
+    "norm_reward": true,
+    "clip_obs": 10.0,
+    "clip_reward": 10.0
+  }
+}

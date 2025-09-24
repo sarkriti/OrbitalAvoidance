@@ -1,0 +1,129 @@
+{
+  "scenario_name": "LEO_Debris_Avoidance",
+  "description": "Standard LEO debris avoidance scenario with controllable satellite and multiple debris objects",
+  "satellites": [
+    {
+      "name": "MainSatellite",
+      "orbit": {
+        "altitude_km": 400,
+        "inclination_deg": 51.6,
+        "eccentricity": 0.001,
+        "raan_deg": 0,
+        "arg_periapsis_deg": 0,
+        "mean_anomaly_deg": 0,
+        "epoch_mjd": 59945.0
+      },
+      "mass_kg": 1000,
+      "drag_area_m2": 10,
+      "drag_coefficient": 2.2,
+      "radiation_area_m2": 10,
+      "radiation_coefficient": 1.8,
+      "is_controllable": true,
+      "max_thrust_n": 1.0,
+      "fuel_capacity_kg": 100,
+      "collision_radius_m": 5.0
+    }
+  ],
+  "debris_fields": [
+    {
+      "num_objects": 20,
+      "altitude_range_km": [
+        380,
+        420
+      ],
+      "inclination_range_deg": [
+        45,
+        60
+      ],
+      "eccentricity_range": [
+        0,
+        0.05
+      ],
+      "mass_range_kg": [
+        1,
+        100
+      ],
+      "size_range_m": [
+        0.1,
+        2.0
+      ],
+      "distribution_type": "uniform"
+    }
+  ],
+  "static_debris": [
+    {
+      "name": "LargeDebris_1",
+      "orbit": {
+        "altitude_km": 405,
+        "inclination_deg": 51.6,
+        "eccentricity": 0.002,
+        "raan_deg": 10,
+        "arg_periapsis_deg": 45,
+        "mean_anomaly_deg": 180
+      },
+      "mass_kg": 500,
+      "drag_area_m2": 5,
+      "is_controllable": false,
+      "max_thrust_n": 0,
+      "fuel_capacity_kg": 0,
+      "collision_radius_m": 3.0
+    }
+  ],
+  "physics": {
+    "propagator_type": "orekit_numerical",
+    "time_step_seconds": 10,
+    "simulation_duration_seconds": 3600,
+    "include_drag": true,
+    "include_solar_radiation": true,
+    "include_j2_perturbation": true,
+    "collision_detection_method": "spherical",
+    "collision_threshold_km": 0.001
+  },
+  "rewards": {
+    "reward_type": "distance_based",
+    "collision_penalty": -1000,
+    "fuel_cost_weight": 0.1,
+    "safety_distance_km": 1.0,
+    "close_approach_penalty_weight": 10.0,
+    "mission_success_reward": 100.0
+  },
+  "observations": {
+    "include_relative_positions": true,
+    "include_relative_velocities": true,
+    "include_fuel_levels": true,
+    "include_time_to_collision": true,
+    "max_tracked_objects": 15,
+    "observation_radius_km": 100.0
+  },
+  "random_seed": 42,
+  "algorithm": "ppo",
+  "scenario_file": "scenarios/leo_debris_avoidance.json",
+  "reward_function": "balanced",
+  "training": {
+    "total_timesteps": 50000,
+    "checkpoint_freq": 10000,
+    "eval_freq": 5000,
+    "reward_threshold": null,
+    "save_best_only": true
+  },
+  "environment": {
+    "max_debris_tracked": 10,
+    "render_mode": null,
+    "scenario_file": "scenarios/leo_debris_avoidance.json",
+    "episode_horizon": 1000
+  },
+  "output": {
+    "log_dir": "training_logs",
+    "save_dir": "trained_models",
+    "experiment_name": "scenario_training"
+  },
+  "ppo": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "n_epochs": 10,
+    "clip_range": 0.2,
+    "gae_lambda": 0.95,
+    "gamma": 0.99
+  }
+}

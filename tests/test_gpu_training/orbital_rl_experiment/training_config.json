@@ -1,0 +1,31 @@
+{
+  "algorithm": "ppo",
+  "scenario_file": "scenarios/leo_debris_avoidance.json",
+  "reward_function": "balanced",
+  "training": {
+    "total_timesteps": 5000,
+    "checkpoint_freq": 10000,
+    "eval_freq": 5000,
+    "reward_threshold": null,
+    "save_best_only": true
+  },
+  "environment": {
+    "max_debris_tracked": 10,
+    "render_mode": null,
+    "scenario_file": "scenarios/leo_debris_avoidance.json"
+  },
+  "output": {
+    "log_dir": "./logs",
+    "save_dir": "./test_gpu_training",
+    "experiment_name": "orbital_rl_experiment"
+  },
+  "prefer_gpu": true,
+  "gpu_memory_fraction": 0.8,
+  "max_threads": null,
+  "ppo": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "n_epochs": 10
+  }
+}

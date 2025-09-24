@@ -1,3 +1,21 @@
+"""Legacy shim for orekit_physics that re-exports the modern orbital_avoidance.physics implementation."""
+from __future__ import annotations
+import sys
+from pathlib import Path
+import warnings
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / 'src'
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+warnings.warn(
+    "Importing orekit_physics from legacy location is deprecated. Use 'orbital_avoidance.physics.orekit_physics' instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+from orbital_avoidance.physics.orekit_physics import *  # noqa: F401,F403
 #!/usr/bin/env python3
 # Orekit-based physics engine for high-precision orbital mechanics.
 # This module provides a high-fidelity orbital propagation system using
@@ -7,14 +25,27 @@ from __future__ import annotations
 
 import math
 import os
+import sys
 import logging
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple, Union
 import tempfile
 import zipfile
 import urllib.request
+from pathlib import Path
+import concurrent.futures
+import multiprocessing
 
 import numpy as np
+
+# Add parent directory for hardware detection
+sys.path.append(str(Path(__file__).parent.parent))
+
+try:
+    from hardware_detection import get_optimal_config
+    HARDWARE_DETECTION_AVAILABLE = True
+except ImportError:
+    HARDWARE_DETECTION_AVAILABLE = False
 
 # Orekit imports - STRICT MODE (no fallbacks)
 try:
@@ -22,8 +53,9 @@ try:
     import jpype
     import os
     
-    # Path to Orekit JAR files
-    orekit_jar_dir = "/home/bryson/RL_testing/orekit_lib"
+    # Path to Orekit JAR files - get from current directory structure
+    current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    orekit_jar_dir = os.path.join(current_dir, "orekit_lib")
     jar_files = [os.path.join(orekit_jar_dir, f) for f in os.listdir(orekit_jar_dir) if f.endswith(".jar")]
     
     # Initialize JVM with Orekit JAR files
@@ -37,10 +69,31 @@ try:
     from org.orekit.data import DataContext, DirectoryCrawler
     from java.io import File
     
-    data_dir = File("/home/bryson/RL_testing/orekit-data")
-    crawler = DirectoryCrawler(data_dir)
-    DataContext.getDefault().getDataProvidersManager().addProvider(crawler)
-    print("✓ Orekit data directory configured")
+    # Robust Orekit data discovery: search multiple candidate paths
+    candidate_dirs = [
+        os.path.join(current_dir, "orekit-data"),                          # module local
+        os.path.join(current_dir, "..", "orekit-data"),                  # parent relative
+        os.path.abspath(os.path.join(current_dir, "../../orekit-data")),   # repo root guess
+        os.environ.get("OREKIT_DATA_PATH", ""),                           # explicit env var
+    ]
+    candidate_dirs = [d for d in candidate_dirs if d and os.path.isdir(d)]
+
+    data_registered = False
+    for d in candidate_dirs:
+        if os.listdir(d):
+            try:
+                data_dir = File(d)
+                crawler = DirectoryCrawler(data_dir)
+                DataContext.getDefault().getDataProvidersManager().clearProviders()
+                DataContext.getDefault().getDataProvidersManager().addProvider(crawler)
+                print(f"✓ Orekit data directory configured: {d}")
+                data_registered = True
+                break
+            except Exception as e:
+                logging.warning(f"Failed to register Orekit data at {d}: {e}")
+
+    if not data_registered:
+        print("⚠️ No valid Orekit data directory found with files. Proceeding with limited defaults.")
     
     # Test basic import with correct Orekit 13.x class
     from org.orekit.orbits import PositionAngleType
@@ -134,20 +187,77 @@ class OrekitOrbitPropagator:
         # Propagator caching to avoid repeated force model setup
         self._propagator_cache = {}
         self._force_models_initialized = False
+    # Persistent state map: key -> {'propagator': NumericalPropagator, 'state': SpacecraftState}
+    self._persistent = {}
+        
+        # Initialize hardware configuration for optimization
+        self.hardware_config = None
+        if HARDWARE_DETECTION_AVAILABLE:
+            try:
+                self.hardware_config = get_optimal_config()
+                logging.info(f"Physics engine configured for: {self.hardware_config.torch_device}, "
+                           f"{self.hardware_config.recommended_threads} threads")
+            except Exception as e:
+                logging.warning(f"Hardware detection failed in physics engine: {e}")
         
         logging.info("OrekitOrbitPropagator initialized successfully")
     
+    def _ensure_jvm_running(self):
+        """Ensure the JVM is started before any Orekit call, especially in forked processes."""
+        if not jpype.isJVMStarted():
+            logging.warning("JVM not running in this process. Restarting for Orekit...")
+            try:
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                orekit_jar_path = os.path.join(current_dir, '..', 'orekit_lib')
+                jar_files = [os.path.join(orekit_jar_path, f) for f in os.listdir(orekit_jar_path) if f.endswith('.jar')]
+                
+                # Check if a JVM has ever been started in this process
+                if jpype.isJVMStarted():
+                     # This case is complex; a simple restart might not be safe.
+                     # For now, we log a critical error. A more advanced solution
+                     # might involve atexit handlers or a centralized JVM manager.
+                     logging.critical("JVM was started and has shut down. A clean restart is not guaranteed.")
+                
+                jpype.startJVM(classpath=jar_files, convertStrings=False)
+                oj.initVM() # Re-initialize orekit_jpype for the new JVM instance
+                self._setup_minimal_data() # Re-run data configuration
+                logging.info("✅ JVM restarted and Orekit re-initialized successfully in new process.")
+            except Exception as e:
+                logging.error(f"❌ Failed to restart JVM: {e}", exc_info=True)
+                raise RuntimeError("Could not start or restart JVM for Orekit.")
+
     def _setup_minimal_data(self):
-        # Setup minimal data context for Orekit operations.
+        """Reapply Orekit data registration using the same multi-path logic as initial import.
+
+        This avoids duplicate warnings in forked or reinitialized environments.
+        """
         try:
-            # Data should already be configured via setup_orekit_curdir
-            pass
-            
+            from org.orekit.data import DataContext, DirectoryCrawler
+            from java.io import File
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            candidate_dirs = [
+                os.path.join(current_dir, "orekit-data"),
+                os.path.join(current_dir, "..", "orekit-data"),
+                os.path.abspath(os.path.join(current_dir, "../../orekit-data")),
+                os.environ.get("OREKIT_DATA_PATH", ""),
+            ]
+            candidate_dirs = [d for d in candidate_dirs if d and os.path.isdir(d)]
+            manager = DataContext.getDefault().getDataProvidersManager()
+            for d in candidate_dirs:
+                try:
+                    if os.listdir(d):
+                        manager.clearProviders()
+                        manager.addProvider(DirectoryCrawler(File(d)))
+                        logging.info(f"Re-registered Orekit data directory: {d}")
+                        return
+                except Exception as inner:
+                    logging.debug(f"Skipping Orekit data candidate {d}: {inner}")
+            logging.warning("Orekit data directory still not found during re-init.")
         except Exception as e:
-            logging.warning(f"Could not setup Orekit data context: {e}")
-            # Continue with default context
+            logging.warning(f"Could not setup Orekit data context on re-init: {e}")
     
     def create_orbit_from_elements(self, elements: OrbitElements) -> KeplerianOrbit:
+        self._ensure_jvm_running()
         # Create an Orekit orbit from orbital elements.
         # Convert to SI units
         a = elements.semi_major_axis_km * 1000.0  # m
@@ -315,34 +425,48 @@ class OrekitOrbitPropagator:
     def propagate_orbit(self, elements: OrbitElements, 
                        time_seconds: float,
                        spacecraft_props: Optional[SpacecraftProperties] = None) -> Tuple[np.ndarray, np.ndarray]:
-        # Propagate orbit and return position and velocity.
-        # Returns: Tuple of (position_km, velocity_km_s) as numpy arrays
-        # Create orbit and propagator
-        orbit = self.create_orbit_from_elements(elements)
-        propagator = self.create_propagator(orbit, spacecraft_props)
-        
-        # Propagate to target time
-        target_date = orbit.getDate().shiftedBy(time_seconds)
-        
+        # Optimized propagation with caching.
+        cache_key = (
+            round(elements.semi_major_axis_km, 6),
+            round(elements.eccentricity, 8),
+            round(elements.inclination_deg, 6),
+            round(elements.raan_deg, 6),
+            round(elements.arg_periapsis_deg, 6),
+            round(elements.mean_anomaly_deg, 6)
+        )
+
+        # Initialize cache structure
+        if not hasattr(self, '_cached_propagators'):
+            self._cached_propagators = {}
+
+        propagator_entry = self._cached_propagators.get(cache_key)
+        if propagator_entry is None:
+            # Create new propagator and store initial date
+            orbit = self.create_orbit_from_elements(elements)
+            propagator = self.create_propagator(orbit, spacecraft_props)
+            propagator_entry = {
+                'propagator': propagator,
+                'last_date': orbit.getDate()
+            }
+            self._cached_propagators[cache_key] = propagator_entry
+        else:
+            propagator = propagator_entry['propagator']
+
+        # Determine target date relative to initial orbit epoch
+        target_date = propagator_entry['last_date'].shiftedBy(time_seconds)
+
         try:
             final_state = propagator.propagate(target_date)
-            logging.debug(f"Successfully propagated orbit by {time_seconds} seconds")
+            propagator_entry['last_date'] = target_date
         except Exception as e:
-            logging.error(f"Numerical propagation failed: {e}")
-            # For debugging, let's try to understand why
-            logging.error(f"Propagator type: {type(propagator)}")
-            logging.error(f"Initial orbit: a={orbit.getA()/1000:.1f}km, e={orbit.getE():.4f}, i={math.degrees(orbit.getI()):.1f}°")
-            logging.error(f"Time step: {time_seconds} seconds")
-            
-            # Try to get the initial state at least
+            logging.error(f"Cached propagation failed: {e}")
             try:
                 final_state = propagator.getInitialState()
-                logging.warning("Using initial state as fallback")
+                logging.warning("Using initial state as fallback (cache)")
             except Exception as e2:
-                logging.error(f"Even initial state access failed: {e2}")
-                raise RuntimeError(f"Complete propagation failure: {e}")
-        
-        # Extract position and velocity
+                logging.error(f"Fallback failed for cached propagator: {e2}")
+                raise RuntimeError(f"Propagation failure: {e}")
+
         pv = final_state.getPVCoordinates()
         position = pv.getPosition()
         velocity = pv.getVelocity()
@@ -361,22 +485,167 @@ class OrekitOrbitPropagator:
         ])
         
         return pos_array, vel_array
+
+    # ===== Persistent Incremental Propagation API =====
+    def create_persistent_object(self, key: str, elements: OrbitElements,
+                                 spacecraft_props: Optional[SpacecraftProperties] = None):
+        """Create a persistent propagator/state pair identified by key.
+
+        This allows incremental propagation by small deltas without reconstructing
+        the numerical propagator each call. Safe for performance while keeping
+        full physics fidelity.
+        """
+        if key in self._persistent:
+            return
+        orbit = self.create_orbit_from_elements(elements)
+        propagator = self.create_propagator(orbit, spacecraft_props)
+        state = propagator.getInitialState()
+        self._persistent[key] = {
+            'propagator': propagator,
+            'state': state,
+        }
+
+    def propagate_persistent_delta(self, key: str, delta_t: float) -> Tuple[np.ndarray, np.ndarray]:
+        """Propagate a persistent object forward by delta_t seconds.
+
+        Returns km position and km/s velocity arrays. Raises if key missing.
+        """
+        if key not in self._persistent:
+            raise KeyError(f"Persistent propagator '{key}' not found")
+        entry = self._persistent[key]
+        propagator = entry['propagator']
+        current_state = entry['state']
+        target_date = current_state.getDate().shiftedBy(delta_t)
+        try:
+            new_state = propagator.propagate(target_date)
+            entry['state'] = new_state
+        except Exception as e:
+            logging.error(f"Persistent delta propagation failed: {e}")
+            raise
+        pv = entry['state'].getPVCoordinates()
+        pos_array = np.array([
+            pv.getPosition().getX()/1000.0,
+            pv.getPosition().getY()/1000.0,
+            pv.getPosition().getZ()/1000.0,
+        ])
+        vel_array = np.array([
+            pv.getVelocity().getX()/1000.0,
+            pv.getVelocity().getY()/1000.0,
+            pv.getVelocity().getZ()/1000.0,
+        ])
+        return pos_array, vel_array
+
+    def apply_instantaneous_delta_v(self, key: str, delta_v_km_s: np.ndarray):
+        """Apply an instantaneous delta-v (km/s) to a persistent object's state.
+
+        This approximates impulsive thrust at the current state, creating a new
+        SpacecraftState with modified velocity but same position & mass.
+        """
+        if key not in self._persistent:
+            raise KeyError(f"Persistent propagator '{key}' not found for delta-v application")
+        entry = self._persistent[key]
+        state = entry['state']
+        pv = state.getPVCoordinates()
+        # Build new PVCoordinates with velocity increment
+        try:
+            from org.hipparchus.geometry.euclidean.threed import Vector3D
+            from org.orekit.utils import PVCoordinates
+            new_velocity = Vector3D(
+                pv.getVelocity().getX() + delta_v_km_s[0]*1000.0,
+                pv.getVelocity().getY() + delta_v_km_s[1]*1000.0,
+                pv.getVelocity().getZ() + delta_v_km_s[2]*1000.0,
+            )
+            new_pv = PVCoordinates(pv.getPosition(), new_velocity)
+            from org.orekit.propagation import SpacecraftState
+            updated_state = SpacecraftState(new_pv, state.getAttitude(), state.getMass())
+            entry['state'] = updated_state
+        except Exception as e:
+            logging.error(f"Failed to apply delta-v: {e}")
+            raise
     
     def batch_propagate(self, elements_list: List[OrbitElements], 
-                       time_seconds: float) -> List[Tuple[np.ndarray, np.ndarray]]:
-        # Propagate multiple orbits efficiently.
-        results = []
+                       time_seconds: float, 
+                       use_multiprocessing: bool = None) -> List[Tuple[np.ndarray, np.ndarray]]:
+        """Propagate multiple orbits efficiently.
         
-        for elements in elements_list:
-            try:
-                pos, vel = self.propagate_orbit(elements, time_seconds)
-                results.append((pos, vel))
-            except Exception as e:
-                logging.warning(f"Failed to propagate orbit {elements}: {e}")
-                # Return zero position/velocity as fallback
-                results.append((np.zeros(3), np.zeros(3)))
+        Args:
+            elements_list: List of orbital elements to propagate
+            time_seconds: Time step in seconds
+            use_multiprocessing: Whether to use multiprocessing (auto-detect if None)
+            
+        Returns:
+            List of (position, velocity) tuples
+        """
+        # Determine if multiprocessing should be used
+        if use_multiprocessing is None:
+            if HARDWARE_DETECTION_AVAILABLE:
+                try:
+                    hardware_config = get_optimal_config()
+                    use_multiprocessing = (
+                        hardware_config.use_multiprocessing and 
+                        len(elements_list) >= 4 and  # Only for larger batches
+                        hardware_config.cpu_info.cores_physical >= 2
+                    )
+                except:
+                    use_multiprocessing = False
+            else:
+                # Conservative fallback: use multiprocessing only for large batches on multi-core systems
+                use_multiprocessing = (
+                    len(elements_list) >= 8 and 
+                    multiprocessing.cpu_count() >= 4
+                )
         
-        return results
+        # Single-threaded propagation for small batches or when multiprocessing disabled
+        if not use_multiprocessing or len(elements_list) < 4:
+            results = []
+            for elements in elements_list:
+                try:
+                    pos, vel = self.propagate_orbit(elements, time_seconds)
+                    results.append((pos, vel))
+                except Exception as e:
+                    logging.warning(f"Failed to propagate orbit {elements}: {e}")
+                    # Return zero position/velocity as fallback
+                    results.append((np.zeros(3), np.zeros(3)))
+            return results
+        
+        # Multi-threaded propagation for larger batches
+        try:
+            # Use ThreadPoolExecutor instead of ProcessPoolExecutor to avoid JVM issues
+            # Orekit/JVM doesn't play well with process-based multiprocessing
+            max_workers = min(len(elements_list), multiprocessing.cpu_count())
+            
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                # Submit all propagation tasks
+                future_to_elements = {
+                    executor.submit(self._safe_propagate_single, elements, time_seconds): elements 
+                    for elements in elements_list
+                }
+                
+                results = []
+                for future in concurrent.futures.as_completed(future_to_elements):
+                    try:
+                        pos, vel = future.result()
+                        results.append((pos, vel))
+                    except Exception as e:
+                        elements = future_to_elements[future]
+                        logging.warning(f"Failed to propagate orbit {elements}: {e}")
+                        results.append((np.zeros(3), np.zeros(3)))
+                        
+            logging.debug(f"Batch propagated {len(elements_list)} orbits using {max_workers} threads")
+            return results
+            
+        except Exception as e:
+            logging.warning(f"Multithreaded propagation failed, falling back to sequential: {e}")
+            # Fallback to sequential processing
+            return self.batch_propagate(elements_list, time_seconds, use_multiprocessing=False)
+    
+    def _safe_propagate_single(self, elements: OrbitElements, time_seconds: float) -> Tuple[np.ndarray, np.ndarray]:
+        """Thread-safe single orbit propagation."""
+        try:
+            return self.propagate_orbit(elements, time_seconds)
+        except Exception as e:
+            logging.warning(f"Single orbit propagation failed: {e}")
+            return np.zeros(3), np.zeros(3)
     
     def get_orbital_period(self, elements: OrbitElements) -> float:
         # Calculate orbital period in seconds using Orekit.
@@ -403,33 +672,38 @@ class OrekitOrbitPropagator:
         Returns:
             OrbitElements: Orbital elements derived from Cartesian state
         """
+        self._ensure_jvm_running()
+
         # Convert to SI units (meters and m/s)
         pos_m = position_km * 1000.0
         vel_ms = velocity_km_s * 1000.0
-        
-        # Create Orekit Vector3D objects
-        position = Vector3D(float(pos_m[0]), float(pos_m[1]), float(pos_m[2]))
-        velocity = Vector3D(float(vel_ms[0]), float(vel_ms[1]), float(vel_ms[2]))
-        
+
         # Create epoch
         epoch = AbsoluteDate.createMJDDate(int(epoch_mjd), epoch_mjd % 1.0, self.utc)
-        
-        # Create PVCoordinates and CartesianOrbit
-        pv = PVCoordinates(position, velocity)
-        cartesian_orbit = CartesianOrbit(pv, self.gcrf, epoch, Constants.WGS84_EARTH_MU)
-        
-        # Convert to KeplerianOrbit for element extraction
-        keplerian_orbit = KeplerianOrbit(cartesian_orbit)
+
+        try:
+            # Create Orekit Vector3D objects
+            position_vec = Vector3D(float(pos_m[0]), float(pos_m[1]), float(pos_m[2]))
+            velocity_vec = Vector3D(float(vel_ms[0]), float(vel_ms[1]), float(vel_ms[2]))
+
+            # Create PVCoordinates and Cartesian orbit
+            pv = PVCoordinates(position_vec, velocity_vec)
+            cartesian_orbit = CartesianOrbit(pv, self.gcrf, epoch, Constants.WGS84_EARTH_MU)
+            keplerian_orbit = KeplerianOrbit(cartesian_orbit)
+        except Exception as e:
+            logging.error(f"Failed to create orbit from PV coordinates: {e}")
+            raise
         
         # Extract orbital elements
-        semi_major_axis_km = keplerian_orbit.getA() / 1000.0  # Convert to km
+        semi_major_axis_km = keplerian_orbit.getA() / 1000.0
         eccentricity = keplerian_orbit.getE()
         inclination_deg = math.degrees(keplerian_orbit.getI())
-        raan_deg = math.degrees(keplerian_orbit.getRightAscensionOfAscendingNode()) 
+        raan_deg = math.degrees(keplerian_orbit.getRightAscensionOfAscendingNode())
+        
         arg_periapsis_deg = math.degrees(keplerian_orbit.getPerigeeArgument())
         mean_anomaly_deg = math.degrees(keplerian_orbit.getMeanAnomaly())
         
-        return OrbitElements(
+        elements = OrbitElements(
             semi_major_axis_km=semi_major_axis_km,
             eccentricity=eccentricity,
             inclination_deg=inclination_deg,
@@ -438,6 +712,12 @@ class OrekitOrbitPropagator:
             mean_anomaly_deg=mean_anomaly_deg,
             epoch_mjd=epoch_mjd
         )
+        # Invalidate cache if mean anomaly/orientation changed significantly
+        if hasattr(self, '_cached_propagators'):
+            # Simple heuristic: clear full cache if updated orbit differs from any existing key in a major element
+            # (Thrust maneuvers will change velocity instantly making cache stale.)
+            self._cached_propagators.clear()
+        return elements
 
 
 def create_propagator() -> OrekitOrbitPropagator:

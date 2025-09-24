@@ -1,3 +1,21 @@
+"""Legacy shim for rl_algorithms re-exporting modern implementations."""
+from __future__ import annotations
+import sys
+from pathlib import Path
+import warnings
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / 'src'
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+warnings.warn(
+    "Importing rl_algorithms from legacy location is deprecated. Use 'orbital_avoidance.rl_algorithms' instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+from orbital_avoidance.rl_algorithms import *  # noqa: F401,F403
 #!/usr/bin/env python3
 """
 Modular RL Algorithm Framework
@@ -18,11 +36,15 @@ from __future__ import annotations
 import os
 import json
 import time
+import sys
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional, Callable, List, Tuple
 import numpy as np
 import gymnasium as gym
 from pathlib import Path
+
+# Add parent directory to path for hardware detection import
+sys.path.append(str(Path(__file__).parent.parent))
 
 try:
     from stable_baselines3 import PPO, SAC, TD3, A2C, DQN
@@ -39,187 +61,30 @@ except ImportError:
     STABLE_BASELINES_AVAILABLE = False
     print("Warning: stable-baselines3 not available. Install with: pip install stable-baselines3")
 
+try:
+    from hardware_detection import get_optimal_config, configure_ml_frameworks, HardwareConfig
+    HARDWARE_DETECTION_AVAILABLE = True
+except ImportError:
+    HARDWARE_DETECTION_AVAILABLE = False
+    print("Warning: hardware_detection module not available. Using default CPU settings.")
+
 import logging
 logger = logging.getLogger(__name__)
+"""Backward compatibility wrapper for RL algorithms module.
 
-
-class RLAlgorithmBase(ABC):
-    """Base class for RL algorithm wrappers."""
-    
-    def __init__(self, env: gym.Env, config: Dict[str, Any]):
-        self.env = env
-        self.config = config
-        self.model = None
-        self.training_history = []
-        
-    @abstractmethod
-    def create_model(self) -> Any:
-        """Create the RL model instance."""
-        pass
-    
-    @abstractmethod
-    def train(self, total_timesteps: int, **kwargs) -> Dict[str, Any]:
-        """Train the model."""
-        pass
-    
-    @abstractmethod
-    def predict(self, observation: np.ndarray, deterministic: bool = True) -> Tuple[np.ndarray, Optional[np.ndarray]]:
-        """Predict action from observation."""
-        pass
-    
-    @abstractmethod
-    def save(self, path: str) -> None:
-        """Save the trained model."""
-        pass
-    
-    @abstractmethod
-    def load(self, path: str) -> None:
-        """Load a trained model."""
-        pass
-
-
-class PPOAlgorithm(RLAlgorithmBase):
-    """Proximal Policy Optimization (PPO) algorithm wrapper."""
-    
-    def __init__(self, env: gym.Env, config: Dict[str, Any]):
-        super().__init__(env, config)
-        self.default_config = {
-            'learning_rate': 3e-4,
-            'n_steps': 2048,
-            'batch_size': 64,
-            'n_epochs': 10,
-            'gamma': 0.99,
-            'gae_lambda': 0.95,
-            'clip_range': 0.2,
-            'ent_coef': 0.0,
-            'vf_coef': 0.5,
-            'max_grad_norm': 0.5,
-            'use_sde': False,
-            'policy': 'MlpPolicy',
-            'policy_kwargs': {
-                'net_arch': dict(pi=[256, 256], vf=[256, 256])
-            }
-        }
-        
-    def create_model(self) -> PPO:
-        """Create PPO model with configured parameters."""
-        if not STABLE_BASELINES_AVAILABLE:
-            raise ImportError("stable-baselines3 required for PPO")
-            
-        # Merge default and user config
-        model_config = {**self.default_config, **self.config.get('ppo', {})}
-        
-        self.model = PPO(
-            policy=model_config['policy'],
-            env=self.env,
-            learning_rate=model_config['learning_rate'],
-            n_steps=model_config['n_steps'],
-            batch_size=model_config['batch_size'],
-            n_epochs=model_config['n_epochs'],
-            gamma=model_config['gamma'],
-            gae_lambda=model_config['gae_lambda'],
-            clip_range=model_config['clip_range'],
-            ent_coef=model_config['ent_coef'],
-            vf_coef=model_config['vf_coef'],
-            max_grad_norm=model_config['max_grad_norm'],
-            use_sde=model_config['use_sde'],
-            policy_kwargs=model_config['policy_kwargs'],
+The implementation moved to `orbital_avoidance.algo.rl_algorithms`.
+"""
+import warnings
+warnings.warn(
+    "Importing 'rl_algorithms' from the old location is deprecated. Use 'from orbital_avoidance.algo import rl_algorithms' instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
+from orbital_avoidance.algo.rl_algorithms import *  # noqa: F401,F403
             verbose=1
         )
         
-        return self.model
-    
-    def train(self, total_timesteps: int, **kwargs) -> Dict[str, Any]:
-        """Train PPO model."""
-        if self.model is None:
-            self.create_model()
-            
-        start_time = time.time()
-        self.model.learn(total_timesteps=total_timesteps, **kwargs)
-        training_time = time.time() - start_time
-        
-        training_info = {
-            'algorithm': 'PPO',
-            'total_timesteps': total_timesteps,
-            'training_time': training_time,
-            'final_reward': list(getattr(self.model, 'ep_info_buffer', []))
-        }
-        
-        self.training_history.append(training_info)
-        return training_info
-    
-    def predict(self, observation: np.ndarray, deterministic: bool = True) -> Tuple[np.ndarray, Optional[np.ndarray]]:
-        """Predict action using trained PPO model."""
-        if self.model is None:
-            raise ValueError("Model not trained yet. Call train() first.")
-        
-        return self.model.predict(observation, deterministic=deterministic)
-    
-    def save(self, path: str) -> None:
-        """Save PPO model."""
-        if self.model is not None:
-            self.model.save(path)
-            # Save training history
-            history_path = Path(path).parent / f"{Path(path).stem}_history.json"
-            with open(history_path, 'w') as f:
-                json.dump(self.training_history, f, indent=2)
-    
-    def load(self, path: str) -> None:
-        """Load PPO model."""
-        if not STABLE_BASELINES_AVAILABLE:
-            raise ImportError("stable-baselines3 required for PPO")
-        self.model = PPO.load(path, env=self.env)
-
-
-class SACAlgorithm(RLAlgorithmBase):
-    """Soft Actor-Critic (SAC) algorithm wrapper."""
-    
-    def __init__(self, env: gym.Env, config: Dict[str, Any]):
-        super().__init__(env, config)
-        self.default_config = {
-            'learning_rate': 3e-4,
-            'buffer_size': 1000000,
-            'learning_starts': 100,
-            'batch_size': 256,
-            'tau': 0.005,
-            'gamma': 0.99,
-            'train_freq': 1,
-            'gradient_steps': 1,
-            'ent_coef': 'auto',
-            'target_update_interval': 1,
-            'target_entropy': 'auto',
-            'use_sde': False,
-            'policy': 'MlpPolicy',
-            'policy_kwargs': {
-                'net_arch': [256, 256]
-            }
-        }
-    
-    def create_model(self) -> SAC:
-        """Create SAC model with configured parameters."""
-        if not STABLE_BASELINES_AVAILABLE:
-            raise ImportError("stable-baselines3 required for SAC")
-            
-        model_config = {**self.default_config, **self.config.get('sac', {})}
-        
-        self.model = SAC(
-            policy=model_config['policy'],
-            env=self.env,
-            learning_rate=model_config['learning_rate'],
-            buffer_size=model_config['buffer_size'],
-            learning_starts=model_config['learning_starts'],
-            batch_size=model_config['batch_size'],
-            tau=model_config['tau'],
-            gamma=model_config['gamma'],
-            train_freq=model_config['train_freq'],
-            gradient_steps=model_config['gradient_steps'],
-            ent_coef=model_config['ent_coef'],
-            target_update_interval=model_config['target_update_interval'],
-            target_entropy=model_config['target_entropy'],
-            use_sde=model_config['use_sde'],
-            policy_kwargs=model_config['policy_kwargs'],
-            verbose=1
-        )
+        logger.info(f"SAC model created with batch_size={model_config['batch_size']}, buffer_size={model_config['buffer_size']}, device={getattr(self, 'device', 'cpu')}")
         
         return self.model
     
@@ -294,6 +159,32 @@ class TD3Algorithm(RLAlgorithmBase):
             
         model_config = {**self.default_config, **self.config.get('td3', {})}
         
+        # Apply hardware-specific optimizations
+        if hasattr(self, 'hardware_config') and self.hardware_config:
+            # Adjust batch size and buffer size based on available memory
+            if self.hardware_config.use_gpu and self.hardware_config.gpu_info:
+                gpu_memory_gb = self.hardware_config.gpu_info[0].memory_total_mb / 1024
+                if gpu_memory_gb >= 8:
+                    model_config['batch_size'] = min(256, model_config['batch_size'] * 2)
+                    model_config['buffer_size'] = min(2000000, model_config['buffer_size'] * 2)
+                elif gpu_memory_gb < 4:
+                    model_config['batch_size'] = max(64, model_config['batch_size'] // 2)
+                    model_config['buffer_size'] = max(500000, model_config['buffer_size'] // 2)
+            else:
+                # For CPU: adjust based on available RAM
+                ram_gb = self.hardware_config.cpu_info.memory_available_gb
+                if ram_gb >= 16:
+                    model_config['batch_size'] = min(256, model_config['batch_size'] * 2)
+                elif ram_gb < 8:
+                    model_config['batch_size'] = max(64, model_config['batch_size'] // 2)
+                    model_config['buffer_size'] = max(500000, model_config['buffer_size'] // 2)
+            
+            # Set device in policy kwargs if using GPU
+            if self.hardware_config.use_gpu:
+                if 'policy_kwargs' not in model_config:
+                    model_config['policy_kwargs'] = {}
+                model_config['policy_kwargs']['device'] = self.device
+        
         self.model = TD3(
             policy=model_config['policy'],
             env=self.env,
@@ -311,6 +202,8 @@ class TD3Algorithm(RLAlgorithmBase):
             policy_kwargs=model_config['policy_kwargs'],
             verbose=1
         )
+        
+        logger.info(f"TD3 model created with batch_size={model_config['batch_size']}, buffer_size={model_config['buffer_size']}, device={getattr(self, 'device', 'cpu')}")
         
         return self.model
     

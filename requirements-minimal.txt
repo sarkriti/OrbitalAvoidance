@@ -1,0 +1,27 @@
+# Minimal Requirements for Orbital Avoidance RL Training
+# Core dependencies only - other packages will be installed automatically
+
+# Core ML and RL (with specific versions for compatibility)
+torch>=2.8.0
+tensorflow==2.15.0
+stable-baselines3>=2.7.0
+gymnasium>=1.2.0
+
+# Scientific Computing (pinned for TensorFlow compatibility)
+numpy==1.26.4
+pandas>=2.3.0
+matplotlib>=3.10.0
+
+# Orbital Mechanics
+orekit-jpype>=13.1.1.0
+jpype1>=1.6.0
+
+# Hardware Detection
+psutil>=7.1.0
+
+# Essential Utilities
+PyYAML>=6.0.0
+h5py>=3.14.0
+
+# Critical for TensorFlow compatibility
+protobuf==3.20.3

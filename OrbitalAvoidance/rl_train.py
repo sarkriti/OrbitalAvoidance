@@ -16,6 +16,7 @@ Features:
 - Automatic logging and checkpointing
 - Evaluation and visualization
 - Resume training from checkpoints
+- Automatic CPU/GPU detection and optimization
 """
 
 import argparse
@@ -27,12 +28,97 @@ from typing import Dict, Any, Optional
 import numpy as np
 import logging
 
-# Add the current directory to Python path for imports
+# Ensure src directory is on path for new package layout
+REPO_ROOT = Path(__file__).resolve().parent.parent
+SRC_DIR = REPO_ROOT / 'src'
+if SRC_DIR.exists():
+    sys.path.insert(0, SRC_DIR.as_posix())
+
+# Legacy self-directory also (for wrappers / backward compatibility)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from rl_training_env import RLOrbitalEnvironment, create_rl_environment
-from rl_algorithms import RLAlgorithmFactory, TrainingManager, RewardFunctionManager
-from config_system import ConfigurationLoader
+try:
+    # Require the new unified package (src/ should be on PYTHONPATH or installed)
+    from orbital_avoidance import (
+        RLOrbitalEnvironment, create_rl_environment,
+        RLAlgorithmFactory, TrainingManager, RewardFunctionManager,
+        ConfigurationLoader
+    )
+except ImportError as e:
+    raise ImportError(
+        "Failed to import the modern 'orbital_avoidance' package.\n"
+        "Make sure you run this script with the repository 'src' directory on PYTHONPATH (e.g. `PYTHONPATH=./src python rl_train.py`)"
+        " or install the package in editable mode: `pip install -e src`.\n"
+        f"Original import error: {e}"
+    )
+
+# -------------------------------------------------------------
+# Path resolution helpers (scenarios & training configs)
+# -------------------------------------------------------------
+LEGACY_SCENARIO_DIRS = [
+    REPO_ROOT / 'scenarios',
+    REPO_ROOT / 'OrbitalAvoidance' / 'scenarios'
+]
+NEW_SCENARIO_DIR = REPO_ROOT / 'configs' / 'scenarios'
+LEGACY_TRAINING_DIRS = [REPO_ROOT / 'training_configs']
+NEW_TRAINING_DIR = REPO_ROOT / 'configs' / 'training'
+
+def resolve_config_path(path_str: str, kind: str) -> str:
+    """Resolve scenario or training config path with backward compatibility.
+
+    Args:
+        path_str: User-supplied path (may be relative like 'scenarios/foo.json')
+        kind: 'scenario' or 'training'
+    Returns:
+        Absolute path to existing file.
+    Raises:
+        FileNotFoundError if not found in any known location.
+    """
+    p = Path(path_str)
+    # If already exists as given
+    if p.exists():
+        return p.as_posix()
+    candidates = []
+    if kind == 'scenario':
+        # If user passed legacy relative 'scenarios/...'
+        if p.parts and p.parts[0] == 'scenarios':
+            candidates.append(NEW_SCENARIO_DIR / '/'.join(p.parts[1:]))
+        # Strip any leading scenarios/ and try in new dir
+        candidates.append(NEW_SCENARIO_DIR / p.name)
+        # Legacy dirs
+        for d in LEGACY_SCENARIO_DIRS:
+            candidates.append(d / p.name)
+    elif kind == 'training':
+        if p.parts and p.parts[0] in ('training_configs', 'configs'):
+            # Replace prefix with new path
+            if p.parts[0] == 'training_configs':
+                candidates.append(NEW_TRAINING_DIR / '/'.join(p.parts[1:]))
+        candidates.append(NEW_TRAINING_DIR / p.name)
+        for d in LEGACY_TRAINING_DIRS:
+            candidates.append(d / p.name)
+    else:
+        raise ValueError(f"Unknown config kind: {kind}")
+    for c in candidates:
+        if c.exists():
+            if str(c).startswith(str(NEW_SCENARIO_DIR)) or str(c).startswith(str(NEW_TRAINING_DIR)):
+                logger.info(f"Resolved {kind} path '{path_str}' -> '{c}' (new location)")
+            else:
+                logger.info(f"Resolved {kind} path '{path_str}' -> '{c}' (legacy location)")
+            return c.as_posix()
+    raise FileNotFoundError(f"Could not resolve {kind} config path: {path_str}. Tried: {[c.as_posix() for c in candidates]}")
+
+try:
+    from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+    VEC_ENV_AVAILABLE = True
+except ImportError:
+    VEC_ENV_AVAILABLE = False
+
+try:
+    from hardware_detection import print_hardware_info, configure_ml_frameworks
+    HARDWARE_DETECTION_AVAILABLE = True
+except ImportError:
+    HARDWARE_DETECTION_AVAILABLE = False
+    print("Warning: Hardware detection not available. Using default settings.")
 
 # Setup logging
 logging.basicConfig(
@@ -44,8 +130,52 @@ logger = logging.getLogger(__name__)
 
 def load_training_config(config_file: str) -> Dict[str, Any]:
     """Load training configuration from JSON file."""
-    with open(config_file, 'r') as f:
-        return json.load(f)
+    # Try to resolve as training config first, then as scenario
+    try:
+        resolved = resolve_config_path(config_file, kind='training')
+    except FileNotFoundError:
+        # If not found as training config, try as scenario
+        resolved = resolve_config_path(config_file, kind='scenario')
+    
+    with open(resolved, 'r') as f:
+        config = json.load(f)
+    
+    # If this is a scenario file (doesn't have training section), add defaults
+    if 'training' not in config:
+        config.update({
+            'algorithm': 'ppo',
+            'scenario_file': config_file,
+            'reward_function': 'balanced',
+            'training': {
+                'total_timesteps': 50000,
+                'checkpoint_freq': 10000,
+                'eval_freq': 5000,
+                'reward_threshold': None,
+                'save_best_only': True
+            },
+            'environment': {
+                'max_debris_tracked': 10,
+                'render_mode': None,
+                'scenario_file': config_file,
+                'episode_horizon': 1000
+            },
+            'output': {
+                'log_dir': 'training_logs',
+                'save_dir': 'trained_models',
+                'experiment_name': 'scenario_training'
+            },
+            'ppo': {
+                'learning_rate': 3e-4,
+                'n_steps': 2048,
+                'batch_size': 64,
+                'n_epochs': 10,
+                'clip_range': 0.2,
+                'gae_lambda': 0.95,
+                'gamma': 0.99,
+            }
+        })
+    
+    return config
 
 
 def create_training_config(args) -> Dict[str, Any]:
@@ -66,22 +196,35 @@ def create_training_config(args) -> Dict[str, Any]:
         },
         'environment': {
             'max_debris_tracked': args.max_debris,
-            'render_mode': None
+            'render_mode': None,
+            'scenario_file': args.scenario,
+            'episode_horizon': args.episode_horizon
         },
         'output': {
             'log_dir': args.log_dir,
             'save_dir': args.save_dir,
             'experiment_name': args.experiment_name
-        }
+        },
+        # Hardware configuration
+        'prefer_gpu': getattr(args, 'prefer_gpu', True),
+        'gpu_memory_fraction': getattr(args, 'gpu_memory_fraction', 0.8),
+        'max_threads': getattr(args, 'max_threads', None)
     }
     
     # Add algorithm-specific configuration
     if args.algorithm == 'ppo':
         config['ppo'] = {
             'learning_rate': args.learning_rate,
-            'n_steps': 2048,
-            'batch_size': 64,
-            'n_epochs': 10,
+            'n_steps': args.n_steps,
+            'batch_size': args.batch_size,
+            'n_epochs': args.n_epochs,
+            'clip_range': args.clip_range,
+            'gae_lambda': args.gae_lambda,
+            'gamma': args.gamma,
+            # Optional advanced PPO hyperparameters
+            'ent_coef': getattr(args, 'ent_coef', None) if getattr(args, 'ent_coef', None) is not None else 0.0,
+            'vf_coef': getattr(args, 'vf_coef', None) if getattr(args, 'vf_coef', None) is not None else 0.5,
+            'max_grad_norm': getattr(args, 'max_grad_norm', None) if getattr(args, 'max_grad_norm', None) is not None else 0.5,
         }
     elif args.algorithm == 'sac':
         config['sac'] = {
@@ -101,29 +244,88 @@ def create_training_config(args) -> Dict[str, Any]:
 
 def setup_environment(config: Dict[str, Any]) -> RLOrbitalEnvironment:
     """Setup the RL training environment."""
-    logger.info(f"Setting up environment with scenario: {config['environment']['scenario_file']}")
+    
+    # Handle both formats: scenario files directly and training configs with environment sections
+    if 'environment' in config:
+        # Full training config format
+        scenario_file = config['environment']['scenario_file']
+        max_debris = config['environment'].get('max_debris_tracked', 10)
+        render_mode = config['environment'].get('render_mode', None)
+        env_config = config['environment']
+    else:
+        # Simple scenario file format - use scenario_file at top level with defaults
+        scenario_file = config.get('scenario_file', config.get('config', 'scenarios/leo_debris_avoidance.json'))
+        max_debris = config.get('max_debris_tracked', 10)
+        render_mode = config.get('render_mode', None)
+        env_config = config
+    
+    logger.info(f"Setting up environment with scenario: {scenario_file}")
     
     # Get reward configuration - support both old and new formats
     reward_config = None
-    if 'environment' in config and 'use_improved_rewards' in config['environment']:
+    if 'use_improved_rewards' in env_config:
         # New format with improved rewards
-        reward_config = config['environment'].copy()
+        reward_config = env_config.copy()
     elif 'reward_function' in config:
         # Old format
         reward_manager = RewardFunctionManager()
         reward_config = reward_manager.get_reward_config(config['reward_function'])
     
     # Create environment with proper parameters
+    scenario_path = resolve_config_path(scenario_file, kind='scenario')
     env_params = {
-        'config_file': config['environment']['scenario_file'],
-        'max_debris_tracked': config['environment'].get('max_debris_tracked', 10),
-        'render_mode': config['environment'].get('render_mode', None)
+        'config_file': scenario_path,
+        'max_debris_tracked': max_debris,
+        'render_mode': render_mode
     }
     
     if reward_config:
         env_params['reward_config'] = reward_config
     
     env = create_rl_environment(**env_params)
+
+    # Wrap with Monitor BEFORE any vector/normalization wrappers so SB3 logs ep_rew_mean
+    try:
+        from stable_baselines3.common.monitor import Monitor
+        import os
+        log_dir = config.get('output', {}).get('log_dir', './logs')
+        os.makedirs(log_dir, exist_ok=True)
+        # Use a log file to track episode statistics
+        monitor_file = os.path.join(log_dir, "monitor.csv")
+        env = Monitor(env, filename=monitor_file)
+        logger.info(f"Environment wrapped with Monitor, logging to: {monitor_file}")
+    except Exception as e:
+        logger.warning(f"Could not wrap env with Monitor: {e}")
+
+    # Optional TimeLimit wrapper for shorter episodes (for better ep_rew_mean signal)
+    episode_horizon = config.get('environment', {}).get('episode_horizon')
+    if episode_horizon and episode_horizon > 0:
+        try:
+            import gymnasium as gym
+            from gymnasium.wrappers import TimeLimit
+            env = TimeLimit(env, max_episode_steps=episode_horizon)
+            logger.info(f"Applied TimeLimit wrapper with horizon={episode_horizon}")
+        except Exception as e:
+            logger.warning(f"Failed to apply TimeLimit wrapper: {e}")
+
+    # Optionally wrap in VecNormalize (only at training time, not for evaluation unless stats loaded)
+    norm_cfg = config.get('normalization', {})
+    if norm_cfg.get('enabled') and VEC_ENV_AVAILABLE:
+        # Use DummyVecEnv wrapper
+        env_vec = DummyVecEnv([lambda: env])
+        env = VecNormalize(
+            env_vec,
+            training=True,
+            norm_obs=norm_cfg.get('norm_obs', True),
+            norm_reward=norm_cfg.get('norm_reward', True),
+            clip_obs=norm_cfg.get('clip_obs', 10.0),
+            clip_reward=norm_cfg.get('clip_reward', 10.0),
+            gamma=config.get('ppo', {}).get('gamma', 0.99)
+        )
+        logger.info(f"VecNormalize enabled (obs={norm_cfg.get('norm_obs', True)} reward={norm_cfg.get('norm_reward', True)})")
+    else:
+        if norm_cfg.get('enabled') and not VEC_ENV_AVAILABLE:
+            logger.warning("VecNormalize requested but stable_baselines3 not providing vec_env modules")
     
     logger.info(f"Environment created successfully")
     logger.info(f"Observation space: {env.observation_space}")
@@ -161,7 +363,16 @@ def train_agent(config: Dict[str, Any]) -> Dict[str, Any]:
     
     if save_best_only:
         logger.info("Creating evaluation environment for best model selection")
+        # For eval env we disable normalization training mode
         eval_env = setup_environment(config)
+        # If VecNormalize was used, set eval_env training False
+        try:
+            from stable_baselines3.common.vec_env import VecNormalize as VN
+            if isinstance(env, VN):
+                # Create a separate stats copy for evaluation (shared stats) if needed
+                eval_env.training = False
+        except Exception:
+            pass
     else:
         logger.info("Skipping evaluation environment (checkpoint-based saving)")
         eval_env = None
@@ -199,6 +410,16 @@ def train_agent(config: Dict[str, Any]) -> Dict[str, Any]:
         reward_threshold=training_config.get('reward_threshold'),
         save_best_only=save_best_only
     )
+
+    # If using VecNormalize, save statistics
+    try:
+        from stable_baselines3.common.vec_env import VecNormalize as VN
+        if isinstance(env, VN):
+            stats_path = Path(output_config['save_dir']) / output_config['experiment_name'] / 'vecnormalize_stats.pkl'
+            env.save(stats_path.as_posix())
+            logger.info(f"Saved VecNormalize statistics to {stats_path}")
+    except Exception as e:
+        logger.warning(f"Could not save VecNormalize stats: {e}")
     
     logger.info("Training completed successfully")
     logger.info(f"Training info: {training_info}")
@@ -299,11 +520,32 @@ def test_agent(model_path: str, scenario_file: str, num_episodes: int = 10) -> D
 
 def main():
     """Main training script entry point."""
+    
+    # Initialize hardware detection and optimization
+    if HARDWARE_DETECTION_AVAILABLE:
+        print("🔍 Detecting and configuring hardware resources...")
+        try:
+            hardware_config = print_hardware_info()
+            configure_ml_frameworks(hardware_config)
+            print("✅ Hardware configuration complete!")
+        except Exception as e:
+            logger.warning(f"Hardware detection failed, using defaults: {e}")
+    else:
+        print("⚠️  Hardware detection not available, using default CPU settings")
+    
     parser = argparse.ArgumentParser(description='Train RL agent for orbital debris avoidance')
     
     # Mode selection
     parser.add_argument('--mode', choices=['train', 'test'], default='train',
                        help='Mode: train a new agent or test an existing one')
+    
+    # Hardware configuration
+    parser.add_argument('--prefer-gpu', action='store_true', default=True,
+                       help='Prefer GPU over CPU when available (default: True)')
+    parser.add_argument('--gpu-memory-fraction', type=float, default=0.8,
+                       help='Fraction of GPU memory to use (0.1-1.0, default: 0.8)')
+    parser.add_argument('--max-threads', type=int,
+                       help='Maximum number of CPU threads to use (default: auto-detect)')
     
     # Training configuration
     parser.add_argument('--algorithm', choices=['ppo', 'sac', 'td3'], default='ppo',
@@ -320,6 +562,38 @@ def main():
                        help='Total training timesteps')
     parser.add_argument('--learning-rate', type=float, default=3e-4,
                        help='Learning rate')
+    parser.add_argument('--n-steps', type=int, default=2048,
+                       help='PPO rollout size (reduce e.g. 256 for faster early feedback)')
+    parser.add_argument('--episode-horizon', type=int, default=0,
+                       help='Force episode truncation at this many steps (0=disable)')
+    parser.add_argument('--batch-size', type=int, default=64,
+                       help='PPO batch size')
+    parser.add_argument('--n-epochs', type=int, default=10,
+                       help='PPO epochs per update (consider 5 for noisy rewards)')
+    # Advanced PPO hyperparameters (optional)
+    parser.add_argument('--ent-coef', type=float, default=None,
+                       help='Entropy coefficient for PPO (optional)')
+    parser.add_argument('--vf-coef', type=float, default=None,
+                       help='Value function coefficient for PPO (optional)')
+    parser.add_argument('--max-grad-norm', type=float, default=None,
+                       help='Max gradient norm for optimizer (optional)')
+    parser.add_argument('--clip-range', type=float, default=0.2,
+                       help='PPO clip range')
+    parser.add_argument('--gae-lambda', type=float, default=0.95,
+                       help='GAE lambda')
+    parser.add_argument('--gamma', type=float, default=0.99,
+                       help='Discount factor')
+    # Normalization flags
+    parser.add_argument('--normalize', action='store_true', default=False,
+                       help='Enable observation & reward normalization (VecNormalize)')
+    parser.add_argument('--norm-obs', action='store_true', default=False,
+                       help='Normalize observations (requires --normalize)')
+    parser.add_argument('--norm-reward', action='store_true', default=False,
+                       help='Normalize rewards (requires --normalize)')
+    parser.add_argument('--clip-obs', type=float, default=10.0,
+                       help='Observation clip value for normalization')
+    parser.add_argument('--clip-reward', type=float, default=10.0,
+                       help='Reward clip value for normalization')
     parser.add_argument('--checkpoint-freq', type=int, default=10000,
                        help='Checkpoint save frequency')
     parser.add_argument('--eval-freq', type=int, default=5000,
@@ -358,6 +632,14 @@ def main():
                 config = load_training_config(args.config)
             else:
                 config = create_training_config(args)
+                if args.normalize:
+                    config['normalization'] = {
+                        'enabled': True,
+                        'norm_obs': args.norm_obs or True,  # default True when enabled
+                        'norm_reward': args.norm_reward or True,  # default True when enabled
+                        'clip_obs': args.clip_obs,
+                        'clip_reward': args.clip_reward
+                    }
             
             # Start training
             training_info = train_agent(config)
