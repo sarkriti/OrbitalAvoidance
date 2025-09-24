@@ -25,10 +25,14 @@ import threading
 from pathlib import Path
 import numpy as np
 
-# Add project path
+# Add project path and prefer `src/` for the modern package layout
 if __package__ in (None, ""):
     this_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(this_dir, os.pardir))
+    src_path = os.path.join(project_root, 'src')
+    # Prefer the `src` directory so `import orbital_avoidance...` resolves to the modern implementation
+    if os.path.isdir(src_path) and src_path not in sys.path:
+        sys.path.insert(0, src_path)
     if project_root not in sys.path:
         sys.path.insert(0, project_root)
 
@@ -40,8 +44,8 @@ except ImportError:
     STABLE_BASELINES_AVAILABLE = False
     print("Warning: stable-baselines3 not available. RL agents disabled.")
 
-from OrbitalAvoidance.rl_training_env import create_rl_environment
-from OrbitalAvoidance.orekit_physics import (
+from orbital_avoidance.envs.rl_training_env import create_rl_environment
+from orbital_avoidance.physics.orekit_physics import (
     create_propagator, OrbitElements, convert_to_orbit_elements
 )
 import numpy as np

@@ -60,6 +60,8 @@
       "mass_range_kg": [0.1, 50],
       "size_range_m": [0.05, 1.0],
       "distribution_type": "realistic"
+      ,
+      "enable_dynamics": true
     }
   ],
   "static_debris": [],

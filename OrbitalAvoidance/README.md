@@ -4,17 +4,29 @@ A high-precision orbital simulation environment with Orekit physics backend, mul
 
 ## 🚀 Quick Start
 
+The repository uses a canonical source package under `src/orbital_avoidance`. For development you can either add `./src` to `PYTHONPATH` or install the package in editable mode.
+
+Development (no install):
 ```bash
-# Basic single-agent environment
-from OrbitalAvoidance import ConfigurableOrbitalEnvironment
+export PYTHONPATH=./src:./OrbitalAvoidance
+export OREKIT_DATA=./orekit-data   # point at a downloaded orekit-data directory
+python OrbitalAvoidance/enhanced_web_simulator.py --config scenarios/leo_debris_avoidance.json --port 8081
+```
+
+Recommended (editable install):
+```bash
+pip install -e .
+export OREKIT_DATA=./orekit-data
+python -m orbital_avoidance.enhanced_web_simulator --config scenarios/leo_debris_avoidance.json
+```
+
+Python imports (after editable-install):
+```python
+from orbital_avoidance.envs.configurable_env import ConfigurableOrbitalEnvironment
 env = ConfigurableOrbitalEnvironment(config_file="scenarios/leo_debris_avoidance.json")
 
-# Multi-agent environment  
-from OrbitalAvoidance import MultiAgentOrbitalAvoidance
+from orbital_avoidance.envs.multiagent_env import MultiAgentOrbitalAvoidance
 env = MultiAgentOrbitalAvoidance(config_file="scenarios/multi_satellite_constellation.json")
-
-# Web simulator (visual interface)
-python web_simulator_realistic.py
 ```
 
 ## 📋 Table of Contents
@@ -35,54 +47,64 @@ python web_simulator_realistic.py
 ## 🔧 Installation & Dependencies
 
 ### Required Dependencies
+We recommend installing dependencies in a virtual environment. Key Python packages used by the project include:
+
 ```bash
-# Core physics engine (requires Java JDK 8+)
-pip install orekit-jpype
-
-# Multi-agent reinforcement learning
-pip install pettingzoo
-
-# Standard scientific computing
-pip install numpy scipy matplotlib gymnasium
-
-# Web interface
-pip install flask
-
-# Configuration handling
-pip install pyyaml
+pip install -e .  # recommended: installs this project and core dependencies from setup
+# Minimum non-editable set (if you prefer manual installs):
+pip install jpype1 orekit-jpype numpy scipy matplotlib gymnasium flask pyyaml pytest
 ```
 
-### Java Setup for Orekit
-Orekit requires Java. Install OpenJDK 8 or higher:
+Notes:
+- `jpype1` and an Orekit wrapper such as `orekit-jpype` (or similar) are required for the Java/Orekit bridge.
+- If you see protobuf/tensorboard import warnings during imports, they are usually benign for simulation but may be fixed by pinning matching versions in a `requirements.txt` or environment yaml.
+
+### Java & Orekit data
+Orekit requires a Java runtime. We recommend Java 11+ (CI uses Temurin 17). Install a JDK and verify `java -version`.
+
 ```bash
 # Ubuntu/Debian
-sudo apt install openjdk-11-jdk
+sudo apt install openjdk-17-jdk
 
 # Verify installation
 java -version
 ```
 
-The system will automatically download Orekit JAR files and IERS data on first run.
+Orekit runtime needs two kinds of supporting files in this repository layout:
+
+- `orekit_lib/` — expected to contain Orekit JARs (the repository includes an `orekit_lib/` folder where JARs should live). Ensure all required JARs are present there.
+- `orekit-data/` — supporting IERS/time/frames data required by Orekit (IERS, Earth orientation, etc.). This data must be present and is required at runtime.
+
+Set the `OREKIT_DATA` environment variable to point to the `orekit-data` directory before running code that initializes Orekit:
+
+```bash
+export OREKIT_DATA=/full/path/to/orekit-data
+# or for development inside the repo:
+export OREKIT_DATA=$(pwd)/orekit-data
+```
+
+Note: the code will not automatically fetch these files in all environments — please download/copy the `orekit-data` bundle and the Orekit JARs into `orekit_lib/` if they are missing. On CI, add a step to download or cache `orekit-data` so propagation-based smoke tests run non-skipped.
 
 ---
 
 ## 🏗️ Core Components
 
-### File Structure
+### File Structure (developer view)
+The canonical implementation is under `src/orbital_avoidance/`. A legacy top-level `OrbitalAvoidance/` folder remains as a backwards-compatibility shim but the modern, maintained code and configuration live in `src/`.
+
+Key paths:
+
 ```
-OrbitalAvoidance/
-├── config_system.py          # 📝 Configuration framework
-├── configurable_env.py       # 🌍 Main environment class  
-├── multiagent_env.py         # 👥 Multi-agent wrapper
-├── orekit_physics.py         # 🔬 High-precision physics
-├── web_simulator_realistic.py # 🌐 Web interface
-├── algorithms.py             # 🧠 RL algorithms
-└── scenarios/                # 📁 Configuration files
-    ├── leo_debris_avoidance.json
-    ├── geo_station_keeping.json
-    ├── multi_satellite_constellation.json
-    └── custom_demo.json
+src/orbital_avoidance/                    # canonical package (preferred)
+src/orbital_avoidance/config/             # configuration dataclasses and loaders
+src/orbital_avoidance/envs/               # environment implementations
+OrbitalAvoidance/                          # legacy shims and convenience scripts
+orekit_lib/                                # should contain Orekit JARs (downloaded)
+orekit-data/                                # supporting Orekit data (downloaded)
+scenarios/                                 # example scenario JSONs
 ```
+
+All scenario and configuration handling is implemented under `src/orbital_avoidance/config`. When editing or adding scenarios prefer that folder and the `src` package.
 
 ### Key Classes
 - **`ConfigurableOrbitalEnvironment`**: Main environment class
@@ -330,8 +352,20 @@ Each controllable satellite becomes an independent agent:
 ## 🌐 Web Interface
 
 ### Launch Web Simulator
+Use one of these approaches depending on whether you installed the package or are running in-tree for development.
+
+Development (no install):
 ```bash
-python web_simulator_realistic.py
+export PYTHONPATH=./src:./OrbitalAvoidance
+export OREKIT_DATA=./orekit-data
+python OrbitalAvoidance/enhanced_web_simulator.py --config scenarios/leo_debris_avoidance.json --port 8081
+```
+
+After editable install (recommended):
+```bash
+pip install -e .
+export OREKIT_DATA=./orekit-data
+python -m orbital_avoidance.enhanced_web_simulator --config scenarios/leo_debris_avoidance.json
 ```
 
 ### Features
@@ -702,28 +736,17 @@ To change debris speeds, modify **altitude ranges**:
 
 ## 🧪 Validation & Testing
 
-The system includes a comprehensive validation suite to ensure research-grade accuracy:
+The repository includes validation scripts and a small propagation smoke test. Note that tests which exercise Orekit propagation require a working Java runtime and `OREKIT_DATA` set to a valid `orekit-data/` directory.
 
+Smoke test (local):
 ```bash
-# Run core research-grade validation (7 essential tests)
-python validation/research_grade_validation.py
-
-# Complete validation suite (all tests)
-python validation/comprehensive_validation_suite.py
-
-# Cross-validation against known orbital data
-python validation/cross_validation_test.py
-
-# Long-term stability analysis
-python validation/long_term_stability_test.py
+export OREKIT_DATA=./orekit-data
+pytest OrbitalAvoidance/tests/test_debris_dynamics.py -q
 ```
 
-**Current Certification Status**: ✅ RESEARCH-GRADE CERTIFIED
-- Core physics: 7/7 tests passing
-- Cross-validation: <0.1% error for typical orbits
-- Performance: 39.2 Hz validated
+CI: a GitHub Actions workflow `.github/workflows/ci-smoke-propagation.yml` is included to run a lightweight propagation smoke test; that workflow installs Java and expects `OREKIT_DATA` to be available in the runner. If you want CI to run propagation tests reliably, add a step to download/copy the `orekit-data` bundle into the runner workspace.
 
-See [`validation/README.md`](validation/README.md) for complete testing documentation.
+For heavier validation scripts see the `validation/` folder; those scripts may assume research-grade data and longer runtimes.
 
 ## 📄 License
 

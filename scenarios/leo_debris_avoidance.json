@@ -1,6 +1,6 @@
 {
-  "scenario_name": "LEO_Debris_Avoidance",
-  "description": "Standard LEO debris avoidance scenario with controllable satellite and multiple debris objects",
+  "scenario_name": "LEO_Debris_Improved_Balanced",
+  "description": "Merged / improved LEO debris avoidance scenario: preserves the original simple layout but adds realistic dynamics, stronger physics, better reward shaping, richer observations, and controlled randomization for stable training.",
   "satellites": [
     {
       "name": "MainSatellite",
@@ -13,26 +13,86 @@
         "mean_anomaly_deg": 0,
         "epoch_mjd": 59945.0
       },
-      "mass_kg": 1000,
+      "mass_kg": 1100,
       "drag_area_m2": 10,
       "drag_coefficient": 2.2,
+      "drag_coefficient_uncertainty": 0.10,
       "radiation_area_m2": 10,
       "radiation_coefficient": 1.8,
       "is_controllable": true,
-      "max_thrust_n": 1.0,
-      "fuel_capacity_kg": 100,
-      "collision_radius_m": 5.0
+      "max_thrust_n": 2.0,
+      "fuel_capacity_kg": 120,
+      "collision_radius_m": 25.0,
+      "attitude_dependent_drag": false,
+      "maneuver_efficiency": 0.9,
+      "delta_v_budget_ms": 150.0
     }
   ],
   "debris_fields": [
     {
-      "num_objects": 20,
-      "altitude_range_km": [380, 420],
-      "inclination_range_deg": [45, 60],
-      "eccentricity_range": [0, 0.05],
-      "mass_range_kg": [1, 100],
-      "size_range_m": [0.1, 2.0],
-      "distribution_type": "uniform"
+      "name": "primary_leo_cloud",
+      "num_objects": 30,
+      "altitude_range_km": [388, 412],
+      "inclination_range_deg": [50, 53],
+      "eccentricity_range": [0.0, 0.02],
+      "mass_range_kg": [0.5, 100],
+      "size_range_m": [0.05, 2.0],
+      "distribution_type": "clustered",
+      "cluster_centers": 3,
+      "cluster_radius_km": 20,
+      "covariance_matrix": {
+        "position_uncertainty_km": 0.05,
+        "velocity_uncertainty_km_s": 0.0008
+      },
+      "orbital_decay_rate": 0.995,
+      "dynamics": {
+        "enable_dynamics": true,
+        "random_perturbations": true,
+        "perturbation_magnitude_ms": 0.01,
+        "update_frequency_seconds": 300
+      }
+    },
+    {
+      "name": "secondary_leo_cloud",
+      "num_objects": 10,
+      "altitude_range_km": [395, 420],
+      "inclination_range_deg": [49, 55],
+      "eccentricity_range": [0.0, 0.018],
+      "mass_range_kg": [0.5, 50],
+      "size_range_m": [0.05, 1.5],
+      "distribution_type": "uniform",
+      "covariance_matrix": {
+        "position_uncertainty_km": 0.08,
+        "velocity_uncertainty_km_s": 0.001
+      },
+      "dynamics": {
+        "enable_dynamics": true,
+        "random_perturbations": true,
+        "perturbation_magnitude_ms": 0.005,
+        "update_frequency_seconds": 600
+      }
+    },
+    {
+      "name": "small_debris_swarm",
+      "num_objects": 10,
+      "altitude_range_km": [398, 406],
+      "inclination_range_deg": [50, 52],
+      "eccentricity_range": [0.0, 0.01],
+      "mass_range_kg": [0.1, 10],
+      "size_range_m": [0.02, 0.8],
+      "distribution_type": "swarm",
+      "swarm_center_altitude_km": 402,
+      "swarm_radius_km": 10,
+      "covariance_matrix": {
+        "position_uncertainty_km": 0.12,
+        "velocity_uncertainty_km_s": 0.0015
+      },
+      "dynamics": {
+        "enable_dynamics": true,
+        "random_perturbations": true,
+        "perturbation_magnitude_ms": 0.02,
+        "update_frequency_seconds": 180
+      }
     }
   ],
   "static_debris": [
@@ -51,34 +111,222 @@
       "is_controllable": false,
       "max_thrust_n": 0,
       "fuel_capacity_kg": 0,
-      "collision_radius_m": 3.0
+      "collision_radius_m": 3.0,
+      "dynamic": true,
+      "covariance_matrix": {
+        "position_uncertainty_km": 0.05,
+        "velocity_uncertainty_km_s": 0.0005
+      }
+    },
+    {
+      "name": "StaticDebris_A",
+      "orbit": {
+        "altitude_km": 402,
+        "inclination_deg": 51.6,
+        "eccentricity": 0.001,
+        "raan_deg": 5,
+        "arg_periapsis_deg": 30,
+        "mean_anomaly_deg": 200
+      },
+      "mass_kg": 50,
+      "drag_area_m2": 1,
+      "is_controllable": false,
+      "max_thrust_n": 0,
+      "fuel_capacity_kg": 0,
+      "collision_radius_m": 2.0
+    },
+    {
+      "name": "StaticDebris_B",
+      "orbit": {
+        "altitude_km": 398,
+        "inclination_deg": 51.6,
+        "eccentricity": 0.001,
+        "raan_deg": -8,
+        "arg_periapsis_deg": -45,
+        "mean_anomaly_deg": 90
+      },
+      "mass_kg": 20,
+      "drag_area_m2": 0.5,
+      "is_controllable": false,
+      "max_thrust_n": 0,
+      "fuel_capacity_kg": 0,
+      "collision_radius_m": 1.0
     }
   ],
   "physics": {
     "propagator_type": "orekit_numerical",
+    "integrator": {
+      "type": "dormand_prince_853",
+      "atol": 1e-10,
+      "rtol": 1e-10,
+      "adaptive_step": true,
+      "min_step_seconds": 0.1,
+      "max_step_seconds": 30
+    },
+    "gravity_model": {
+      "degree": 8,
+      "order": 8,
+      "model": "egm96"
+    },
+    "atmosphere_model": {
+      "type": "nrlmsise00",
+      "solar_activity": {
+        "f107": 150.0,
+        "f107_avg": 145.0,
+        "kp": 3.0
+      },
+      "daily_variation": true,
+      "density_uncertainty": 0.15
+    },
+    "solar_radiation_model": {
+      "type": "srp_with_eclipse",
+      "solar_flux_wm2": 1361.0,
+      "earth_shadow": true,
+      "moon_shadow": false
+    },
+    "third_body_perturbations": {
+      "include_sun": true,
+      "include_moon": true,
+      "include_solar_system_bodies": false
+    },
     "time_step_seconds": 10,
     "simulation_duration_seconds": 3600,
     "include_drag": true,
     "include_solar_radiation": true,
     "include_j2_perturbation": true,
-    "collision_detection_method": "spherical",
-    "collision_threshold_km": 0.001
+    "include_higher_order_gravity": true,
+    "relativistic_effects": false,
+    "parallel_propagation": false,
+    "num_propagation_threads": 4
+  },
+  "collision_detection": {
+    "method": "probabilistic_enhanced",
+    "hard_threshold_km": 0.001,
+    "collision_threshold_km": 0.01,
+    "probability_threshold": 1e-6,
+    "covariance_propagation": true,
+    "conjunction_screening_km": 10.0,
+    "time_to_collision_threshold_hours": 6.0,
+    "miss_distance_threshold_km": 0.5,
+    "advanced_screening": {
+      "enable_pc_screening": true,
+      "enable_miss_distance_analysis": true,
+      "enable_time_of_closest_approach": true
+    }
   },
   "rewards": {
-    "reward_type": "distance_based",
-    "collision_penalty": -1000,
-    "fuel_cost_weight": 0.1,
-    "safety_distance_km": 1.0,
-    "close_approach_penalty_weight": 10.0,
-    "mission_success_reward": 100.0
+    "reward_type": "multi_objective_balanced",
+    "collision_penalty": -1000.0,
+    "conjunction_penalty_weight": 100.0,
+    "fuel_cost_weight": 0.2,
+    "safety_distance_km": 0.05,
+    "close_approach_penalty_weight": 20.0,
+    "mission_success_reward": 200.0,
+    "proximity_penalties": {
+      "warning_distance_km": 0.05,
+      "caution_distance_km": 0.1,
+      "warning_penalty": -50.0,
+      "caution_penalty": -10.0
+    },
+    "fuel_efficiency_bonus": {
+      "enable": true,
+      "bonus_weight": 5.0,
+      "target_delta_v_ratio": 0.7
+    },
+    "mission_progress_reward": {
+      "enable": true,
+      "orbital_stability_weight": 2.0,
+      "target_maintenance_weight": 1.0
+    },
+    "per_step": {
+      "step_penalty": -0.05,
+      "safe_flight_bonus": 0.01,
+      "station_keeping_bonus": 0.05
+    },
+    "multi_objective_weights": {
+      "safety": 0.7,
+      "fuel_efficiency": 0.15,
+      "mission_completion": 0.15
+    }
   },
   "observations": {
     "include_relative_positions": true,
     "include_relative_velocities": true,
     "include_fuel_levels": true,
     "include_time_to_collision": true,
+    "include_collision_probability": true,
+    "include_uncertainty_ellipsoids": true,
+    "include_miss_distance": true,
+    "include_delta_v_remaining": true,
+    "include_orbital_elements": true,
     "max_tracked_objects": 15,
-    "observation_radius_km": 100.0
+    "observation_radius_km": 100.0,
+    "time_horizon_hours": 1.0,
+    "observation_frequency_hz": 1.0,
+    "state_history_length": 6,
+    "enhanced_features": {
+      "relative_distances_normalized": true,
+      "velocities_normalized": true,
+      "safety_radius_normalization": true,
+      "time_features": true
+    }
+  },
+  "environmental_factors": {
+    "solar_cycle_variation": true,
+    "geomagnetic_storms": false,
+    "atmospheric_density_uncertainty": 0.15,
+    "space_weather": {
+      "enable_random_storms": false,
+      "storm_frequency_days": 30,
+      "storm_intensity_range": [0.5, 2.0]
+    }
+  },
+  "randomization": {
+    "enable_episode_randomization": true,
+    "randomize_initial_conditions": true,
+    "randomize_debris_positions": true,
+    "randomize_debris_velocities": true,
+    "randomize_satellite_state": true,
+    "randomization_ranges": {
+      "altitude_variation_km": 5.0,
+      "inclination_variation_deg": 1.0,
+      "raan_variation_deg": 30.0,
+      "mean_anomaly_variation_deg": 360.0,
+      "debris_position_scatter_km": 10.0,
+      "debris_velocity_scatter_ms": 0.05
+    },
+    "seed_strategy": "fixed_for_debug" 
+  },
+  "training_optimization": {
+    "enable_parallel_environments": true,
+    "num_parallel_envs": 8,
+    "enable_vectorized_physics": false,
+    "memory_optimization": true,
+    "gpu_acceleration": {
+      "enable_gpu_physics": false,
+      "preferred_device": "auto",
+      "memory_fraction": 0.8
+    },
+    "computational_budget": {
+      "max_cpu_cores": 16,
+      "max_memory_gb": 64,
+      "target_fps": 30
+    }
+  },
+  "advanced_features": {
+    "enable_conjunction_analysis": true,
+    "enable_orbit_determination": true,
+    "enable_maneuver_planning": true,
+    "enable_uncertainty_propagation": true,
+    "research_metrics": {
+      "track_collision_probabilities": true,
+      "track_fuel_consumption": true,
+      "track_maneuver_efficiency": true,
+      "track_conjunction_events": true
+    }
+  },
+  "notes": {
+    "design_rationale": "This config balances realism and trainability: more debris dynamics and probabilistic collision screening than the original, but conservative physics and episode length to keep training stable. Start training with these settings; if early learning is slow, reduce num_parallel_envs, shorten simulation_duration_seconds, or temporarily disable uncertainty features while the agent learns basic avoidance."
   },
   "random_seed": 42
 }

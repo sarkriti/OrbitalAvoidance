@@ -82,15 +82,21 @@ class ConfigurableOrbitalEnvironment(gym.Env):
         # --- debris handling unchanged ---
         self.debris_configs = {}
         if getattr(self.config, 'static_debris', None):
+            # Treat legacy 'static_debris' entries as dynamic by default so all debris are propagated
+            for d in self.config.static_debris:
+                if not hasattr(d, 'dynamic'):
+                    setattr(d, 'dynamic', True)
             self.debris_configs.update({d.name: d for d in self.config.static_debris})
         if getattr(self.config, 'debris_fields', None):
             from orbital_avoidance.config.config_system import DebrisGenerator
             for field in self.config.debris_fields:
-                field_dynamic = False
+                # Default to dynamic debris unless explicitly disabled in the field config
+                field_dynamic = True
                 if isinstance(field, dict):
-                    field_dynamic = field.get('dynamics', {}).get('enable_dynamics', False)
+                    field_dynamic = field.get('dynamics', {}).get('enable_dynamics', True)
                 generated = DebrisGenerator.generate_debris_field(field, seed=self.config.random_seed)
                 for obj in generated:
+                    # Ensure generated debris are marked dynamic by default
                     if not hasattr(obj, 'dynamic'):
                         setattr(obj, 'dynamic', field_dynamic)
                     self.debris_configs[obj.name] = obj

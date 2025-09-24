@@ -148,6 +148,20 @@ class RLOrbitalEnvironment(gym.Env):
             if i < len(self.current_debris_states):
                 self.current_debris_states[i].update_from_dict(debris_dict)
 
+        # Debug logging: simulation time, main satellite position, and first debris position
+        try:
+            sim_time = getattr(self._base_env, 'simulation_time_seconds', None)
+            # Fallback: infer from step_count and physics timestep
+            if sim_time is None:
+                sim_time = self.step_count * getattr(self.config.physics, 'time_step_seconds', 0)
+            sat_pos = self.current_satellite_state.position_km
+            first_debris_pos = None
+            if self.current_debris_states:
+                first_debris_pos = self.current_debris_states[0].position_km
+            logger.info(f"[ENV DEBUG] sim_time={sim_time} s, sat_pos_km={sat_pos}, debris0_pos_km={first_debris_pos}")
+        except Exception as e:
+            logger.warning(f"Failed to log env debug info: {e}")
+
         reward = self.reward_function(action)
         terminated = self._check_collision()
         truncated = self.step_count >= int(self.config.physics.simulation_duration_seconds / self.config.physics.time_step_seconds)

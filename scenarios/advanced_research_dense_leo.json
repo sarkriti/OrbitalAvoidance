@@ -50,7 +50,8 @@
         "perturbation_magnitude_ms": 0.01,
         "update_frequency_seconds": 300,
         "enable_dynamics": true
-      }
+      },
+      "enable_dynamics": true
     },
     {
       "name": "secondary_leo_cloud", 
@@ -116,6 +117,8 @@
         "position_uncertainty_km": 0.05,
         "velocity_uncertainty_km_s": 0.0005
       }
+    ,
+      "dynamic": true
     },
     {
       "name": "LargeDebris_2",
@@ -137,6 +140,8 @@
         "position_uncertainty_km": 0.04,
         "velocity_uncertainty_km_s": 0.0004
       }
+    ,
+      "dynamic": true
     },
     {
       "name": "LargeDebris_3",
@@ -158,6 +163,8 @@
         "position_uncertainty_km": 0.03,
         "velocity_uncertainty_km_s": 0.0003
       }
+    ,
+      "dynamic": true
     },
     {
       "name": "LargeDebris_4",
@@ -179,6 +186,8 @@
         "position_uncertainty_km": 0.06,
         "velocity_uncertainty_km_s": 0.0006
       }
+    ,
+      "dynamic": true
     }
   ],
   "physics": {
