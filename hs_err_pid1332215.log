@@ -1,0 +1,1759 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00005569d2d9c634, pid=1332215, tid=1332215
+#
+# JRE version: OpenJDK Runtime Environment (21.0.8+9) (build 21.0.8+9-Ubuntu-0ubuntu122.04.1)
+# Java VM: OpenJDK 64-Bit Server VM (21.0.8+9-Ubuntu-0ubuntu122.04.1, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [python3+0x15e634]
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -F%F -- %E" (or dumping to /home/brysonbrown/Orbital/OrbitalAvoidance/core.1332215)
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugs.launchpad.net/ubuntu/+source/openjdk-21
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: 
+
+Host: AMD EPYC 7542 32-Core Processor, 128 cores, 503G, Ubuntu 22.04.5 LTS
+Time: Thu Sep 25 01:29:21 2025 UTC elapsed time: 30.628950 seconds (0d 0h 0m 30s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000556a16d747d0):  JavaThread "main"      [_thread_in_native, id=1332215, stack(0x00007ffcfb269000,0x00007ffcfb369000) (1024K)]
+
+Stack: [0x00007ffcfb269000,0x00007ffcfb369000],  sp=0x00007ffcfb346c38,  free space=887k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [python3+0x15e634]
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x0000000000000009
+
+Registers:
+RAX=0x0000556a150b51d0, RBX=0x00007f7f29b5c4a0, RCX=0x00005569d2d9c630, RDX=0x00007f7f29b5c4a0
+RSP=0x00007ffcfb346c38, RBP=0x00005569d2d9c630, RSI=0x00007f7f29b5c4a0, RDI=0x0000000000000001
+R8 =0x00005569d2d9c6c0, R9 =0x00005569d31b77c0, R10=0x00005569d31b77c0, R11=0x0000000000000000
+R12=0x00007f7f29b5c4a0, R13=0x0000556a10a26ce0, R14=0x00005569d31b28a0, R15=0x0000556a10a26cc8
+RIP=0x00005569d2d9c634, EFLAGS=0x0000000000010202, CSGSFS=0x002b000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+XMM[0]=0x00007f7cd7e7a310 0x0000556a10a26cb0
+XMM[1]=0x0000000000000000 0x00007f7cd7e7a310
+XMM[2]=0x0000556a10a26ce0 0x0000556a10a26ce0
+XMM[3]=0x0000000000000000 0x0000000000000005
+XMM[4]=0x00007f7cd7e902b0 0x0000556a10a26cb0
+XMM[5]=0x0000000000000000 0x00007f7cd7e902b0
+XMM[6]=0x0000000000000001 0x0000000000000004
+XMM[7]=0x0000000000000000 0x0000029000000012
+XMM[8]=0x00007f7cd7e90b30 0x0000556a10a26cb0
+XMM[9]=0x0000000000000000 0x00007f7cd7e90b30
+XMM[10]=0x0000000000000000 0x00007f7f29df6610
+XMM[11]=0x0000556a10a26cc8 0x0000556a10a26cc8
+XMM[12]=0x0000000000000000 0x00007f7f29e0d0c0
+XMM[13]=0x000000000000003e 0x0000000000000000
+XMM[14]=0x0000000000000000 0x00007f7f29d51690
+XMM[15]=0xffffffffffffffff 0xffffffffffffffff
+  MXCSR=0x00001fab
+
+
+Register to memory mapping:
+
+RAX=0x0000556a150b51d0 points into unknown readable memory: 0x00007f7f2a330470 | 70 04 33 2a 7f 7f 00 00
+RBX=0x00007f7f29b5c4a0 points into unknown readable memory: 0x0000000000000003 | 03 00 00 00 00 00 00 00
+RCX=0x00005569d2d9c630: <offset 0x000000000015e630> in /usr/bin/python3 at 0x00005569d2c3e000
+RDX=0x00007f7f29b5c4a0 points into unknown readable memory: 0x0000000000000003 | 03 00 00 00 00 00 00 00
+RSP=0x00007ffcfb346c38 is pointing into the stack for thread: 0x0000556a16d747d0
+RBP=0x00005569d2d9c630: <offset 0x000000000015e630> in /usr/bin/python3 at 0x00005569d2c3e000
+RSI=0x00007f7f29b5c4a0 points into unknown readable memory: 0x0000000000000003 | 03 00 00 00 00 00 00 00
+RDI=0x0000000000000001 is an unknown value
+R8 =0x00005569d2d9c6c0: <offset 0x000000000015e6c0> in /usr/bin/python3 at 0x00005569d2c3e000
+R9 =0x00005569d31b77c0: PyUnicode_Type+0x0000000000000000 in /usr/bin/python3 at 0x00005569d2c3e000
+R10=0x00005569d31b77c0: PyUnicode_Type+0x0000000000000000 in /usr/bin/python3 at 0x00005569d2c3e000
+R11=0x0 is null
+R12=0x00007f7f29b5c4a0 points into unknown readable memory: 0x0000000000000003 | 03 00 00 00 00 00 00 00
+R13=0x0000556a10a26ce0 points into unknown readable memory: 0x00007f7f2a244070 | 70 40 24 2a 7f 7f 00 00
+R14=0x00005569d31b28a0: PyCFunction_Type+0x0000000000000000 in /usr/bin/python3 at 0x00005569d2c3e000
+R15=0x0000556a10a26cc8 points into unknown readable memory: 0x0000556a10a26cc8 | c8 6c a2 10 6a 55 00 00
+
+Top of Stack: (sp=0x00007ffcfb346c38)
+0x00007ffcfb346c38:   00005569d2d9c854 00007ffcfb346d40
+0x00007ffcfb346c48:   00005569d2d9c630 00007f7f29b5c490
+0x00007ffcfb346c58:   00007ffcfb346d40 00005569d2d9c630
+0x00007ffcfb346c68:   00005569d2d9c285 0000556a10a26ce0
+0x00007ffcfb346c78:   0000556a10a26a30 0000000000000002
+0x00007ffcfb346c88:   0000556a10a26ce0 00007ffcfb346d40
+0x00007ffcfb346c98:   00005569d2d9b9eb 0000556a10a26a30
+0x00007ffcfb346ca8:   0000556a10a234a0 0000556a10a26ce0
+0x00007ffcfb346cb8:   0000556a10a26ce0 0000000210a26a30
+0x00007ffcfb346cc8:   0000000000000002 0000003000000008
+0x00007ffcfb346cd8:   00007ffcfb346db0 00007ffcfb346d50
+0x00007ffcfb346ce8:   0000556a10a26c98 00005569d2f7eddc
+0x00007ffcfb346cf8:   00007f7cd7e90f80 0000000000000002
+0x00007ffcfb346d08:   00007f7f2a1d8010 0000000000000000
+0x00007ffcfb346d18:   00007ffcfb346e08 00007ffcfb346e00
+0x00007ffcfb346d28:   0000000010bfdc30 00007f7f2a244630
+0x00007ffcfb346d38:   00005569d2dd5e10 0000556a10a26a30
+0x00007ffcfb346d48:   00005569d2e2feef 00007f7f2a01c040
+0x00007ffcfb346d58:   00007f7f2a007a40 0000556a10a234a0
+0x00007ffcfb346d68:   0000000000000002 0000000000000003
+0x00007ffcfb346d78:   00005569d2da7c0f 0000000000000000
+0x00007ffcfb346d88:   0000556a10a234a0 00007f7cd7e90f80
+0x00007ffcfb346d98:   00007f7cd7e7ead0 0000000000000000
+0x00007ffcfb346da8:   00005569d2da79bc 0000000000000001
+0x00007ffcfb346db8:   00005569d2cb613a 00007f7cd7e7a3e0
+0x00007ffcfb346dc8:   0000556a10a234a0 00007f7f2a248950
+0x00007ffcfb346dd8:   0000000000000002 00005569d31e7b20
+0x00007ffcfb346de8:   00007f7f2a244630 0000556a10a26a30
+0x00007ffcfb346df8:   00005569d2e94820 0000556a10a234a0
+0x00007ffcfb346e08:   0000556a10a26a30 00007f7cd7e7a3d0
+0x00007ffcfb346e18:   0000556a10bfdc30 00005569d31e7b20
+0x00007ffcfb346e28:   00005569d2e2fc6e 0000556a10a234a0 
+
+Instructions: (pc=0x00005569d2d9c634)
+0x00005569d2d9c534:   02 0f 84 5b ff ff ff 48 8b 7c 24 08 48 8b 3f 48
+0x00005569d2d9c544:   85 ff 0f 84 ca 00 00 00 4c 89 fe 41 ff d6 85 c0
+0x00005569d2d9c554:   0f 85 3e ff ff ff 49 8d 5c 24 fc 49 83 fc 03 0f
+0x00005569d2d9c564:   84 2d ff ff ff 4c 8b 44 24 08 49 8b 78 f8 48 85
+0x00005569d2d9c574:   ff 0f 84 9b 00 00 00 4c 89 fe 41 ff d6 85 c0 0f
+0x00005569d2d9c584:   85 0f ff ff ff 49 8d 5c 24 fb 49 83 fc 04 0f 84
+0x00005569d2d9c594:   fe fe ff ff 4c 8b 4c 24 08 49 8b 79 f0 48 85 ff
+0x00005569d2d9c5a4:   74 70 4c 89 fe 41 ff d6 85 c0 0f 85 e4 fe ff ff
+0x00005569d2d9c5b4:   49 8d 5c 24 fa 49 83 fc 05 0f 84 d3 fe ff ff 48
+0x00005569d2d9c5c4:   8b 7c dd 18 48 85 ff 74 49 4c 89 fe 41 ff d6 85
+0x00005569d2d9c5d4:   c0 0f 85 bd fe ff ff 48 83 eb 01 73 e2 e9 b0 fe
+0x00005569d2d9c5e4:   ff ff 66 2e 0f 1f 84 00 00 00 00 00 48 8d 15 c9
+0x00005569d2d9c5f4:   00 00 00 48 39 d0 75 22 41 8b 84 24 a8 00 00 00
+0x00005569d2d9c604:   25 00 02 00 00 85 c0 0f 85 af fe ff ff e9 7a fe
+0x00005569d2d9c614:   ff ff 49 89 dc e9 48 fe ff ff 4c 89 e7 ff d0 eb
+0x00005569d2d9c624:   e4 66 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa
+0x00005569d2d9c634:   48 8b 47 08 f6 80 a9 00 00 00 40 75 07 31 c0 c3
+0x00005569d2d9c644:   0f 1f 40 00 48 8b 80 48 01 00 00 48 85 c0 75 1c
+0x00005569d2d9c654:   48 8b 47 f8 a8 02 74 e5 48 83 e8 04 48 89 47 f8
+0x00005569d2d9c664:   31 c0 c3 66 0f 1f 84 00 00 00 00 00 48 8d 15 49
+0x00005569d2d9c674:   00 00 00 48 39 d0 75 12 8b 8f a8 00 00 00 81 e1
+0x00005569d2d9c684:   00 02 00 00 85 c9 75 c8 eb b3 48 83 ec 18 48 89
+0x00005569d2d9c694:   7c 24 08 ff d0 48 8b 7c 24 08 85 c0 74 10 48 8b
+0x00005569d2d9c6a4:   47 f8 a8 02 74 08 48 83 e8 04 48 89 47 f8 31 c0
+0x00005569d2d9c6b4:   48 83 c4 18 c3 0f 1f 80 00 00 00 00 f3 0f 1e fa
+0x00005569d2d9c6c4:   48 8b 87 a8 00 00 00 25 00 02 00 00 c3 66 66 2e
+0x00005569d2d9c6d4:   0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa
+0x00005569d2d9c6e4:   41 54 49 89 d4 55 48 89 f5 53 48 89 fb 48 83 ec
+0x00005569d2d9c6f4:   10 48 8b 47 10 f6 40 11 02 0f 85 3f 01 00 00 48
+0x00005569d2d9c704:   8b 7b 18 48 85 ff 0f 84 10 01 00 00 48 8d 0d 19
+0x00005569d2d9c714:   ff ff ff 48 39 cd 75 6c 48 8b 77 08 f6 86 a9 00
+0x00005569d2d9c724:   00 00 40 75 27 48 8b 7b 20 48 85 ff 74 0e 4c 8b 
+
+
+Stack slot to memory mapping:
+
+stack at sp + 0 slots: 0x00005569d2d9c854: <offset 0x000000000015e854> in /usr/bin/python3 at 0x00005569d2c3e000
+stack at sp + 1 slots: 0x00007ffcfb346d40 is pointing into the stack for thread: 0x0000556a16d747d0
+stack at sp + 2 slots: 0x00005569d2d9c630: <offset 0x000000000015e630> in /usr/bin/python3 at 0x00005569d2c3e000
+stack at sp + 3 slots: 0x00007f7f29b5c490 points into unknown readable memory: 0x00007f7f29b5c3f0 | f0 c3 b5 29 7f 7f 00 00
+stack at sp + 4 slots: 0x00007ffcfb346d40 is pointing into the stack for thread: 0x0000556a16d747d0
+stack at sp + 5 slots: 0x00005569d2d9c630: <offset 0x000000000015e630> in /usr/bin/python3 at 0x00005569d2c3e000
+stack at sp + 6 slots: 0x00005569d2d9c285: <offset 0x000000000015e285> in /usr/bin/python3 at 0x00005569d2c3e000
+stack at sp + 7 slots: 0x0000556a10a26ce0 points into unknown readable memory: 0x00007f7f2a244070 | 70 40 24 2a 7f 7f 00 00
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007f7d78106430, length=13, elements={
+0x0000556a16d747d0, 0x0000556a21926b40, 0x0000556a21928300, 0x0000556a21929bd0,
+0x0000556a2192b340, 0x0000556a2192ca10, 0x0000556a2192e740, 0x0000556a2192ff70,
+0x0000556a2193bf40, 0x0000556a2193fda0, 0x00007f7d64080790, 0x00007f7d64083620,
+0x00007f7d74001330
+}
+
+Java Threads: ( => current thread )
+=>0x0000556a16d747d0 JavaThread "main"                       [_thread_in_native, id=1332215, stack(0x00007ffcfb269000,0x00007ffcfb369000) (1024K)]
+  0x0000556a21926b40 JavaThread "Reference Handler"          [_thread_blocked, id=1332389, stack(0x00007f7d8adff000,0x00007f7d8aeff000) (1024K)]
+  0x0000556a21928300 JavaThread "Finalizer"                  [_thread_blocked, id=1332390, stack(0x00007f7d8acff000,0x00007f7d8adff000) (1024K)]
+  0x0000556a21929bd0 JavaThread "Signal Dispatcher"          [_thread_blocked, id=1332391, stack(0x00007f7d8abff000,0x00007f7d8acff000) (1024K)]
+  0x0000556a2192b340 JavaThread "Service Thread"             [_thread_blocked, id=1332392, stack(0x00007f7d8aaff000,0x00007f7d8abff000) (1024K)]
+  0x0000556a2192ca10 JavaThread "Monitor Deflation Thread"   [_thread_blocked, id=1332393, stack(0x00007f7d8a9ff000,0x00007f7d8aaff000) (1024K)]
+  0x0000556a2192e740 JavaThread "C2 CompilerThread0"         [_thread_blocked, id=1332394, stack(0x00007f7d8a8ff000,0x00007f7d8a9ff000) (1024K)]
+  0x0000556a2192ff70 JavaThread "C1 CompilerThread0"         [_thread_blocked, id=1332395, stack(0x00007f7d8a7ff000,0x00007f7d8a8ff000) (1024K)]
+  0x0000556a2193bf40 JavaThread "Notification Thread"        [_thread_blocked, id=1332400, stack(0x00007f7d8a62e000,0x00007f7d8a72e000) (1024K)]
+  0x0000556a2193fda0 JavaThread "Common-Cleaner"             [_thread_blocked, id=1332402, stack(0x00007f7d8a52e000,0x00007f7d8a62e000) (1024K)]
+  0x00007f7d64080790 JavaThread "C1 CompilerThread1"         [_thread_blocked, id=1333507, stack(0x00007f7d8a32e000,0x00007f7d8a42e000) (1024K)]
+  0x00007f7d64083620 JavaThread "C1 CompilerThread2"         [_thread_blocked, id=1333535, stack(0x00007f7d8a42e000,0x00007f7d8a52e000) (1024K)]
+  0x00007f7d74001330 JavaThread "SIGINT handler"             [_thread_blocked, id=1334284, stack(0x00007f7d8982d000,0x00007f7d8992d000) (1024K)]
+Total: 13
+
+Other Threads:
+  0x0000556a2191eab0 VMThread "VM Thread"                           [id=1332374, stack(0x00007f7d8af00000,0x00007f7d8b000000) (1024K)]
+  0x0000556a16d30650 WorkerThread "GC Thread#0"                     [id=1332296, stack(0x00007f7de2537000,0x00007f7de2637000) (1024K)]
+  0x00007f7d78001210 WorkerThread "GC Thread#1"                     [id=1332668, stack(0x00007f7d89d2e000,0x00007f7d89e2e000) (1024K)]
+  0x00007f7d7812bbf0 WorkerThread "GC Thread#2"                     [id=1332805, stack(0x00007f7d8952d000,0x00007f7d8962d000) (1024K)]
+  0x00007f7d781296d0 WorkerThread "GC Thread#3"                     [id=1333617, stack(0x00007f7d8932c000,0x00007f7d8942c000) (1024K)]
+  0x00007f7d7812ad30 WorkerThread "GC Thread#4"                     [id=1333618, stack(0x00007f7d8922b000,0x00007f7d8932b000) (1024K)]
+  0x0000556a16dab820 ConcurrentGCThread "G1 Main Marker"            terminated
+  0x0000556a16dac630 WorkerThread "G1 Conc#0"                       [id=1332299, stack(0x00007f7de2335000,0x00007f7de2435000) (1024K)]
+  0x0000556a217d6280 ConcurrentGCThread "G1 Refine#0"               terminated
+  0x0000556a217d6ff0 ConcurrentGCThread "G1 Service"                terminated
+Total: 10
+
+Threads with active compile tasks:
+Total: 0
+
+VM state: at safepoint (shutting down)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f7e205c5e10] Threads_lock - owner thread: 0x0000556a2191eab0
+[0x00007f7e205c5d10] Heap_lock - owner thread: 0x00007f7d74001330
+
+Heap address: 0x00000000a0000000, size: 30208 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+
+CDS archive(s) mapped at: [0x00007f7d8b000000-0x00007f7d8bca0000-0x00007f7d8bca0000), size 13238272, SharedBaseAddress: 0x00007f7d8b000000, ArchiveRelocationMode: 1.
+Compressed class space mapped at: 0x00007f7d8c000000-0x00007f7dcc000000, reserved size: 1073741824
+Narrow klass base: 0x00007f7d8b000000, Narrow klass shift: 0, Narrow klass range: 0x100000000
+
+GC Precious Log:
+ CardTable entry size: 512
+ Card Set container configuration: InlinePtr #cards 3 size 8 Array Of Cards #cards 128 size 272 Howl #buckets 8 coarsen threshold 29491 Howl Bitmap #cards 4096 size 528 coarsen threshold 3686 Card regions per heap region 1 cards per card region 32768
+ CPUs: 128 total, 128 available
+ Memory: 503G
+ Large Page Support: Disabled
+ NUMA Support: Disabled
+ Compressed Oops: Enabled (Zero based)
+ Heap Region Size: 16M
+ Heap Min Capacity: 16M
+ Heap Initial Capacity: 2G
+ Heap Max Capacity: 30208M
+ Pre-touch: Disabled
+ Parallel Workers: 83
+ Concurrent Workers: 21
+ Concurrent Refinement Workers: 83
+ Periodic GC: Disabled
+
+Heap:
+ garbage-first heap   total 1081344K, used 9860K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 5903K, committed 6080K, reserved 1114112K
+  class space    used 517K, committed 576K, reserved 1048576K
+
+Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=humongous(continues), CS=collection set, F=free, TAMS=top-at-mark-start, PB=parsable bottom
+|   0|0x00000000a0000000, 0x00000000a0656480, 0x00000000a1000000| 39%| O|  |TAMS 0x00000000a0000000| PB 0x00000000a0000000| Untracked 
+|   1|0x00000000a1000000, 0x00000000a1000000, 0x00000000a2000000|  0%| F|  |TAMS 0x00000000a1000000| PB 0x00000000a1000000| Untracked 
+|   2|0x00000000a2000000, 0x00000000a234ac90, 0x00000000a3000000| 20%| S|CS|TAMS 0x00000000a2000000| PB 0x00000000a2000000| Complete 
+|   3|0x00000000a3000000, 0x00000000a3000000, 0x00000000a4000000|  0%| F|  |TAMS 0x00000000a3000000| PB 0x00000000a3000000| Untracked 
+|   4|0x00000000a4000000, 0x00000000a4000000, 0x00000000a5000000|  0%| F|  |TAMS 0x00000000a4000000| PB 0x00000000a4000000| Untracked 
+|   5|0x00000000a5000000, 0x00000000a5000000, 0x00000000a6000000|  0%| F|  |TAMS 0x00000000a5000000| PB 0x00000000a5000000| Untracked 
+|   6|0x00000000a6000000, 0x00000000a6000000, 0x00000000a7000000|  0%| F|  |TAMS 0x00000000a6000000| PB 0x00000000a6000000| Untracked 
+|   7|0x00000000a7000000, 0x00000000a7000000, 0x00000000a8000000|  0%| F|  |TAMS 0x00000000a7000000| PB 0x00000000a7000000| Untracked 
+|   8|0x00000000a8000000, 0x00000000a8000000, 0x00000000a9000000|  0%| F|  |TAMS 0x00000000a8000000| PB 0x00000000a8000000| Untracked 
+|   9|0x00000000a9000000, 0x00000000a9000000, 0x00000000aa000000|  0%| F|  |TAMS 0x00000000a9000000| PB 0x00000000a9000000| Untracked 
+|  10|0x00000000aa000000, 0x00000000aa000000, 0x00000000ab000000|  0%| F|  |TAMS 0x00000000aa000000| PB 0x00000000aa000000| Untracked 
+|  11|0x00000000ab000000, 0x00000000ab000000, 0x00000000ac000000|  0%| F|  |TAMS 0x00000000ab000000| PB 0x00000000ab000000| Untracked 
+|  12|0x00000000ac000000, 0x00000000ac000000, 0x00000000ad000000|  0%| F|  |TAMS 0x00000000ac000000| PB 0x00000000ac000000| Untracked 
+|  13|0x00000000ad000000, 0x00000000ad000000, 0x00000000ae000000|  0%| F|  |TAMS 0x00000000ad000000| PB 0x00000000ad000000| Untracked 
+|  14|0x00000000ae000000, 0x00000000ae000000, 0x00000000af000000|  0%| F|  |TAMS 0x00000000ae000000| PB 0x00000000ae000000| Untracked 
+|  15|0x00000000af000000, 0x00000000af000000, 0x00000000b0000000|  0%| F|  |TAMS 0x00000000af000000| PB 0x00000000af000000| Untracked 
+|  16|0x00000000b0000000, 0x00000000b0000000, 0x00000000b1000000|  0%| F|  |TAMS 0x00000000b0000000| PB 0x00000000b0000000| Untracked 
+|  17|0x00000000b1000000, 0x00000000b1000000, 0x00000000b2000000|  0%| F|  |TAMS 0x00000000b1000000| PB 0x00000000b1000000| Untracked 
+|  18|0x00000000b2000000, 0x00000000b2000000, 0x00000000b3000000|  0%| F|  |TAMS 0x00000000b2000000| PB 0x00000000b2000000| Untracked 
+|  19|0x00000000b3000000, 0x00000000b3000000, 0x00000000b4000000|  0%| F|  |TAMS 0x00000000b3000000| PB 0x00000000b3000000| Untracked 
+|  20|0x00000000b4000000, 0x00000000b4000000, 0x00000000b5000000|  0%| F|  |TAMS 0x00000000b4000000| PB 0x00000000b4000000| Untracked 
+|  21|0x00000000b5000000, 0x00000000b5000000, 0x00000000b6000000|  0%| F|  |TAMS 0x00000000b5000000| PB 0x00000000b5000000| Untracked 
+|  22|0x00000000b6000000, 0x00000000b6000000, 0x00000000b7000000|  0%| F|  |TAMS 0x00000000b6000000| PB 0x00000000b6000000| Untracked 
+|  23|0x00000000b7000000, 0x00000000b7000000, 0x00000000b8000000|  0%| F|  |TAMS 0x00000000b7000000| PB 0x00000000b7000000| Untracked 
+|  24|0x00000000b8000000, 0x00000000b8000000, 0x00000000b9000000|  0%| F|  |TAMS 0x00000000b8000000| PB 0x00000000b8000000| Untracked 
+|  25|0x00000000b9000000, 0x00000000b9000000, 0x00000000ba000000|  0%| F|  |TAMS 0x00000000b9000000| PB 0x00000000b9000000| Untracked 
+|  26|0x00000000ba000000, 0x00000000ba000000, 0x00000000bb000000|  0%| F|  |TAMS 0x00000000ba000000| PB 0x00000000ba000000| Untracked 
+|  27|0x00000000bb000000, 0x00000000bb000000, 0x00000000bc000000|  0%| F|  |TAMS 0x00000000bb000000| PB 0x00000000bb000000| Untracked 
+|  28|0x00000000bc000000, 0x00000000bc000000, 0x00000000bd000000|  0%| F|  |TAMS 0x00000000bc000000| PB 0x00000000bc000000| Untracked 
+|  29|0x00000000bd000000, 0x00000000bd000000, 0x00000000be000000|  0%| F|  |TAMS 0x00000000bd000000| PB 0x00000000bd000000| Untracked 
+|  30|0x00000000be000000, 0x00000000be000000, 0x00000000bf000000|  0%| F|  |TAMS 0x00000000be000000| PB 0x00000000be000000| Untracked 
+|  31|0x00000000bf000000, 0x00000000bf000000, 0x00000000c0000000|  0%| F|  |TAMS 0x00000000bf000000| PB 0x00000000bf000000| Untracked 
+|  32|0x00000000c0000000, 0x00000000c0000000, 0x00000000c1000000|  0%| F|  |TAMS 0x00000000c0000000| PB 0x00000000c0000000| Untracked 
+|  33|0x00000000c1000000, 0x00000000c1000000, 0x00000000c2000000|  0%| F|  |TAMS 0x00000000c1000000| PB 0x00000000c1000000| Untracked 
+|  34|0x00000000c2000000, 0x00000000c2000000, 0x00000000c3000000|  0%| F|  |TAMS 0x00000000c2000000| PB 0x00000000c2000000| Untracked 
+|  35|0x00000000c3000000, 0x00000000c3000000, 0x00000000c4000000|  0%| F|  |TAMS 0x00000000c3000000| PB 0x00000000c3000000| Untracked 
+|  36|0x00000000c4000000, 0x00000000c4000000, 0x00000000c5000000|  0%| F|  |TAMS 0x00000000c4000000| PB 0x00000000c4000000| Untracked 
+|  37|0x00000000c5000000, 0x00000000c5000000, 0x00000000c6000000|  0%| F|  |TAMS 0x00000000c5000000| PB 0x00000000c5000000| Untracked 
+|  38|0x00000000c6000000, 0x00000000c6000000, 0x00000000c7000000|  0%| F|  |TAMS 0x00000000c6000000| PB 0x00000000c6000000| Untracked 
+|  39|0x00000000c7000000, 0x00000000c7000000, 0x00000000c8000000|  0%| F|  |TAMS 0x00000000c7000000| PB 0x00000000c7000000| Untracked 
+|  40|0x00000000c8000000, 0x00000000c8000000, 0x00000000c9000000|  0%| F|  |TAMS 0x00000000c8000000| PB 0x00000000c8000000| Untracked 
+|  41|0x00000000c9000000, 0x00000000c9000000, 0x00000000ca000000|  0%| F|  |TAMS 0x00000000c9000000| PB 0x00000000c9000000| Untracked 
+|  42|0x00000000ca000000, 0x00000000ca000000, 0x00000000cb000000|  0%| F|  |TAMS 0x00000000ca000000| PB 0x00000000ca000000| Untracked 
+|  43|0x00000000cb000000, 0x00000000cb000000, 0x00000000cc000000|  0%| F|  |TAMS 0x00000000cb000000| PB 0x00000000cb000000| Untracked 
+|  44|0x00000000cc000000, 0x00000000cc000000, 0x00000000cd000000|  0%| F|  |TAMS 0x00000000cc000000| PB 0x00000000cc000000| Untracked 
+|  45|0x00000000cd000000, 0x00000000cd000000, 0x00000000ce000000|  0%| F|  |TAMS 0x00000000cd000000| PB 0x00000000cd000000| Untracked 
+|  46|0x00000000ce000000, 0x00000000ce000000, 0x00000000cf000000|  0%| F|  |TAMS 0x00000000ce000000| PB 0x00000000ce000000| Untracked 
+|  47|0x00000000cf000000, 0x00000000cf000000, 0x00000000d0000000|  0%| F|  |TAMS 0x00000000cf000000| PB 0x00000000cf000000| Untracked 
+|  48|0x00000000d0000000, 0x00000000d0000000, 0x00000000d1000000|  0%| F|  |TAMS 0x00000000d0000000| PB 0x00000000d0000000| Untracked 
+|  49|0x00000000d1000000, 0x00000000d1000000, 0x00000000d2000000|  0%| F|  |TAMS 0x00000000d1000000| PB 0x00000000d1000000| Untracked 
+|  50|0x00000000d2000000, 0x00000000d2000000, 0x00000000d3000000|  0%| F|  |TAMS 0x00000000d2000000| PB 0x00000000d2000000| Untracked 
+|  51|0x00000000d3000000, 0x00000000d3000000, 0x00000000d4000000|  0%| F|  |TAMS 0x00000000d3000000| PB 0x00000000d3000000| Untracked 
+|  52|0x00000000d4000000, 0x00000000d4000000, 0x00000000d5000000|  0%| F|  |TAMS 0x00000000d4000000| PB 0x00000000d4000000| Untracked 
+|  53|0x00000000d5000000, 0x00000000d5000000, 0x00000000d6000000|  0%| F|  |TAMS 0x00000000d5000000| PB 0x00000000d5000000| Untracked 
+|  54|0x00000000d6000000, 0x00000000d6000000, 0x00000000d7000000|  0%| F|  |TAMS 0x00000000d6000000| PB 0x00000000d6000000| Untracked 
+|  55|0x00000000d7000000, 0x00000000d7000000, 0x00000000d8000000|  0%| F|  |TAMS 0x00000000d7000000| PB 0x00000000d7000000| Untracked 
+|  56|0x00000000d8000000, 0x00000000d8000000, 0x00000000d9000000|  0%| F|  |TAMS 0x00000000d8000000| PB 0x00000000d8000000| Untracked 
+|  57|0x00000000d9000000, 0x00000000d9000000, 0x00000000da000000|  0%| F|  |TAMS 0x00000000d9000000| PB 0x00000000d9000000| Untracked 
+|  58|0x00000000da000000, 0x00000000da000000, 0x00000000db000000|  0%| F|  |TAMS 0x00000000da000000| PB 0x00000000da000000| Untracked 
+|  59|0x00000000db000000, 0x00000000db000000, 0x00000000dc000000|  0%| F|  |TAMS 0x00000000db000000| PB 0x00000000db000000| Untracked 
+|  60|0x00000000dc000000, 0x00000000dc000000, 0x00000000dd000000|  0%| F|  |TAMS 0x00000000dc000000| PB 0x00000000dc000000| Untracked 
+|  61|0x00000000dd000000, 0x00000000dd000000, 0x00000000de000000|  0%| F|  |TAMS 0x00000000dd000000| PB 0x00000000dd000000| Untracked 
+|  62|0x00000000de000000, 0x00000000de000000, 0x00000000df000000|  0%| F|  |TAMS 0x00000000de000000| PB 0x00000000de000000| Untracked 
+|  63|0x00000000df000000, 0x00000000df000000, 0x00000000e0000000|  0%| F|  |TAMS 0x00000000df000000| PB 0x00000000df000000| Untracked 
+|  64|0x00000000e0000000, 0x00000000e0000000, 0x00000000e1000000|  0%| F|  |TAMS 0x00000000e0000000| PB 0x00000000e0000000| Untracked 
+|  65|0x00000000e1000000, 0x00000000e1612850, 0x00000000e2000000| 37%| E|  |TAMS 0x00000000e1000000| PB 0x00000000e1000000| Complete 
+
+Card table byte_map: [0x00007f7e0029c000,0x00007f7e03d9c000] _byte_map_base: 0x00007f7dffd9c000
+
+Marking Bits: (CMBitMap*) 0x0000556a16daab10
+ Bits: [0x00007f7de2a9c000, 0x00007f7e0029c000)
+
+Polling page: 0x00007f7f29fa6000
+
+Metaspace:
+
+Usage:
+  Non-class:      5.26 MB used.
+      Class:    517.73 KB used.
+       Both:      5.77 MB used.
+
+Virtual space:
+  Non-class space:       64.00 MB reserved,       5.38 MB (  8%) committed,  1 nodes.
+      Class space:        1.00 GB reserved,     576.00 KB ( <1%) committed,  1 nodes.
+             Both:        1.06 GB reserved,       5.94 MB ( <1%) committed. 
+
+Chunk freelists:
+   Non-Class:  9.36 MB
+       Class:  15.44 MB
+        Both:  24.80 MB
+
+MaxMetaspaceSize: unlimited
+CompressedClassSpaceSize: 1.00 GB
+Initial GC threshold: 21.00 MB
+Current GC threshold: 21.00 MB
+CDS: on
+ - commit_granule_bytes: 65536.
+ - commit_granule_words: 8192.
+ - virtual_space_node_default_size: 8388608.
+ - enlarge_chunks_in_place: 1.
+ - use_allocation_guard: 0.
+
+
+Internal statistics:
+
+num_allocs_failed_limit: 0.
+num_arena_births: 76.
+num_arena_deaths: 0.
+num_vsnodes_births: 2.
+num_vsnodes_deaths: 0.
+num_space_committed: 95.
+num_space_uncommitted: 0.
+num_chunks_returned_to_freelist: 0.
+num_chunks_taken_from_freelist: 199.
+num_chunk_merges: 0.
+num_chunk_splits: 151.
+num_chunks_enlarged: 113.
+num_inconsistent_stats: 0.
+
+CodeHeap 'non-profiled nmethods': size=118304Kb used=872Kb max_used=872Kb free=117431Kb
+ bounds [0x00007f7e0f6e4000, 0x00007f7e0f954000, 0x00007f7e16a6c000]
+CodeHeap 'profiled nmethods': size=118300Kb used=2786Kb max_used=2786Kb free=115513Kb
+ bounds [0x00007f7e07a6c000, 0x00007f7e07d2c000, 0x00007f7e0edf3000]
+CodeHeap 'non-nmethods': size=9156Kb used=2535Kb max_used=4795Kb free=6621Kb
+ bounds [0x00007f7e0edf3000, 0x00007f7e0f2b3000, 0x00007f7e0f6e4000]
+CodeCache: size=245760Kb, used=6193Kb, max_used=8453Kb, free=239565Kb
+ total_blobs=2181, nmethods=1662, adapters=422, full_count=0
+Compilation: enabled, stopped_count=0, restarted_count=0
+
+Compilation events (20 events):
+Event: 23.970 Thread 0x00007f7d6407e5e0 nmethod 1740 0x00007f7e0f79c090 code [0x00007f7e0f79c220, 0x00007f7e0f79c488]
+Event: 23.988 Thread 0x00007f7d50008b20 nmethod 1734% 0x00007f7e0f79c590 code [0x00007f7e0f79c760, 0x00007f7e0f79d2d8]
+Event: 24.006 Thread 0x0000556a2192e740 nmethod 1738 0x00007f7e0f79d590 code [0x00007f7e0f79d720, 0x00007f7e0f79da88]
+Event: 24.135 Thread 0x00007f7d4800a1e0 nmethod 865 0x00007f7e0f79dc10 code [0x00007f7e0f79ed20, 0x00007f7e0f7b3e20]
+Event: 24.268 Thread 0x0000556a2192ff70 1742       3       java.lang.String::hashCode (60 bytes)
+Event: 24.277 Thread 0x0000556a2192ff70 nmethod 1742 0x00007f7e07d20f10 code [0x00007f7e07d210e0, 0x00007f7e07d21418]
+Event: 25.754 Thread 0x00007f7d64080790 1744       3       org.jpype.JPypeContext::getClassLoader (26 bytes)
+Event: 25.754 Thread 0x00007f7d64084280 1743       3       org.jpype.JPypeContext::getInstance (4 bytes)
+Event: 25.755 Thread 0x0000556a2192e740 1745       4       jdk.internal.jimage.ImageStringsReader::hashCode (33 bytes)
+Event: 25.756 Thread 0x0000556a2192ff70 1746       3       org.jpype.pkg.JPypePackageManager::isModulePackage (109 bytes)
+Event: 25.759 Thread 0x00007f7d64084280 nmethod 1743 0x00007f7e07d21510 code [0x00007f7e07d216a0, 0x00007f7e07d21790]
+Event: 25.761 Thread 0x00007f7d64080790 nmethod 1744 0x00007f7e07d21810 code [0x00007f7e07d21a00, 0x00007f7e07d21f40]
+Event: 25.775 Thread 0x0000556a2192ff70 nmethod 1746 0x00007f7e07d22110 code [0x00007f7e07d223c0, 0x00007f7e07d23050]
+Event: 25.780 Thread 0x0000556a2192e740 nmethod 1745 0x00007f7e0f7bd710 code [0x00007f7e0f7bd8e0, 0x00007f7e0f7bdca0]
+Event: 29.714 Thread 0x00007f7d64083620 1747       3       java.lang.ref.ReferenceQueue::poll0 (65 bytes)
+Event: 29.717 Thread 0x00007f7d64083620 nmethod 1747 0x00007f7e07d23490 code [0x00007f7e07d23660, 0x00007f7e07d23b70]
+Event: 29.740 Thread 0x00007f7d64080790 1748       3       org.jpype.manager.TypeManager$Destroyer::add (101 bytes)
+Event: 29.740 Thread 0x00007f7d64083620 1749       3       org.jpype.manager.TypeManager$Destroyer::add (39 bytes)
+Event: 29.742 Thread 0x00007f7d64083620 nmethod 1749 0x00007f7e07d23c90 code [0x00007f7e07d23e40, 0x00007f7e07d24050]
+Event: 29.742 Thread 0x00007f7d64080790 nmethod 1748 0x00007f7e07d24190 code [0x00007f7e07d24380, 0x00007f7e07d24800]
+
+GC Heap History (14 events):
+Event: 0.796 GC heap before
+{Heap before GC invocations=0 (full 0):
+ garbage-first heap   total 2113536K, used 1074K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 1547K, committed 1664K, reserved 1114112K
+  class space    used 128K, committed 192K, reserved 1048576K
+}
+Event: 1.090 GC heap after
+{Heap after GC invocations=1 (full 1):
+ garbage-first heap   total 114688K, used 2450K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 0 young (0K), 0 survivors (0K)
+ Metaspace       used 1547K, committed 1664K, reserved 1114112K
+  class space    used 128K, committed 192K, reserved 1048576K
+}
+Event: 4.130 GC heap before
+{Heap before GC invocations=1 (full 1):
+ garbage-first heap   total 114688K, used 18834K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 2191K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 4.178 GC heap after
+{Heap after GC invocations=2 (full 1):
+ garbage-first heap   total 114688K, used 5106K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 2191K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 4.580 GC heap before
+{Heap before GC invocations=2 (full 1):
+ garbage-first heap   total 114688K, used 21490K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 2215K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 4.636 GC heap after
+{Heap after GC invocations=3 (full 1):
+ garbage-first heap   total 114688K, used 4849K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 2215K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 5.054 GC heap before
+{Heap before GC invocations=3 (full 1):
+ garbage-first heap   total 114688K, used 21233K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 2264K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 5.129 GC heap after
+{Heap after GC invocations=4 (full 1):
+ garbage-first heap   total 114688K, used 6351K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 2264K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 9.867 GC heap before
+{Heap before GC invocations=4 (full 1):
+ garbage-first heap   total 114688K, used 6351K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 2282K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 10.713 GC heap after
+{Heap after GC invocations=5 (full 2):
+ garbage-first heap   total 65536K, used 6445K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 0 young (0K), 0 survivors (0K)
+ Metaspace       used 2282K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 15.207 GC heap before
+{Heap before GC invocations=5 (full 2):
+ garbage-first heap   total 65536K, used 6445K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 2360K, committed 2560K, reserved 1114112K
+  class space    used 195K, committed 320K, reserved 1048576K
+}
+Event: 15.777 GC heap after
+{Heap after GC invocations=6 (full 3):
+ garbage-first heap   total 65536K, used 6489K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 0 young (0K), 0 survivors (0K)
+ Metaspace       used 2360K, committed 2560K, reserved 1114112K
+  class space    used 195K, committed 320K, reserved 1048576K
+}
+Event: 20.423 GC heap before
+{Heap before GC invocations=6 (full 3):
+ garbage-first heap   total 65536K, used 22873K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 5287K, committed 5440K, reserved 1114112K
+  class space    used 449K, committed 512K, reserved 1048576K
+}
+Event: 20.537 GC heap after
+{Heap after GC invocations=7 (full 3):
+ garbage-first heap   total 1081344K, used 9860K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 5287K, committed 5440K, reserved 1114112K
+  class space    used 449K, committed 512K, reserved 1048576K
+}
+
+Dll operation events (7 events):
+Event: 0.012 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+Event: 0.159 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so
+Event: 0.170 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+Event: 0.190 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so
+Event: 0.296 Loaded shared library /home/brysonbrown/.local/lib/python3.10/site-packages/_jpype.cpython-310-x86_64-linux-gnu.so
+Event: 0.349 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+Event: 17.787 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so
+
+Deoptimization events (20 events):
+Event: 23.311 Thread 0x0000556a16d747d0 Uncommon trap: trap_request=0xffffffde fr.pc=0x00007f7e0f788e3c relative=0x000000000000011c
+Event: 23.311 Thread 0x0000556a16d747d0 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f7e0f788e3c method=jdk.internal.misc.Unsafe.allocateUninitializedArray(Ljava/lang/Class;I)Ljava/lang/Object; @ 51 c2
+Event: 23.311 Thread 0x0000556a16d747d0 DEOPT PACKING pc=0x00007f7e0f788e3c sp=0x00007ffcfb35f0f0
+Event: 23.311 Thread 0x0000556a16d747d0 DEOPT UNPACKING pc=0x00007f7e0ee46f99 sp=0x00007ffcfb35f088 mode 2
+Event: 23.500 Thread 0x0000556a16d747d0 Uncommon trap: trap_request=0xffffff45 fr.pc=0x00007f7e0f78bd4c relative=0x000000000000298c
+Event: 23.500 Thread 0x0000556a16d747d0 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f7e0f78bd4c method=org.jpype.manager.MethodResolution.sortMethods(Ljava/util/List;)Ljava/util/List; @ 138 c2
+Event: 23.501 Thread 0x0000556a16d747d0 DEOPT PACKING pc=0x00007f7e0f78bd4c sp=0x00007ffcfb360e90
+Event: 23.501 Thread 0x0000556a16d747d0 DEOPT UNPACKING pc=0x00007f7e0ee46f99 sp=0x00007ffcfb360e10 mode 2
+Event: 24.209 Thread 0x0000556a16d747d0 Uncommon trap: trap_request=0xffffff45 fr.pc=0x00007f7e0f719f78 relative=0x0000000000000238
+Event: 24.209 Thread 0x0000556a16d747d0 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f7e0f719f78 method=java.lang.StringLatin1.hashCode([B)I @ 2 c2
+Event: 24.210 Thread 0x0000556a16d747d0 DEOPT PACKING pc=0x00007f7e0f719f78 sp=0x00007ffcfb34f0c0
+Event: 24.210 Thread 0x0000556a16d747d0 DEOPT UNPACKING pc=0x00007f7e0ee46f99 sp=0x00007ffcfb34f078 mode 2
+Event: 24.210 Thread 0x0000556a16d747d0 Uncommon trap: trap_request=0xffffff45 fr.pc=0x00007f7e0f6fa65c relative=0x00000000000000bc
+Event: 24.210 Thread 0x0000556a16d747d0 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f7e0f6fa65c method=java.lang.String.hashCode()I @ 42 c2
+Event: 24.210 Thread 0x0000556a16d747d0 DEOPT PACKING pc=0x00007f7e0f6fa65c sp=0x00007ffcfb34f0f0
+Event: 24.210 Thread 0x0000556a16d747d0 DEOPT UNPACKING pc=0x00007f7e0ee46f99 sp=0x00007ffcfb34f0a0 mode 2
+Event: 24.211 Thread 0x0000556a16d747d0 Uncommon trap: trap_request=0xffffff45 fr.pc=0x00007f7e0f723cfc relative=0x000000000000023c
+Event: 24.211 Thread 0x0000556a16d747d0 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f7e0f723cfc method=java.lang.String.startsWith(Ljava/lang/String;I)Z @ 1 c2
+Event: 24.211 Thread 0x0000556a16d747d0 DEOPT PACKING pc=0x00007f7e0f723cfc sp=0x00007ffcfb34f2f0
+Event: 24.211 Thread 0x0000556a16d747d0 DEOPT UNPACKING pc=0x00007f7e0ee46f99 sp=0x00007ffcfb34f280 mode 2
+
+Classes loaded (20 events):
+Event: 29.708 Loading class java/lang/System$Logger$Level
+Event: 29.708 Loading class java/lang/System$Logger$Level done
+Event: 29.709 Loading class jdk/internal/logger/SurrogateLogger
+Event: 29.709 Loading class jdk/internal/logger/SimpleConsoleLogger
+Event: 29.710 Loading class sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration
+Event: 29.710 Loading class sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration done
+Event: 29.710 Loading class jdk/internal/logger/SimpleConsoleLogger done
+Event: 29.711 Loading class jdk/internal/logger/SurrogateLogger done
+Event: 29.721 Loading class sun/util/logging/PlatformLogger
+Event: 29.722 Loading class sun/util/logging/PlatformLogger done
+Event: 29.722 Loading class sun/util/logging/PlatformLogger$Level
+Event: 29.722 Loading class sun/util/logging/PlatformLogger$Level done
+Event: 29.727 Loading class jdk/internal/event/ThreadSleepEvent
+Event: 29.727 Loading class jdk/internal/event/Event
+Event: 29.727 Loading class jdk/internal/event/Event done
+Event: 29.727 Loading class jdk/internal/event/ThreadSleepEvent done
+Event: 29.742 Loading class java/util/WeakHashMap$KeyIterator
+Event: 29.742 Loading class java/util/WeakHashMap$HashIterator
+Event: 29.742 Loading class java/util/WeakHashMap$HashIterator done
+Event: 29.742 Loading class java/util/WeakHashMap$KeyIterator done
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 0.302 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f156b80}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object)'> (0x000000011f156b80) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 0.303 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f15cda8}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, int)'> (0x000000011f15cda8) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 0.307 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f167200}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial(java.lang.Object, java.lang.Object, java.lang.Object)'> (0x000000011f167200) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 0.311 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f177108}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, int)'> (0x000000011f177108) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 0.316 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f1827c8}: 'void java.lang.invoke.DelegatingMethodHandle$Holder.delegate(java.lang.Object, java.lang.Object, int, java.lang.Object)'> (0x000000011f1827c8) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 0.374 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f9d3170}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeInterface(java.lang.Object, java.lang.Object)'> (0x000000011f9d3170) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 0.375 Thread 0x0000556a16d747d0 Exception <a 'java/lang/IncompatibleClassChangeError'{0x000000011f9d6408}: Found class java.lang.Object, but interface was expected> (0x000000011f9d6408) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 840]
+Event: 0.685 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011facdbf8}: method resolution failed> (0x000000011facdbf8) 
+thrown [./src/hotspot/share/prims/methodHandles.cpp, line 1144]
+Event: 0.702 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x000000011fad7028}: 'java.lang.Object java.lang.invoke.Invokers$Holder.invokeExact_MT(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x000000011fad7028) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 3.429 Thread 0x0000556a16d747d0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a672a6b8}: 'void java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, java.lang.Object)'> (0x00000000a672a6b8) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+
+ZGC Phase Switch (0 events):
+No events
+
+VM Operations (20 events):
+Event: 15.779 Executing VM operation: G1CollectFull (System.gc()) done
+Event: 17.779 Executing VM operation: Cleanup
+Event: 17.781 Executing VM operation: Cleanup done
+Event: 17.859 Executing VM operation: HandshakeAllThreads (Deoptimize)
+Event: 17.861 Executing VM operation: HandshakeAllThreads (Deoptimize) done
+Event: 18.862 Executing VM operation: Cleanup
+Event: 18.865 Executing VM operation: Cleanup done
+Event: 19.865 Executing VM operation: Cleanup
+Event: 19.866 Executing VM operation: Cleanup done
+Event: 20.421 Executing VM operation: G1CollectForAllocation (G1 Evacuation Pause)
+Event: 20.538 Executing VM operation: G1CollectForAllocation (G1 Evacuation Pause) done
+Event: 21.538 Executing VM operation: Cleanup
+Event: 21.539 Executing VM operation: Cleanup done
+Event: 23.539 Executing VM operation: Cleanup
+Event: 23.539 Executing VM operation: Cleanup done
+Event: 24.540 Executing VM operation: Cleanup
+Event: 24.540 Executing VM operation: Cleanup done
+Event: 29.733 Executing VM operation: ThreadDump
+Event: 29.734 Executing VM operation: ThreadDump done
+Event: 29.744 Executing VM operation: Exit
+
+Memory protections (20 events):
+Event: 4.012 Protecting memory [0x00007f7d89e2e000,0x00007f7d89e32000] with protection modes 0
+Event: 4.015 Protecting memory [0x00007f7d89c2d000,0x00007f7d89c31000] with protection modes 0
+Event: 4.017 Protecting memory [0x00007f7d89b2d000,0x00007f7d89b31000] with protection modes 0
+Event: 4.023 Protecting memory [0x00007f7d89a2d000,0x00007f7d89a31000] with protection modes 0
+Event: 4.027 Protecting memory [0x00007f7d8992d000,0x00007f7d89931000] with protection modes 0
+Event: 4.073 Protecting memory [0x00007f7d8982d000,0x00007f7d89831000] with protection modes 0
+Event: 4.082 Protecting memory [0x00007f7d8972d000,0x00007f7d89731000] with protection modes 0
+Event: 4.109 Protecting memory [0x00007f7d8962d000,0x00007f7d89631000] with protection modes 0
+Event: 17.370 Protecting memory [0x00007f7d8a32e000,0x00007f7d8a332000] with protection modes 0
+Event: 17.942 Protecting memory [0x00007f7d8a42e000,0x00007f7d8a432000] with protection modes 0
+Event: 17.943 Protecting memory [0x00007f7d8a22e000,0x00007f7d8a232000] with protection modes 0
+Event: 17.949 Protecting memory [0x00007f7d8982d000,0x00007f7d89831000] with protection modes 0
+Event: 17.949 Protecting memory [0x00007f7d8992d000,0x00007f7d89931000] with protection modes 0
+Event: 17.950 Protecting memory [0x00007f7d8972d000,0x00007f7d89731000] with protection modes 0
+Event: 18.001 Protecting memory [0x00007f7d89a2d000,0x00007f7d89a31000] with protection modes 0
+Event: 18.153 Protecting memory [0x00007f7d89e2e000,0x00007f7d89e32000] with protection modes 0
+Event: 18.156 Protecting memory [0x00007f7d89c2d000,0x00007f7d89c31000] with protection modes 0
+Event: 23.679 Protecting memory [0x00007f7d8972d000,0x00007f7d89731000] with protection modes 0
+Event: 29.676 Protecting memory [0x00007f7d8982d000,0x00007f7d89831000] with protection modes 0
+Event: 29.725 Protecting memory [0x00007f7d8a22e000,0x00007f7d8a232000] with protection modes 0
+
+Nmethod flushes (20 events):
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b7b590
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b7c990
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b7e190
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b85790
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b87410
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b89510
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b89990
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b8b010
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b8b610
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b8c610
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b8ca90
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b8d610
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b8e810
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b8eb90
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b91010
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b92b10
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b93c10
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07b95390
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07ba2410
+Event: 15.396 Thread 0x0000556a2191eab0 flushing  nmethod 0x00007f7e07bb3c10
+
+Events (20 events):
+Event: 17.950 Thread 0x0000556a2192ff70 Thread added: 0x00007f7d64287620
+Event: 18.000 Thread 0x00007f7d6407e5e0 Thread added: 0x00007f7d4c015b10
+Event: 18.152 Thread 0x00007f7d64083620 Thread added: 0x00007f7d50001fa0
+Event: 18.155 Thread 0x00007f7d64083620 Thread added: 0x00007f7d50002ba0
+Event: 18.479 Thread 0x00007f7d50002ba0 Thread exited: 0x00007f7d50002ba0
+Event: 18.538 Thread 0x00007f7d50001fa0 Thread exited: 0x00007f7d50001fa0
+Event: 18.539 Thread 0x00007f7d4c015b10 Thread exited: 0x00007f7d4c015b10
+Event: 23.330 Thread 0x00007f7d64287620 Thread exited: 0x00007f7d64287620
+Event: 23.679 Thread 0x00007f7d64083620 Thread added: 0x00007f7d50008b20
+Event: 24.270 Thread 0x00007f7d50008b20 Thread exited: 0x00007f7d50008b20
+Event: 24.272 Thread 0x00007f7d6407e5e0 Thread exited: 0x00007f7d6407e5e0
+Event: 24.273 Thread 0x00007f7d4800a1e0 Thread exited: 0x00007f7d4800a1e0
+Event: 25.754 Thread 0x00007f7d64286850 Thread exited: 0x00007f7d64286850
+Event: 25.755 Thread 0x00007f7d64084f00 Thread exited: 0x00007f7d64084f00
+Event: 29.676 Thread 0x0000556a21929bd0 Thread added: 0x00007f7d74001330
+Event: 29.714 Thread 0x00007f7d64084280 Thread exited: 0x00007f7d64084280
+Event: 29.725 Thread 0x00007f7d74001330 Thread added: 0x00007f7d2002b0c0
+Event: 29.738 Thread 0x0000556a21a08310 Thread exited: 0x0000556a21a08310
+Event: 29.743 Thread 0x00007f7d2002b0c0 Thread exited: 0x00007f7d2002b0c0
+Event: 29.743 Thread 0x00007f7d74001330 Before exit entered
+
+
+Dynamic libraries:
+a0000000-e2000000 rw-p 00000000 00:00 0 
+e2000000-800000000 ---p 00000000 00:00 0 
+5569d2c3e000-5569d2cab000 r--p 00000000 fd:00 42337173                   /usr/bin/python3.10
+5569d2cab000-5569d2f60000 r-xp 0006d000 fd:00 42337173                   /usr/bin/python3.10
+5569d2f60000-5569d31a2000 r--p 00322000 fd:00 42337173                   /usr/bin/python3.10
+5569d31a2000-5569d31a9000 r--p 00563000 fd:00 42337173                   /usr/bin/python3.10
+5569d31a9000-5569d31e8000 rw-p 0056a000 fd:00 42337173                   /usr/bin/python3.10
+5569d31e8000-5569d322e000 rw-p 00000000 00:00 0 
+556a10a21000-556a10b6f000 rw-p 00000000 00:00 0                          [heap]
+556a10b6f000-556a2411a000 rw-p 00000000 00:00 0                          [heap]
+7f7cd7e06000-7f7cd8406000 rw-p 00000000 00:00 0 
+7f7cd8406000-7f7cd841b000 r--p 00000000 fd:00 16018054                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_parallel_device.so
+7f7cd841b000-7f7cd843e000 r-xp 00014000 fd:00 16018054                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_parallel_device.so
+7f7cd843e000-7f7cd8440000 r--p 00036000 fd:00 16018054                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_parallel_device.so
+7f7cd8440000-7f7cd8441000 rw-p 00037000 fd:00 16018054                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_parallel_device.so
+7f7cd8441000-7f7cd8944000 rw-p 00000000 00:00 0 
+7f7cd8944000-7f7cd8957000 r--p 00000000 fd:00 16019073                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_proto_comparators.so
+7f7cd8957000-7f7cd8973000 r-xp 00012000 fd:00 16019073                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_proto_comparators.so
+7f7cd8973000-7f7cd8975000 r--p 0002d000 fd:00 16019073                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_proto_comparators.so
+7f7cd8975000-7f7cd8976000 rw-p 0002e000 fd:00 16019073                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_proto_comparators.so
+7f7cd8976000-7f7cd8978000 rw-p 00000000 00:00 0 
+7f7cd8978000-7f7cd898e000 r--p 00000000 fd:00 16018582                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/lib/io/_pywrap_record_io.so
+7f7cd898e000-7f7cd89b2000 r-xp 00015000 fd:00 16018582                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/lib/io/_pywrap_record_io.so
+7f7cd89b2000-7f7cd89b4000 r--p 00038000 fd:00 16018582                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/lib/io/_pywrap_record_io.so
+7f7cd89b4000-7f7cd89b5000 rw-p 00039000 fd:00 16018582                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/lib/io/_pywrap_record_io.so
+7f7cd89b5000-7f7cd8bb7000 rw-p 00000000 00:00 0 
+7f7cd8bb7000-7f7cd8bc7000 r--p 00000000 fd:00 16018169                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_device_lib.so
+7f7cd8bc7000-7f7cd8bdf000 r-xp 0000f000 fd:00 16018169                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_device_lib.so
+7f7cd8bdf000-7f7cd8be0000 r--p 00026000 fd:00 16018169                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_device_lib.so
+7f7cd8be0000-7f7cd8be1000 rw-p 00026000 fd:00 16018169                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_device_lib.so
+7f7cd8be1000-7f7cd98e4000 rw-p 00000000 00:00 0 
+7f7cd98e4000-7f7cd98f8000 r--p 00000000 fd:00 16019124                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_api_dispatcher.so
+7f7cd98f8000-7f7cd9921000 r-xp 00013000 fd:00 16019124                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_api_dispatcher.so
+7f7cd9921000-7f7cd9922000 r--p 0003b000 fd:00 16019124                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_api_dispatcher.so
+7f7cd9922000-7f7cd9924000 rw-p 0003b000 fd:00 16019124                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_api_dispatcher.so
+7f7cd9924000-7f7cd9939000 r--p 00000000 fd:00 16019113                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_library_pybind.so
+7f7cd9939000-7f7cd995d000 r-xp 00014000 fd:00 16019113                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_library_pybind.so
+7f7cd995d000-7f7cd995f000 r--p 00037000 fd:00 16019113                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_library_pybind.so
+7f7cd995f000-7f7cd9960000 rw-p 00038000 fd:00 16019113                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_library_pybind.so
+7f7cd9960000-7f7cd9963000 rw-p 00000000 00:00 0 
+7f7cd9963000-7f7cd9973000 r--p 00000000 fd:00 16019117                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_registry.so
+7f7cd9973000-7f7cd998a000 r-xp 0000f000 fd:00 16019117                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_registry.so
+7f7cd998a000-7f7cd998b000 r--p 00025000 fd:00 16019117                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_registry.so
+7f7cd998b000-7f7cd998c000 rw-p 00025000 fd:00 16019117                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_op_def_registry.so
+7f7cd998c000-7f7cd9a8f000 rw-p 00000000 00:00 0 
+7f7cd9a8f000-7f7cd9af7000 r--p 00000000 fd:00 16018065                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_dtensor_device.so
+7f7cd9af7000-7f7cd9bf8000 r-xp 00067000 fd:00 16018065                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_dtensor_device.so
+7f7cd9bf8000-7f7cd9bff000 r--p 00167000 fd:00 16018065                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_dtensor_device.so
+7f7cd9bff000-7f7cd9c01000 rw-p 0016d000 fd:00 16018065                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_dtensor_device.so
+7f7cd9c01000-7f7cd9c04000 rw-p 00000000 00:00 0 
+7f7cd9c04000-7f7cd9c0d000 r--p 00000000 fd:00 16018238                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tensor_float_32_execution.so
+7f7cd9c0d000-7f7cd9c1e000 r-xp 00008000 fd:00 16018238                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tensor_float_32_execution.so
+7f7cd9c1e000-7f7cd9c20000 r--p 00018000 fd:00 16018238                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tensor_float_32_execution.so
+7f7cd9c20000-7f7cd9c21000 rw-p 00019000 fd:00 16018238                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tensor_float_32_execution.so
+7f7cd9c21000-7f7cd9c2a000 r--p 00000000 fd:00 16018209                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_determinism.so
+7f7cd9c2a000-7f7cd9c3b000 r-xp 00008000 fd:00 16018209                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_determinism.so
+7f7cd9c3b000-7f7cd9c3d000 r--p 00018000 fd:00 16018209                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_determinism.so
+7f7cd9c3d000-7f7cd9c3e000 rw-p 00019000 fd:00 16018209                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_determinism.so
+7f7cd9c3e000-7f7cd9c4d000 r--p 00000000 fd:00 16018056                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/flags_pybind.so
+7f7cd9c4d000-7f7cd9c65000 r-xp 0000e000 fd:00 16018056                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/flags_pybind.so
+7f7cd9c65000-7f7cd9c67000 r--p 00025000 fd:00 16018056                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/flags_pybind.so
+7f7cd9c67000-7f7cd9c68000 rw-p 00026000 fd:00 16018056                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/flags_pybind.so
+7f7cd9c68000-7f7cd9c75000 r--p 00000000 fd:00 16018658                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/profiler/internal/_pywrap_traceme.so
+7f7cd9c75000-7f7cd9c8b000 r-xp 0000c000 fd:00 16018658                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/profiler/internal/_pywrap_traceme.so
+7f7cd9c8b000-7f7cd9c8d000 r--p 00021000 fd:00 16018658                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/profiler/internal/_pywrap_traceme.so
+7f7cd9c8d000-7f7cd9c8e000 rw-p 00022000 fd:00 16018658                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/profiler/internal/_pywrap_traceme.so
+7f7cd9c8e000-7f7cd9d8e000 rw-p 00000000 00:00 0 
+7f7cd9d8e000-7f7cd9d9e000 r--p 00000000 fd:00 16018234                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_utils.so
+7f7cd9d9e000-7f7cd9db3000 r-xp 0000f000 fd:00 16018234                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_utils.so
+7f7cd9db3000-7f7cd9db5000 r--p 00023000 fd:00 16018234                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_utils.so
+7f7cd9db5000-7f7cd9db6000 rw-p 00024000 fd:00 16018234                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_utils.so
+7f7cd9db6000-7f7cd9dbf000 r--p 00000000 fd:00 16018213                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_nest.so
+7f7cd9dbf000-7f7cd9dd0000 r-xp 00008000 fd:00 16018213                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_nest.so
+7f7cd9dd0000-7f7cd9dd2000 r--p 00018000 fd:00 16018213                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_nest.so
+7f7cd9dd2000-7f7cd9dd3000 rw-p 00019000 fd:00 16018213                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_nest.so
+7f7cd9dd3000-7f7cd9ed3000 rw-p 00000000 00:00 0 
+7f7cd9ed3000-7f7cd9ed8000 r--p 00000000 fd:00 15750817                   /home/brysonbrown/.local/lib/python3.10/site-packages/ml_dtypes/_ml_dtypes_ext.cpython-310-x86_64-linux-gnu.so
+7f7cd9ed8000-7f7cd9f56000 r-xp 00005000 fd:00 15750817                   /home/brysonbrown/.local/lib/python3.10/site-packages/ml_dtypes/_ml_dtypes_ext.cpython-310-x86_64-linux-gnu.so
+7f7cd9f56000-7f7cd9f71000 r--p 00083000 fd:00 15750817                   /home/brysonbrown/.local/lib/python3.10/site-packages/ml_dtypes/_ml_dtypes_ext.cpython-310-x86_64-linux-gnu.so
+7f7cd9f71000-7f7cd9f72000 r--p 0009d000 fd:00 15750817                   /home/brysonbrown/.local/lib/python3.10/site-packages/ml_dtypes/_ml_dtypes_ext.cpython-310-x86_64-linux-gnu.so
+7f7cd9f72000-7f7cd9f73000 rw-p 0009e000 fd:00 15750817                   /home/brysonbrown/.local/lib/python3.10/site-packages/ml_dtypes/_ml_dtypes_ext.cpython-310-x86_64-linux-gnu.so
+7f7cd9f73000-7f7cda074000 rw-p 00000000 00:00 0 
+7f7cda074000-7f7cfab8e000 r--p 00000000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f7cfab8e000-7f7d0f40b000 r-xp 20b19000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f7d0f40b000-7f7d0fb43000 r--p 35395000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f7d0fb43000-7f7d0fb97000 rw-p 35acc000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f7d0fb97000-7f7d0fc7b000 rw-p 00000000 00:00 0 
+7f7d0fc7b000-7f7d1682e000 r--p 00000000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f7d1682e000-7f7d17ebc000 r-xp 06bb2000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f7d17ebc000-7f7d17f73000 r--p 0823f000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f7d17f73000-7f7d17fcf000 rw-p 082f5000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f7d17fcf000-7f7d18000000 rw-p 00000000 00:00 0 
+7f7d18000000-7f7d180af000 rw-p 00000000 00:00 0 
+7f7d180af000-7f7d1c000000 ---p 00000000 00:00 0 
+7f7d1c000000-7f7d1c021000 rw-p 00000000 00:00 0 
+7f7d1c021000-7f7d20000000 ---p 00000000 00:00 0 
+7f7d20000000-7f7d2062a000 rw-p 00000000 00:00 0 
+7f7d2062a000-7f7d24000000 ---p 00000000 00:00 0 
+7f7d24000000-7f7d24ea5000 rw-p 00000000 00:00 0 
+7f7d24ea5000-7f7d28000000 ---p 00000000 00:00 0 
+7f7d28000000-7f7d28365000 rw-p 00000000 00:00 0 
+7f7d28365000-7f7d2c000000 ---p 00000000 00:00 0 
+7f7d2c000000-7f7d2ca5d000 rw-p 00000000 00:00 0 
+7f7d2ca5d000-7f7d30000000 ---p 00000000 00:00 0 
+7f7d30000000-7f7d300b0000 rw-p 00000000 00:00 0 
+7f7d300b0000-7f7d34000000 ---p 00000000 00:00 0 
+7f7d34000000-7f7d340a5000 rw-p 00000000 00:00 0 
+7f7d340a5000-7f7d38000000 ---p 00000000 00:00 0 
+7f7d38000000-7f7d38040000 rw-p 00000000 00:00 0 
+7f7d38040000-7f7d3c000000 ---p 00000000 00:00 0 
+7f7d3c000000-7f7d3c38d000 rw-p 00000000 00:00 0 
+7f7d3c38d000-7f7d40000000 ---p 00000000 00:00 0 
+7f7d40000000-7f7d42fc9000 rw-p 00000000 00:00 0 
+7f7d42fc9000-7f7d44000000 ---p 00000000 00:00 0 
+7f7d44000000-7f7d44021000 rw-p 00000000 00:00 0 
+7f7d44021000-7f7d48000000 ---p 00000000 00:00 0 
+7f7d48000000-7f7d4815b000 rw-p 00000000 00:00 0 
+7f7d4815b000-7f7d4c000000 ---p 00000000 00:00 0 
+7f7d4c000000-7f7d4c6cf000 rw-p 00000000 00:00 0 
+7f7d4c6cf000-7f7d50000000 ---p 00000000 00:00 0 
+7f7d50000000-7f7d501fd000 rw-p 00000000 00:00 0 
+7f7d501fd000-7f7d54000000 ---p 00000000 00:00 0 
+7f7d54000000-7f7d5418f000 rw-p 00000000 00:00 0 
+7f7d5418f000-7f7d58000000 ---p 00000000 00:00 0 
+7f7d58000000-7f7d58021000 rw-p 00000000 00:00 0 
+7f7d58021000-7f7d5c000000 ---p 00000000 00:00 0 
+7f7d5c000000-7f7d5c021000 rw-p 00000000 00:00 0 
+7f7d5c021000-7f7d60000000 ---p 00000000 00:00 0 
+7f7d60000000-7f7d60511000 rw-p 00000000 00:00 0 
+7f7d60511000-7f7d64000000 ---p 00000000 00:00 0 
+7f7d64000000-7f7d642e6000 rw-p 00000000 00:00 0 
+7f7d642e6000-7f7d68000000 ---p 00000000 00:00 0 
+7f7d68000000-7f7d68021000 rw-p 00000000 00:00 0 
+7f7d68021000-7f7d6c000000 ---p 00000000 00:00 0 
+7f7d6c000000-7f7d6c021000 rw-p 00000000 00:00 0 
+7f7d6c021000-7f7d70000000 ---p 00000000 00:00 0 
+7f7d70000000-7f7d70021000 rw-p 00000000 00:00 0 
+7f7d70021000-7f7d74000000 ---p 00000000 00:00 0 
+7f7d74000000-7f7d74021000 rw-p 00000000 00:00 0 
+7f7d74021000-7f7d78000000 ---p 00000000 00:00 0 
+7f7d78000000-7f7d78418000 rw-p 00000000 00:00 0 
+7f7d78418000-7f7d7c000000 ---p 00000000 00:00 0 
+7f7d7c000000-7f7d7c021000 rw-p 00000000 00:00 0 
+7f7d7c021000-7f7d80000000 ---p 00000000 00:00 0 
+7f7d80000000-7f7d802b0000 rw-p 00000000 00:00 0 
+7f7d802b0000-7f7d80400000 ---p 00000000 00:00 0 
+7f7d80400000-7f7d806b0000 rw-p 00000000 00:00 0 
+7f7d806b0000-7f7d84000000 ---p 00000000 00:00 0 
+7f7d84000000-7f7d84021000 rw-p 00000000 00:00 0 
+7f7d84021000-7f7d88000000 ---p 00000000 00:00 0 
+7f7d88001000-7f7d8800e000 r--p 00000000 fd:00 16019071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_dtypes.so
+7f7d8800e000-7f7d88027000 r-xp 0000c000 fd:00 16019071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_dtypes.so
+7f7d88027000-7f7d88029000 r--p 00024000 fd:00 16019071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_dtypes.so
+7f7d88029000-7f7d8802a000 rw-p 00025000 fd:00 16019071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_dtypes.so
+7f7d8802a000-7f7d8803a000 r--p 00000000 fd:00 16018053                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_py_exception_registry.so
+7f7d8803a000-7f7d8805a000 r-xp 0000f000 fd:00 16018053                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_py_exception_registry.so
+7f7d8805a000-7f7d8805c000 r--p 0002e000 fd:00 16018053                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_py_exception_registry.so
+7f7d8805c000-7f7d8805d000 rw-p 0002f000 fd:00 16018053                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_py_exception_registry.so
+7f7d8805d000-7f7d8807e000 r--p 00000000 fd:00 16018182                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_tf_stack.so
+7f7d8807e000-7f7d880bd000 r-xp 00020000 fd:00 16018182                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_tf_stack.so
+7f7d880bd000-7f7d880c0000 r--p 0005e000 fd:00 16018182                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_tf_stack.so
+7f7d880c0000-7f7d880c1000 rw-p 00060000 fd:00 16018182                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_tf_stack.so
+7f7d880c1000-7f7d880c3000 rw-p 00000000 00:00 0 
+7f7d880c3000-7f7d880c7000 r--p 00000000 fd:00 42347357                   /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.32.1
+7f7d880c7000-7f7d880dd000 r-xp 00004000 fd:00 42347357                   /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.32.1
+7f7d880dd000-7f7d880e7000 r--p 0001a000 fd:00 42347357                   /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.32.1
+7f7d880e7000-7f7d880e8000 r--p 00023000 fd:00 42347357                   /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.32.1
+7f7d880e8000-7f7d880e9000 rw-p 00024000 fd:00 42347357                   /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.32.1
+7f7d880e9000-7f7d880eb000 r--p 00000000 fd:00 42347552                   /usr/lib/x86_64-linux-gnu/libxxhash.so.0.8.1
+7f7d880eb000-7f7d880fa000 r-xp 00002000 fd:00 42347552                   /usr/lib/x86_64-linux-gnu/libxxhash.so.0.8.1
+7f7d880fa000-7f7d880fc000 r--p 00011000 fd:00 42347552                   /usr/lib/x86_64-linux-gnu/libxxhash.so.0.8.1
+7f7d880fc000-7f7d880fd000 r--p 00012000 fd:00 42347552                   /usr/lib/x86_64-linux-gnu/libxxhash.so.0.8.1
+7f7d880fd000-7f7d880fe000 rw-p 00013000 fd:00 42347552                   /usr/lib/x86_64-linux-gnu/libxxhash.so.0.8.1
+7f7d880fe000-7f7d8810d000 r--p 00000000 fd:00 42347347                   /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.3.4
+7f7d8810d000-7f7d881f3000 r-xp 0000f000 fd:00 42347347                   /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.3.4
+7f7d881f3000-7f7d88231000 r--p 000f5000 fd:00 42347347                   /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.3.4
+7f7d88231000-7f7d88232000 ---p 00133000 fd:00 42347347                   /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.3.4
+7f7d88232000-7f7d88235000 r--p 00133000 fd:00 42347347                   /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.3.4
+7f7d88235000-7f7d8823b000 rw-p 00136000 fd:00 42347347                   /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.3.4
+7f7d8823b000-7f7d8823c000 rw-p 00000000 00:00 0 
+7f7d8823c000-7f7d8824f000 r--p 00000000 fd:00 42336531                   /usr/lib/x86_64-linux-gnu/libsystemd.so.0.32.0
+7f7d8824f000-7f7d882ce000 r-xp 00013000 fd:00 42336531                   /usr/lib/x86_64-linux-gnu/libsystemd.so.0.32.0
+7f7d882ce000-7f7d882f9000 r--p 00092000 fd:00 42336531                   /usr/lib/x86_64-linux-gnu/libsystemd.so.0.32.0
+7f7d882f9000-7f7d882fa000 ---p 000bd000 fd:00 42336531                   /usr/lib/x86_64-linux-gnu/libsystemd.so.0.32.0
+7f7d882fa000-7f7d88301000 r--p 000bd000 fd:00 42336531                   /usr/lib/x86_64-linux-gnu/libsystemd.so.0.32.0
+7f7d88301000-7f7d88302000 rw-p 000c4000 fd:00 42336531                   /usr/lib/x86_64-linux-gnu/libsystemd.so.0.32.0
+7f7d88302000-7f7d88303000 rw-p 00000000 00:00 0 
+7f7d88303000-7f7d8830d000 r--p 00000000 fd:00 42347555                   /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.8
+7f7d8830d000-7f7d883bf000 r-xp 0000a000 fd:00 42347555                   /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.8
+7f7d883bf000-7f7d883d0000 r--p 000bc000 fd:00 42347555                   /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.8
+7f7d883d0000-7f7d883d1000 r--p 000cc000 fd:00 42347555                   /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.8
+7f7d883d1000-7f7d883d2000 rw-p 000cd000 fd:00 42347555                   /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.8
+7f7d883d2000-7f7d88408000 r--p 00000000 fd:00 42338549                   /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0.0
+7f7d88408000-7f7d88548000 r-xp 00036000 fd:00 42338549                   /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0.0
+7f7d88548000-7f7d88590000 r--p 00176000 fd:00 42338549                   /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0.0
+7f7d88590000-7f7d88591000 ---p 001be000 fd:00 42338549                   /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0.0
+7f7d88591000-7f7d88598000 r--p 001be000 fd:00 42338549                   /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0.0
+7f7d88598000-7f7d88599000 rw-p 001c5000 fd:00 42338549                   /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0.0
+7f7d88599000-7f7d885ae000 r--p 00000000 fd:00 42348939                   /usr/lib/python3/dist-packages/apt_pkg.cpython-310-x86_64-linux-gnu.so
+7f7d885ae000-7f7d885cd000 r-xp 00015000 fd:00 42348939                   /usr/lib/python3/dist-packages/apt_pkg.cpython-310-x86_64-linux-gnu.so
+7f7d885cd000-7f7d885e4000 r--p 00034000 fd:00 42348939                   /usr/lib/python3/dist-packages/apt_pkg.cpython-310-x86_64-linux-gnu.so
+7f7d885e4000-7f7d885e6000 r--p 0004a000 fd:00 42348939                   /usr/lib/python3/dist-packages/apt_pkg.cpython-310-x86_64-linux-gnu.so
+7f7d885e6000-7f7d885ef000 rw-p 0004c000 fd:00 42348939                   /usr/lib/python3/dist-packages/apt_pkg.cpython-310-x86_64-linux-gnu.so
+7f7d885ef000-7f7d88679000 r--p 00000000 fd:00 16018179                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_tf_session.so
+7f7d88679000-7f7d887ab000 r-xp 00089000 fd:00 16018179                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_tf_session.so
+7f7d887ab000-7f7d887b3000 r--p 001ba000 fd:00 16018179                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_tf_session.so
+7f7d887b3000-7f7d887b5000 rw-p 001c1000 fd:00 16018179                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_tf_session.so
+7f7d887b5000-7f7d887b8000 rw-p 00000000 00:00 0 
+7f7d887b8000-7f7d887ea000 r--p 00000000 fd:00 16018068                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tfe.so
+7f7d887ea000-7f7d8884a000 r-xp 00031000 fd:00 16018068                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tfe.so
+7f7d8884a000-7f7d8884d000 r--p 00090000 fd:00 16018068                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tfe.so
+7f7d8884d000-7f7d8884e000 rw-p 00092000 fd:00 16018068                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tfe.so
+7f7d8884e000-7f7d8894e000 rw-p 00000000 00:00 0 
+7f7d8894e000-7f7d88a28000 r--p 00000000 fd:00 16018058                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
+7f7d88a28000-7f7d88bd8000 r-xp 000d9000 fd:00 16018058                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
+7f7d88bd8000-7f7d88be4000 r--p 00288000 fd:00 16018058                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
+7f7d88be4000-7f7d88bee000 rw-p 00293000 fd:00 16018058                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
+7f7d88bee000-7f7d88bf1000 rw-p 00000000 00:00 0 
+7f7d88bf1000-7f7d88c2a000 rw-p 0037f000 fd:00 16018058                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
+7f7d88c2a000-7f7d8922a000 rw-p 00000000 00:00 0 
+7f7d8922a000-7f7d8922b000 ---p 00000000 00:00 0 
+7f7d8922b000-7f7d8932b000 rw-p 00000000 00:00 0 
+7f7d8932b000-7f7d8932c000 ---p 00000000 00:00 0 
+7f7d8932c000-7f7d8952c000 rw-p 00000000 00:00 0 
+7f7d8952c000-7f7d8952d000 ---p 00000000 00:00 0 
+7f7d8952d000-7f7d8962d000 rw-p 00000000 00:00 0 
+7f7d8962d000-7f7d89631000 ---p 00000000 00:00 0 
+7f7d89631000-7f7d8972d000 rw-p 00000000 00:00 0 
+7f7d8972d000-7f7d89731000 ---p 00000000 00:00 0 
+7f7d89731000-7f7d8982d000 rw-p 00000000 00:00 0 
+7f7d8982d000-7f7d89831000 ---p 00000000 00:00 0 
+7f7d89831000-7f7d8992d000 rw-p 00000000 00:00 0 
+7f7d8992d000-7f7d89931000 ---p 00000000 00:00 0 
+7f7d89931000-7f7d89a2d000 rw-p 00000000 00:00 0 
+7f7d89a2d000-7f7d89a31000 ---p 00000000 00:00 0 
+7f7d89a31000-7f7d89b2d000 rw-p 00000000 00:00 0 
+7f7d89b2d000-7f7d89b31000 ---p 00000000 00:00 0 
+7f7d89b31000-7f7d89c2d000 rw-p 00000000 00:00 0 
+7f7d89c2d000-7f7d89c31000 ---p 00000000 00:00 0 
+7f7d89c31000-7f7d89d2d000 rw-p 00000000 00:00 0 
+7f7d89d2d000-7f7d89d2e000 ---p 00000000 00:00 0 
+7f7d89d2e000-7f7d89e2e000 rw-p 00000000 00:00 0 
+7f7d89e2e000-7f7d89e32000 ---p 00000000 00:00 0 
+7f7d89e32000-7f7d89f2e000 rw-p 00000000 00:00 0 
+7f7d89f2e000-7f7d89f32000 ---p 00000000 00:00 0 
+7f7d89f32000-7f7d8a02e000 rw-p 00000000 00:00 0 
+7f7d8a02e000-7f7d8a032000 ---p 00000000 00:00 0 
+7f7d8a032000-7f7d8a12e000 rw-p 00000000 00:00 0 
+7f7d8a12e000-7f7d8a132000 ---p 00000000 00:00 0 
+7f7d8a132000-7f7d8a22e000 rw-p 00000000 00:00 0 
+7f7d8a22e000-7f7d8a232000 ---p 00000000 00:00 0 
+7f7d8a232000-7f7d8a32e000 rw-p 00000000 00:00 0 
+7f7d8a32e000-7f7d8a332000 ---p 00000000 00:00 0 
+7f7d8a332000-7f7d8a42e000 rw-p 00000000 00:00 0 
+7f7d8a42e000-7f7d8a432000 ---p 00000000 00:00 0 
+7f7d8a432000-7f7d8a52e000 rw-p 00000000 00:00 0 
+7f7d8a52e000-7f7d8a532000 ---p 00000000 00:00 0 
+7f7d8a532000-7f7d8a62e000 rw-p 00000000 00:00 0 
+7f7d8a62e000-7f7d8a632000 ---p 00000000 00:00 0 
+7f7d8a632000-7f7d8a72e000 rw-p 00000000 00:00 0 
+7f7d8a72e000-7f7d8a733000 r--p 00000000 fd:00 48365875                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so
+7f7d8a733000-7f7d8a774000 r-xp 00005000 fd:00 48365875                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so
+7f7d8a774000-7f7d8a7fd000 r--p 00046000 fd:00 48365875                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so
+7f7d8a7fd000-7f7d8a7fe000 r--p 000ce000 fd:00 48365875                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so
+7f7d8a7fe000-7f7d8a7ff000 rw-p 000cf000 fd:00 48365875                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so
+7f7d8a7ff000-7f7d8a803000 ---p 00000000 00:00 0 
+7f7d8a803000-7f7d8a8ff000 rw-p 00000000 00:00 0 
+7f7d8a8ff000-7f7d8a903000 ---p 00000000 00:00 0 
+7f7d8a903000-7f7d8a9ff000 rw-p 00000000 00:00 0 
+7f7d8a9ff000-7f7d8aa03000 ---p 00000000 00:00 0 
+7f7d8aa03000-7f7d8aaff000 rw-p 00000000 00:00 0 
+7f7d8aaff000-7f7d8ab03000 ---p 00000000 00:00 0 
+7f7d8ab03000-7f7d8abff000 rw-p 00000000 00:00 0 
+7f7d8abff000-7f7d8ac03000 ---p 00000000 00:00 0 
+7f7d8ac03000-7f7d8acff000 rw-p 00000000 00:00 0 
+7f7d8acff000-7f7d8ad03000 ---p 00000000 00:00 0 
+7f7d8ad03000-7f7d8adff000 rw-p 00000000 00:00 0 
+7f7d8adff000-7f7d8ae03000 ---p 00000000 00:00 0 
+7f7d8ae03000-7f7d8aeff000 rw-p 00000000 00:00 0 
+7f7d8aeff000-7f7d8af00000 ---p 00000000 00:00 0 
+7f7d8af00000-7f7d8b000000 rw-p 00000000 00:00 0 
+7f7d8b000000-7f7d8bca0000 rw-p 00001000 fd:00 48365901                   /usr/lib/jvm/java-21-openjdk-amd64/lib/server/classes.jsa
+7f7d8bca0000-7f7d8c000000 ---p 00000000 00:00 0 
+7f7d8c000000-7f7d8c040000 rw-p 00000000 00:00 0 
+7f7d8c040000-7f7d8c090000 rw-p 00000000 00:00 0 
+7f7d8c090000-7f7dcc000000 ---p 00000000 00:00 0 
+7f7dcc000000-7f7dcc021000 rw-p 00000000 00:00 0 
+7f7dcc021000-7f7dd0000000 ---p 00000000 00:00 0 
+7f7dd0000000-7f7dd0021000 rw-p 00000000 00:00 0 
+7f7dd0021000-7f7dd4000000 ---p 00000000 00:00 0 
+7f7dd4000000-7f7dd4021000 rw-p 00000000 00:00 0 
+7f7dd4021000-7f7dd8000000 ---p 00000000 00:00 0 
+7f7dd8000000-7f7dd8021000 rw-p 00000000 00:00 0 
+7f7dd8021000-7f7ddc000000 ---p 00000000 00:00 0 
+7f7ddc000000-7f7ddc021000 rw-p 00000000 00:00 0 
+7f7ddc021000-7f7de0000000 ---p 00000000 00:00 0 
+7f7de0007000-7f7de000b000 r--p 00000000 fd:00 42336965                   /usr/lib/x86_64-linux-gnu/libudev.so.1.7.2
+7f7de000b000-7f7de0025000 r-xp 00004000 fd:00 42336965                   /usr/lib/x86_64-linux-gnu/libudev.so.1.7.2
+7f7de0025000-7f7de002e000 r--p 0001e000 fd:00 42336965                   /usr/lib/x86_64-linux-gnu/libudev.so.1.7.2
+7f7de002e000-7f7de002f000 ---p 00027000 fd:00 42336965                   /usr/lib/x86_64-linux-gnu/libudev.so.1.7.2
+7f7de002f000-7f7de0030000 r--p 00027000 fd:00 42336965                   /usr/lib/x86_64-linux-gnu/libudev.so.1.7.2
+7f7de0030000-7f7de0031000 rw-p 00028000 fd:00 42336965                   /usr/lib/x86_64-linux-gnu/libudev.so.1.7.2
+7f7de0031000-7f7de0032000 ---p 00000000 00:00 0 
+7f7de0032000-7f7de0132000 rw-p 00000000 00:00 0 
+7f7de0132000-7f7de0133000 ---p 00000000 00:00 0 
+7f7de0133000-7f7de0233000 rw-p 00000000 00:00 0 
+7f7de0233000-7f7de0234000 ---p 00000000 00:00 0 
+7f7de0234000-7f7de2334000 rw-p 00000000 00:00 0 
+7f7de2334000-7f7de2335000 ---p 00000000 00:00 0 
+7f7de2335000-7f7de2435000 rw-p 00000000 00:00 0 
+7f7de2435000-7f7de2436000 ---p 00000000 00:00 0 
+7f7de2436000-7f7de2536000 rw-p 00000000 00:00 0 
+7f7de2536000-7f7de2537000 ---p 00000000 00:00 0 
+7f7de2537000-7f7de3b1c000 rw-p 00000000 00:00 0 
+7f7de3b1c000-7f7e0029c000 ---p 00000000 00:00 0 
+7f7e0029c000-7f7e004ac000 rw-p 00000000 00:00 0 
+7f7e004ac000-7f7e03d9c000 ---p 00000000 00:00 0 
+7f7e03d9c000-7f7e03fac000 rw-p 00000000 00:00 0 
+7f7e03fac000-7f7e0789c000 ---p 00000000 00:00 0 
+7f7e0789c000-7f7e078a1000 rw-p 00000000 00:00 0 
+7f7e078a1000-7f7e07984000 ---p 00000000 00:00 0 
+7f7e07984000-7f7e0798a000 rw-p 00000000 00:00 0 
+7f7e0798a000-7f7e07a6c000 ---p 00000000 00:00 0 
+7f7e07a6c000-7f7e07d2c000 rwxp 00000000 00:00 0 
+7f7e07d2c000-7f7e0edf3000 ---p 00000000 00:00 0 
+7f7e0edf3000-7f7e0f2b3000 rwxp 00000000 00:00 0 
+7f7e0f2b3000-7f7e0f6e4000 ---p 00000000 00:00 0 
+7f7e0f6e4000-7f7e0f954000 rwxp 00000000 00:00 0 
+7f7e0f954000-7f7e16a6c000 ---p 00000000 00:00 0 
+7f7e16a6c000-7f7e1f099000 r--s 00000000 fd:00 48365900                   /usr/lib/jvm/java-21-openjdk-amd64/lib/modules
+7f7e1f099000-7f7e1f33b000 r--p 00000000 fd:00 48365904                   /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so
+7f7e1f33b000-7f7e201b6000 r-xp 002a2000 fd:00 48365904                   /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so
+7f7e201b6000-7f7e20490000 r--p 0111d000 fd:00 48365904                   /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so
+7f7e20490000-7f7e20564000 r--p 013f6000 fd:00 48365904                   /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so
+7f7e20564000-7f7e20594000 rw-p 014ca000 fd:00 48365904                   /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so
+7f7e20594000-7f7e22c7b000 rw-p 00000000 00:00 0 
+7f7e22c84000-7f7e22c98000 r--p 00000000 fd:00 16018698                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_tf2.so
+7f7e22c98000-7f7e22cb7000 r-xp 00013000 fd:00 16018698                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_tf2.so
+7f7e22cb7000-7f7e22cb9000 r--p 00031000 fd:00 16018698                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_tf2.so
+7f7e22cb9000-7f7e22cba000 rw-p 00032000 fd:00 16018698                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_tf2.so
+7f7e22cba000-7f7e231bc000 rw-p 00000000 00:00 0 
+7f7e231bc000-7f7e2326e000 r--p 00000000 fd:00 42342460                   /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7f7e2326e000-7f7e234cd000 r-xp 000b2000 fd:00 42342460                   /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7f7e234cd000-7f7e2359f000 r--p 00311000 fd:00 42342460                   /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7f7e2359f000-7f7e235fa000 r--p 003e2000 fd:00 42342460                   /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7f7e235fa000-7f7e235fd000 rw-p 0043d000 fd:00 42342460                   /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7f7e235fd000-7f7e23600000 rw-p 00000000 00:00 0 
+7f7e23600000-7f7e2363b000 r-xp 00000000 fd:00 16548542                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libquadmath-96973f99.so.0.0.0
+7f7e2363b000-7f7e2383a000 ---p 0003b000 fd:00 16548542                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libquadmath-96973f99.so.0.0.0
+7f7e2383a000-7f7e2383b000 r--p 0003a000 fd:00 16548542                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libquadmath-96973f99.so.0.0.0
+7f7e2383b000-7f7e2383d000 rw-p 0003b000 fd:00 16548542                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libquadmath-96973f99.so.0.0.0
+7f7e23840000-7f7e2387b000 r--p 00000000 fd:00 15754013                   /home/brysonbrown/.local/lib/python3.10/site-packages/_jpype.cpython-310-x86_64-linux-gnu.so
+7f7e2387b000-7f7e238cf000 r-xp 0003b000 fd:00 15754013                   /home/brysonbrown/.local/lib/python3.10/site-packages/_jpype.cpython-310-x86_64-linux-gnu.so
+7f7e238cf000-7f7e238f8000 r--p 0008f000 fd:00 15754013                   /home/brysonbrown/.local/lib/python3.10/site-packages/_jpype.cpython-310-x86_64-linux-gnu.so
+7f7e238f8000-7f7e238fc000 r--p 000b7000 fd:00 15754013                   /home/brysonbrown/.local/lib/python3.10/site-packages/_jpype.cpython-310-x86_64-linux-gnu.so
+7f7e238fc000-7f7e23900000 rw-p 000bb000 fd:00 15754013                   /home/brysonbrown/.local/lib/python3.10/site-packages/_jpype.cpython-310-x86_64-linux-gnu.so
+7f7e23900000-7f7e23a00000 rw-p 00000000 00:00 0 
+7f7e23a00000-7f7e23c76000 r-xp 00000000 fd:00 16548543                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libgfortran-040039e1.so.5.0.0
+7f7e23c76000-7f7e23e75000 ---p 00276000 fd:00 16548543                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libgfortran-040039e1.so.5.0.0
+7f7e23e75000-7f7e23e76000 r--p 00275000 fd:00 16548543                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libgfortran-040039e1.so.5.0.0
+7f7e23e76000-7f7e23e78000 rw-p 00276000 fd:00 16548543                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libgfortran-040039e1.so.5.0.0
+7f7e23e78000-7f7e23e8d000 rw-p 0027b000 fd:00 16548543                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libgfortran-040039e1.so.5.0.0
+7f7e23e96000-7f7e23ea0000 r--p 00000000 fd:00 16415008                   /home/brysonbrown/.local/lib/python3.10/site-packages/google/_upb/_message.abi3.so
+7f7e23ea0000-7f7e23ecc000 r-xp 0000a000 fd:00 16415008                   /home/brysonbrown/.local/lib/python3.10/site-packages/google/_upb/_message.abi3.so
+7f7e23ecc000-7f7e23ee1000 r--p 00036000 fd:00 16415008                   /home/brysonbrown/.local/lib/python3.10/site-packages/google/_upb/_message.abi3.so
+7f7e23ee1000-7f7e23ee2000 r--p 0004a000 fd:00 16415008                   /home/brysonbrown/.local/lib/python3.10/site-packages/google/_upb/_message.abi3.so
+7f7e23ee2000-7f7e23ee6000 rw-p 0004b000 fd:00 16415008                   /home/brysonbrown/.local/lib/python3.10/site-packages/google/_upb/_message.abi3.so
+7f7e23ee6000-7f7e23f04000 r--p 00000000 fd:00 42342461                   /usr/lib/x86_64-linux-gnu/libssl.so.3
+7f7e23f04000-7f7e23f5f000 r-xp 0001e000 fd:00 42342461                   /usr/lib/x86_64-linux-gnu/libssl.so.3
+7f7e23f5f000-7f7e23f7c000 r--p 00079000 fd:00 42342461                   /usr/lib/x86_64-linux-gnu/libssl.so.3
+7f7e23f7c000-7f7e23f86000 r--p 00095000 fd:00 42342461                   /usr/lib/x86_64-linux-gnu/libssl.so.3
+7f7e23f86000-7f7e23f8a000 rw-p 0009f000 fd:00 42342461                   /usr/lib/x86_64-linux-gnu/libssl.so.3
+7f7e23f8a000-7f7e23f91000 r--p 00000000 fd:00 16548131                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_generator.cpython-310-x86_64-linux-gnu.so
+7f7e23f91000-7f7e24011000 r-xp 00007000 fd:00 16548131                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_generator.cpython-310-x86_64-linux-gnu.so
+7f7e24011000-7f7e24065000 r--p 00087000 fd:00 16548131                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_generator.cpython-310-x86_64-linux-gnu.so
+7f7e24065000-7f7e24066000 r--p 000da000 fd:00 16548131                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_generator.cpython-310-x86_64-linux-gnu.so
+7f7e24066000-7f7e24068000 rw-p 000db000 fd:00 16548131                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_generator.cpython-310-x86_64-linux-gnu.so
+7f7e24068000-7f7e2406a000 rw-p 00000000 00:00 0 
+7f7e2406a000-7f7e24174000 r--p 00000000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e24174000-7f7e2417c000 r-xp 0010a000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e2417c000-7f7e24182000 ---p 00112000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e24182000-7f7e25e03000 r-xp 00118000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e25e03000-7f7e26013000 r--p 01d99000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e26013000-7f7e26014000 ---p 01fa9000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e26014000-7f7e2601a000 r--p 01fa9000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e2601a000-7f7e26031000 rw-p 01faf000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e26031000-7f7e2603d000 rw-p 00000000 00:00 0 
+7f7e2603d000-7f7e260e9000 rw-p 020d4000 fd:00 16548541                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so
+7f7e260e9000-7f7e26114000 r--p 00000000 fd:00 16548224                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so
+7f7e26114000-7f7e265f2000 r-xp 0002b000 fd:00 16548224                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so
+7f7e265f2000-7f7e26766000 r--p 00509000 fd:00 16548224                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so
+7f7e26766000-7f7e26767000 ---p 0067d000 fd:00 16548224                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so
+7f7e26767000-7f7e26769000 r--p 0067d000 fd:00 16548224                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so
+7f7e26769000-7f7e2678c000 rw-p 0067f000 fd:00 16548224                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so
+7f7e2678c000-7f7e267ac000 rw-p 00000000 00:00 0 
+7f7e267ac000-7f7e267b7000 rw-p 0070b000 fd:00 16548224                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_umath.cpython-310-x86_64-linux-gnu.so
+7f7e267b7000-7f7e2691d000 r--p 00000000 fd:00 42337459                   /usr/lib/x86_64-linux-gnu/libcuda.so.580.82.07
+7f7e2691d000-7f7e2789f000 r-xp 00166000 fd:00 42337459                   /usr/lib/x86_64-linux-gnu/libcuda.so.580.82.07
+7f7e2789f000-7f7e2c24a000 r--p 010e8000 fd:00 42337459                   /usr/lib/x86_64-linux-gnu/libcuda.so.580.82.07
+7f7e2c24a000-7f7e2c24b000 ---p 05a93000 fd:00 42337459                   /usr/lib/x86_64-linux-gnu/libcuda.so.580.82.07
+7f7e2c24b000-7f7e2c380000 r--p 05a93000 fd:00 42337459                   /usr/lib/x86_64-linux-gnu/libcuda.so.580.82.07
+7f7e2c380000-7f7e2c389000 rw-p 05bc8000 fd:00 42337459                   /usr/lib/x86_64-linux-gnu/libcuda.so.580.82.07
+7f7e2c389000-7f7e2c400000 rw-p 00000000 00:00 0 
+7f7e2c400000-7f7e51da6000 r-xp 00000000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e51da6000-7f7e51fa6000 ---p 259a6000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e51fa6000-7f7e5231f000 r--p 259a6000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e5231f000-7f7e52a7a000 rw-p 25d1f000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e52a7a000-7f7e57b72000 rw-p 00000000 00:00 0 
+7f7e57b72000-7f7e57d71000 ---p 2b772000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e57d71000-7f7e58573000 r--p 26571000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e58573000-7f7e58772000 ---p 2c173000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e58772000-7f7e5e6f2000 rw-p 26d72000 fd:00 16137495                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12
+7f7e5e6f5000-7f7e5e6f8000 r--p 00000000 fd:00 42337460                   /usr/lib/x86_64-linux-gnu/libcap.so.2.44
+7f7e5e6f8000-7f7e5e6fc000 r-xp 00003000 fd:00 42337460                   /usr/lib/x86_64-linux-gnu/libcap.so.2.44
+7f7e5e6fc000-7f7e5e6fe000 r--p 00007000 fd:00 42337460                   /usr/lib/x86_64-linux-gnu/libcap.so.2.44
+7f7e5e6fe000-7f7e5e6ff000 r--p 00008000 fd:00 42337460                   /usr/lib/x86_64-linux-gnu/libcap.so.2.44
+7f7e5e6ff000-7f7e5e700000 rw-p 00009000 fd:00 42337460                   /usr/lib/x86_64-linux-gnu/libcap.so.2.44
+7f7e5e700000-7f7e5e800000 rw-p 00000000 00:00 0 
+7f7e5e800000-7f7e656ec000 r-xp 00000000 fd:00 16137455                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.12
+7f7e656ec000-7f7e658ec000 ---p 06eec000 fd:00 16137455                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.12
+7f7e658ec000-7f7e658f8000 r--p 06eec000 fd:00 16137455                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.12
+7f7e658f8000-7f7e658ff000 rw-p 06ef8000 fd:00 16137455                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.12
+7f7e658ff000-7f7e6590b000 rw-p 00000000 00:00 0 
+7f7e65910000-7f7e65919000 r--p 00000000 fd:00 16018693                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_cpu_feature_guard.so
+7f7e65919000-7f7e6592a000 r-xp 00008000 fd:00 16018693                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_cpu_feature_guard.so
+7f7e6592a000-7f7e6592c000 r--p 00018000 fd:00 16018693                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_cpu_feature_guard.so
+7f7e6592c000-7f7e6592d000 rw-p 00019000 fd:00 16018693                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/platform/_pywrap_cpu_feature_guard.so
+7f7e6592d000-7f7e6592f000 r--p 00000000 fd:00 42347404                   /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.3
+7f7e6592f000-7f7e65948000 r-xp 00002000 fd:00 42347404                   /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.3
+7f7e65948000-7f7e6594a000 r--p 0001b000 fd:00 42347404                   /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.3
+7f7e6594a000-7f7e6594b000 ---p 0001d000 fd:00 42347404                   /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.3
+7f7e6594b000-7f7e6594c000 r--p 0001d000 fd:00 42347404                   /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.3
+7f7e6594c000-7f7e6594d000 rw-p 0001e000 fd:00 42347404                   /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.3
+7f7e6594d000-7f7e65952000 r--p 00000000 fd:00 16548122                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/mtrand.cpython-310-x86_64-linux-gnu.so
+7f7e65952000-7f7e659ab000 r-xp 00005000 fd:00 16548122                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/mtrand.cpython-310-x86_64-linux-gnu.so
+7f7e659ab000-7f7e659fb000 r--p 0005e000 fd:00 16548122                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/mtrand.cpython-310-x86_64-linux-gnu.so
+7f7e659fb000-7f7e659fc000 ---p 000ae000 fd:00 16548122                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/mtrand.cpython-310-x86_64-linux-gnu.so
+7f7e659fc000-7f7e659fd000 r--p 000ae000 fd:00 16548122                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/mtrand.cpython-310-x86_64-linux-gnu.so
+7f7e659fd000-7f7e659fe000 rw-p 000af000 fd:00 16548122                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/mtrand.cpython-310-x86_64-linux-gnu.so
+7f7e659fe000-7f7e65a00000 rw-p 00000000 00:00 0 
+7f7e65a00000-7f7e6c839000 r-xp 00000000 fd:00 16415519                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/curand/lib/libcurand.so.10
+7f7e6c839000-7f7e6ca39000 ---p 06e39000 fd:00 16415519                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/curand/lib/libcurand.so.10
+7f7e6ca39000-7f7e6ca3e000 r--p 06e39000 fd:00 16415519                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/curand/lib/libcurand.so.10
+7f7e6ca3e000-7f7e6de6a000 rw-p 06e3e000 fd:00 16415519                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/curand/lib/libcurand.so.10
+7f7e6de6a000-7f7e6e4a2000 rw-p 00000000 00:00 0 
+7f7e6e4a4000-7f7e6e4a8000 r--p 00000000 fd:00 48238741                   /usr/local/lib/python3.10/dist-packages/wrapt/_wrappers.cpython-310-x86_64-linux-gnu.so
+7f7e6e4a8000-7f7e6e4ad000 r-xp 00004000 fd:00 48238741                   /usr/local/lib/python3.10/dist-packages/wrapt/_wrappers.cpython-310-x86_64-linux-gnu.so
+7f7e6e4ad000-7f7e6e4af000 r--p 00009000 fd:00 48238741                   /usr/local/lib/python3.10/dist-packages/wrapt/_wrappers.cpython-310-x86_64-linux-gnu.so
+7f7e6e4af000-7f7e6e4b0000 r--p 0000a000 fd:00 48238741                   /usr/local/lib/python3.10/dist-packages/wrapt/_wrappers.cpython-310-x86_64-linux-gnu.so
+7f7e6e4b0000-7f7e6e4b2000 rw-p 0000b000 fd:00 48238741                   /usr/local/lib/python3.10/dist-packages/wrapt/_wrappers.cpython-310-x86_64-linux-gnu.so
+7f7e6e4b2000-7f7e6e4b5000 r--p 00000000 fd:00 42360098                   /usr/lib/python3.10/lib-dynload/termios.cpython-310-x86_64-linux-gnu.so
+7f7e6e4b5000-7f7e6e4b6000 r-xp 00003000 fd:00 42360098                   /usr/lib/python3.10/lib-dynload/termios.cpython-310-x86_64-linux-gnu.so
+7f7e6e4b6000-7f7e6e4b8000 r--p 00004000 fd:00 42360098                   /usr/lib/python3.10/lib-dynload/termios.cpython-310-x86_64-linux-gnu.so
+7f7e6e4b8000-7f7e6e4b9000 r--p 00005000 fd:00 42360098                   /usr/lib/python3.10/lib-dynload/termios.cpython-310-x86_64-linux-gnu.so
+7f7e6e4b9000-7f7e6e4bb000 rw-p 00006000 fd:00 42360098                   /usr/lib/python3.10/lib-dynload/termios.cpython-310-x86_64-linux-gnu.so
+7f7e6e4bb000-7f7e6e4bd000 r--p 00000000 fd:00 42630582                   /usr/lib/python3/dist-packages/lz4/frame/_frame.cpython-310-x86_64-linux-gnu.so
+7f7e6e4bd000-7f7e6e4bf000 r-xp 00002000 fd:00 42630582                   /usr/lib/python3/dist-packages/lz4/frame/_frame.cpython-310-x86_64-linux-gnu.so
+7f7e6e4bf000-7f7e6e4c3000 r--p 00004000 fd:00 42630582                   /usr/lib/python3/dist-packages/lz4/frame/_frame.cpython-310-x86_64-linux-gnu.so
+7f7e6e4c3000-7f7e6e4c4000 r--p 00007000 fd:00 42630582                   /usr/lib/python3/dist-packages/lz4/frame/_frame.cpython-310-x86_64-linux-gnu.so
+7f7e6e4c4000-7f7e6e4c5000 rw-p 00008000 fd:00 42630582                   /usr/lib/python3/dist-packages/lz4/frame/_frame.cpython-310-x86_64-linux-gnu.so
+7f7e6e4c5000-7f7e6e4cc000 r--p 00000000 fd:00 48365892                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+7f7e6e4cc000-7f7e6e4d5000 r-xp 00007000 fd:00 48365892                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+7f7e6e4d5000-7f7e6e4d9000 r--p 00010000 fd:00 48365892                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+7f7e6e4d9000-7f7e6e4da000 ---p 00014000 fd:00 48365892                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+7f7e6e4da000-7f7e6e4db000 r--p 00014000 fd:00 48365892                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+7f7e6e4db000-7f7e6e4dc000 rw-p 00015000 fd:00 48365892                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+7f7e6e4dc000-7f7e6e4e9000 r--p 00000000 fd:00 48365868                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+7f7e6e4e9000-7f7e6e4f7000 r-xp 0000d000 fd:00 48365868                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+7f7e6e4f7000-7f7e6e4fc000 r--p 0001b000 fd:00 48365868                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+7f7e6e4fc000-7f7e6e4fd000 ---p 00020000 fd:00 48365868                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+7f7e6e4fd000-7f7e6e4fe000 r--p 00020000 fd:00 48365868                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+7f7e6e4fe000-7f7e6e4ff000 rw-p 00021000 fd:00 48365868                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+7f7e6e4ff000-7f7e6e600000 rw-p 00000000 00:00 0 
+7f7e6e600000-7f7e86e54000 r-xp 00000000 fd:00 16415489                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nccl/lib/libnccl.so.2
+7f7e86e54000-7f7e87054000 ---p 18854000 fd:00 16415489                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nccl/lib/libnccl.so.2
+7f7e87054000-7f7e8705d000 r--p 18854000 fd:00 16415489                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nccl/lib/libnccl.so.2
+7f7e8705d000-7f7e87072000 rw-p 1885d000 fd:00 16415489                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nccl/lib/libnccl.so.2
+7f7e87072000-7f7e870aa000 rw-p 00000000 00:00 0 
+7f7e870b0000-7f7e870ba000 rw-p 00000000 00:00 0 
+7f7e870ba000-7f7e870c2000 ---p 00000000 00:00 0 
+7f7e870c2000-7f7e870c7000 r--p 00000000 fd:00 42347419                   /usr/lib/x86_64-linux-gnu/libmpdec.so.2.5.1
+7f7e870c7000-7f7e870e8000 r-xp 00005000 fd:00 42347419                   /usr/lib/x86_64-linux-gnu/libmpdec.so.2.5.1
+7f7e870e8000-7f7e870ef000 r--p 00026000 fd:00 42347419                   /usr/lib/x86_64-linux-gnu/libmpdec.so.2.5.1
+7f7e870ef000-7f7e870f0000 r--p 0002c000 fd:00 42347419                   /usr/lib/x86_64-linux-gnu/libmpdec.so.2.5.1
+7f7e870f0000-7f7e870f1000 rw-p 0002d000 fd:00 42347419                   /usr/lib/x86_64-linux-gnu/libmpdec.so.2.5.1
+7f7e870f1000-7f7e870f4000 r--p 00000000 fd:00 48365891                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so
+7f7e870f4000-7f7e870fc000 r-xp 00003000 fd:00 48365891                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so
+7f7e870fc000-7f7e870fe000 r--p 0000b000 fd:00 48365891                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so
+7f7e870fe000-7f7e870ff000 r--p 0000c000 fd:00 48365891                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so
+7f7e870ff000-7f7e87100000 rw-p 0000d000 fd:00 48365891                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so
+7f7e87100000-7f7e87200000 rw-p 00000000 00:00 0 
+7f7e87200000-7f7e87767000 r-xp 00000000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e87767000-7f7e87966000 ---p 00567000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e87966000-7f7e87970000 r--p 00566000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e87970000-7f7e87971000 rw-p 00570000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e87971000-7f7e87ccd000 rw-p 00000000 00:00 0 
+7f7e87ccd000-7f7e87ecc000 ---p 00acd000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e87ecc000-7f7e87fbe000 r--p 006cc000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e87fbe000-7f7e881bd000 ---p 00dbe000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e881bd000-7f7e983c5000 rw-p 007bd000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e983c5000-7f7e98400000 ---p 111c5000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e98400000-7f7e98401000 rw-p 10a00000 fd:00 16137857                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufft/lib/libcufft.so.11
+7f7e98403000-7f7e98405000 r--p 00000000 fd:00 48365899                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so
+7f7e98405000-7f7e9840a000 r-xp 00002000 fd:00 48365899                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so
+7f7e9840a000-7f7e9840c000 r--p 00007000 fd:00 48365899                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so
+7f7e9840c000-7f7e9840d000 r--p 00008000 fd:00 48365899                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so
+7f7e9840d000-7f7e9840e000 rw-p 00009000 fd:00 48365899                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so
+7f7e9840e000-7f7e98416000 r--p 00000000 fd:00 42360056                   /usr/lib/python3.10/lib-dynload/_decimal.cpython-310-x86_64-linux-gnu.so
+7f7e98416000-7f7e9842b000 r-xp 00008000 fd:00 42360056                   /usr/lib/python3.10/lib-dynload/_decimal.cpython-310-x86_64-linux-gnu.so
+7f7e9842b000-7f7e98437000 r--p 0001d000 fd:00 42360056                   /usr/lib/python3.10/lib-dynload/_decimal.cpython-310-x86_64-linux-gnu.so
+7f7e98437000-7f7e98438000 r--p 00028000 fd:00 42360056                   /usr/lib/python3.10/lib-dynload/_decimal.cpython-310-x86_64-linux-gnu.so
+7f7e98438000-7f7e9843b000 rw-p 00029000 fd:00 42360056                   /usr/lib/python3.10/lib-dynload/_decimal.cpython-310-x86_64-linux-gnu.so
+7f7e9843b000-7f7e9843f000 r--p 00000000 fd:00 42359865                   /usr/lib/python3.10/lib-dynload/_asyncio.cpython-310-x86_64-linux-gnu.so
+7f7e9843f000-7f7e98447000 r-xp 00004000 fd:00 42359865                   /usr/lib/python3.10/lib-dynload/_asyncio.cpython-310-x86_64-linux-gnu.so
+7f7e98447000-7f7e9844b000 r--p 0000c000 fd:00 42359865                   /usr/lib/python3.10/lib-dynload/_asyncio.cpython-310-x86_64-linux-gnu.so
+7f7e9844b000-7f7e9844c000 ---p 00010000 fd:00 42359865                   /usr/lib/python3.10/lib-dynload/_asyncio.cpython-310-x86_64-linux-gnu.so
+7f7e9844c000-7f7e9844d000 r--p 00010000 fd:00 42359865                   /usr/lib/python3.10/lib-dynload/_asyncio.cpython-310-x86_64-linux-gnu.so
+7f7e9844d000-7f7e9844f000 rw-p 00011000 fd:00 42359865                   /usr/lib/python3.10/lib-dynload/_asyncio.cpython-310-x86_64-linux-gnu.so
+7f7e9844f000-7f7e98600000 rw-p 00000000 00:00 0 
+7f7e98600000-7f7eaf684000 r-xp 00000000 fd:00 16137840                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparse/lib/libcusparse.so.12
+7f7eaf684000-7f7eaf884000 ---p 17084000 fd:00 16137840                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparse/lib/libcusparse.so.12
+7f7eaf884000-7f7eaf893000 r--p 17084000 fd:00 16137840                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparse/lib/libcusparse.so.12
+7f7eaf893000-7f7eaf8af000 rw-p 17093000 fd:00 16137840                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparse/lib/libcusparse.so.12
+7f7eaf8af000-7f7eaf8b5000 rw-p 00000000 00:00 0 
+7f7eaf8b5000-7f7eafa00000 ---p 172b5000 fd:00 16137840                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparse/lib/libcusparse.so.12
+7f7eafa00000-7f7eafa05000 rw-p 17200000 fd:00 16137840                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparse/lib/libcusparse.so.12
+7f7eafa07000-7f7eafa08000 r--p 00000000 fd:00 42630576                   /usr/lib/python3/dist-packages/lz4/_version.cpython-310-x86_64-linux-gnu.so
+7f7eafa08000-7f7eafa09000 r-xp 00001000 fd:00 42630576                   /usr/lib/python3/dist-packages/lz4/_version.cpython-310-x86_64-linux-gnu.so
+7f7eafa09000-7f7eafa0a000 r--p 00002000 fd:00 42630576                   /usr/lib/python3/dist-packages/lz4/_version.cpython-310-x86_64-linux-gnu.so
+7f7eafa0a000-7f7eafa0b000 r--p 00002000 fd:00 42630576                   /usr/lib/python3/dist-packages/lz4/_version.cpython-310-x86_64-linux-gnu.so
+7f7eafa0b000-7f7eafa0c000 rw-p 00003000 fd:00 42630576                   /usr/lib/python3/dist-packages/lz4/_version.cpython-310-x86_64-linux-gnu.so
+7f7eafa0c000-7f7eafa1e000 r--p 00000000 fd:00 42361510                   /usr/lib/python3.10/lib-dynload/_ssl.cpython-310-x86_64-linux-gnu.so
+7f7eafa1e000-7f7eafa2b000 r-xp 00012000 fd:00 42361510                   /usr/lib/python3.10/lib-dynload/_ssl.cpython-310-x86_64-linux-gnu.so
+7f7eafa2b000-7f7eafa39000 r--p 0001f000 fd:00 42361510                   /usr/lib/python3.10/lib-dynload/_ssl.cpython-310-x86_64-linux-gnu.so
+7f7eafa39000-7f7eafa3a000 ---p 0002d000 fd:00 42361510                   /usr/lib/python3.10/lib-dynload/_ssl.cpython-310-x86_64-linux-gnu.so
+7f7eafa3a000-7f7eafa3b000 r--p 0002d000 fd:00 42361510                   /usr/lib/python3.10/lib-dynload/_ssl.cpython-310-x86_64-linux-gnu.so
+7f7eafa3b000-7f7eafa44000 rw-p 0002e000 fd:00 42361510                   /usr/lib/python3.10/lib-dynload/_ssl.cpython-310-x86_64-linux-gnu.so
+7f7eafa44000-7f7eafa47000 r--p 00000000 fd:00 16548111                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_pcg64.cpython-310-x86_64-linux-gnu.so
+7f7eafa47000-7f7eafa59000 r-xp 00003000 fd:00 16548111                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_pcg64.cpython-310-x86_64-linux-gnu.so
+7f7eafa59000-7f7eafa5e000 r--p 00015000 fd:00 16548111                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_pcg64.cpython-310-x86_64-linux-gnu.so
+7f7eafa5e000-7f7eafa5f000 r--p 00019000 fd:00 16548111                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_pcg64.cpython-310-x86_64-linux-gnu.so
+7f7eafa5f000-7f7eafa60000 rw-p 0001a000 fd:00 16548111                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_pcg64.cpython-310-x86_64-linux-gnu.so
+7f7eafa60000-7f7eafa63000 r--p 00000000 fd:00 16548118                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_philox.cpython-310-x86_64-linux-gnu.so
+7f7eafa63000-7f7eafa72000 r-xp 00003000 fd:00 16548118                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_philox.cpython-310-x86_64-linux-gnu.so
+7f7eafa72000-7f7eafa76000 r--p 00012000 fd:00 16548118                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_philox.cpython-310-x86_64-linux-gnu.so
+7f7eafa76000-7f7eafa77000 r--p 00015000 fd:00 16548118                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_philox.cpython-310-x86_64-linux-gnu.so
+7f7eafa77000-7f7eafa78000 rw-p 00016000 fd:00 16548118                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_philox.cpython-310-x86_64-linux-gnu.so
+7f7eafa78000-7f7eafa7b000 r--p 00000000 fd:00 16548121                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_mt19937.cpython-310-x86_64-linux-gnu.so
+7f7eafa7b000-7f7eafa8c000 r-xp 00003000 fd:00 16548121                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_mt19937.cpython-310-x86_64-linux-gnu.so
+7f7eafa8c000-7f7eafa91000 r--p 00014000 fd:00 16548121                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_mt19937.cpython-310-x86_64-linux-gnu.so
+7f7eafa91000-7f7eafa92000 r--p 00018000 fd:00 16548121                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_mt19937.cpython-310-x86_64-linux-gnu.so
+7f7eafa92000-7f7eafa93000 rw-p 00019000 fd:00 16548121                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_mt19937.cpython-310-x86_64-linux-gnu.so
+7f7eafa93000-7f7eafba0000 rw-p 00000000 00:00 0 
+7f7eafba4000-7f7eafba8000 r--p 00000000 fd:00 16548116                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_bounded_integers.cpython-310-x86_64-linux-gnu.so
+7f7eafba8000-7f7eafbed000 r-xp 00004000 fd:00 16548116                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_bounded_integers.cpython-310-x86_64-linux-gnu.so
+7f7eafbed000-7f7eafbf6000 r--p 00049000 fd:00 16548116                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_bounded_integers.cpython-310-x86_64-linux-gnu.so
+7f7eafbf6000-7f7eafbf7000 r--p 00051000 fd:00 16548116                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_bounded_integers.cpython-310-x86_64-linux-gnu.so
+7f7eafbf7000-7f7eafbf8000 rw-p 00052000 fd:00 16548116                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_bounded_integers.cpython-310-x86_64-linux-gnu.so
+7f7eafbf8000-7f7eafbf9000 rw-p 00000000 00:00 0 
+7f7eafbf9000-7f7eafca9000 r--p 00000000 fd:00 16415706                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12
+7f7eafca9000-7f7eb00c8000 r-xp 000b0000 fd:00 16415706                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12
+7f7eb00c8000-7f7eb021a000 r--p 004cf000 fd:00 16415706                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12
+7f7eb021a000-7f7eb021b000 ---p 00621000 fd:00 16415706                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12
+7f7eb021b000-7f7eb0264000 r--p 00621000 fd:00 16415706                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12
+7f7eb0264000-7f7eb0338000 rw-p 0066a000 fd:00 16415706                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12
+7f7eb0338000-7f7eb0367000 rw-p 00000000 00:00 0 
+7f7eb0367000-7f7eb0401000 r--p 00000000 fd:00 42336927                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7f7eb0401000-7f7eb0512000 r-xp 0009a000 fd:00 42336927                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7f7eb0512000-7f7eb0581000 r--p 001ab000 fd:00 42336927                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7f7eb0581000-7f7eb0582000 ---p 0021a000 fd:00 42336927                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7f7eb0582000-7f7eb058d000 r--p 0021a000 fd:00 42336927                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7f7eb058d000-7f7eb0590000 rw-p 00225000 fd:00 42336927                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7f7eb0590000-7f7eb0593000 rw-p 00000000 00:00 0 
+7f7eb0593000-7f7eb05c4000 r--p 00000000 fd:00 16415542                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufile/lib/libcufile.so.0
+7f7eb05c4000-7f7eb07bd000 r-xp 00031000 fd:00 16415542                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufile/lib/libcufile.so.0
+7f7eb07bd000-7f7eb086a000 r--p 0022a000 fd:00 16415542                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufile/lib/libcufile.so.0
+7f7eb086a000-7f7eb086b000 ---p 002d7000 fd:00 16415542                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufile/lib/libcufile.so.0
+7f7eb086b000-7f7eb0870000 r--p 002d7000 fd:00 16415542                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufile/lib/libcufile.so.0
+7f7eb0870000-7f7eb0879000 rw-p 002dc000 fd:00 16415542                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufile/lib/libcufile.so.0
+7f7eb0879000-7f7eb0884000 rw-p 00000000 00:00 0 
+7f7eb0884000-7f7eb0890000 rw-p 00304000 fd:00 16415542                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cufile/lib/libcufile.so.0
+7f7eb0890000-7f7eb2837000 r--p 00000000 fd:00 16411853                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparselt/lib/libcusparseLt.so.0
+7f7eb2837000-7f7eb5845000 r-xp 01fa7000 fd:00 16411853                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparselt/lib/libcusparseLt.so.0
+7f7eb5845000-7f7ec9c81000 r--p 04fb5000 fd:00 16411853                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparselt/lib/libcusparseLt.so.0
+7f7ec9c81000-7f7ec9c82000 ---p 193f1000 fd:00 16411853                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparselt/lib/libcusparseLt.so.0
+7f7ec9c82000-7f7ec9da5000 r--p 193f1000 fd:00 16411853                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparselt/lib/libcusparseLt.so.0
+7f7ec9da5000-7f7ec9dd2000 rw-p 19514000 fd:00 16411853                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparselt/lib/libcusparseLt.so.0
+7f7ec9dd2000-7f7eca037000 rw-p 00000000 00:00 0 
+7f7eca037000-7f7ecba00000 rw-p 19542000 fd:00 16411853                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cusparselt/lib/libcusparseLt.so.0
+7f7ecba00000-7f7ecba1e000 r-xp 00000000 fd:00 16137881                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9
+7f7ecba1e000-7f7ecbc1d000 ---p 0001e000 fd:00 16137881                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9
+7f7ecbc1d000-7f7ecbc1e000 r--p 0001d000 fd:00 16137881                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9
+7f7ecbc1e000-7f7ecbc1f000 rw-p 0001e000 fd:00 16137881                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9
+7f7ecbc22000-7f7ecbc26000 r--p 00000000 fd:00 16548112                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_common.cpython-310-x86_64-linux-gnu.so
+7f7ecbc26000-7f7ecbc58000 r-xp 00004000 fd:00 16548112                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_common.cpython-310-x86_64-linux-gnu.so
+7f7ecbc58000-7f7ecbc5c000 r--p 00036000 fd:00 16548112                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_common.cpython-310-x86_64-linux-gnu.so
+7f7ecbc5c000-7f7ecbc5d000 ---p 0003a000 fd:00 16548112                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_common.cpython-310-x86_64-linux-gnu.so
+7f7ecbc5d000-7f7ecbc5e000 r--p 0003a000 fd:00 16548112                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_common.cpython-310-x86_64-linux-gnu.so
+7f7ecbc5e000-7f7ecbc5f000 rw-p 0003b000 fd:00 16548112                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_common.cpython-310-x86_64-linux-gnu.so
+7f7ecbc5f000-7f7ecbc60000 rw-p 00000000 00:00 0 
+7f7ecbc60000-7f7ecc568000 r--p 00000000 fd:00 16519031                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so
+7f7ecc568000-7f7ecf4bd000 r-xp 00908000 fd:00 16519031                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so
+7f7ecf4bd000-7f7f063c0000 r--p 0385d000 fd:00 16519031                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so
+7f7f063c0000-7f7f06423000 r--p 3a75f000 fd:00 16519031                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so
+7f7f06423000-7f7f06443000 rw-p 3a7c2000 fd:00 16519031                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so
+7f7f06443000-7f7f0718d000 rw-p 00000000 00:00 0 
+7f7f0718d000-7f7f07852000 rw-p 3c18f000 fd:00 16519031                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so
+7f7f07852000-7f7f08667000 r--p 00000000 fd:00 16519030                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so
+7f7f08667000-7f7f189dd000 r-xp 00e15000 fd:00 16519030                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so
+7f7f189dd000-7f7f1b431000 r--p 1118b000 fd:00 16519030                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so
+7f7f1b431000-7f7f1b68b000 r--p 13bdf000 fd:00 16519030                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so
+7f7f1b68b000-7f7f1b6fb000 rw-p 13e39000 fd:00 16519030                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so
+7f7f1b6fb000-7f7f1b809000 rw-p 00000000 00:00 0 
+7f7f1b809000-7f7f1bd0a000 rw-p 195f6000 fd:00 16519030                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so
+7f7f1bd0a000-7f7f1be86000 r--p 00000000 fd:00 16519034                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_python.so
+7f7f1be86000-7f7f1ca3e000 r-xp 0017c000 fd:00 16519034                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_python.so
+7f7f1ca3e000-7f7f1ce51000 r--p 00d34000 fd:00 16519034                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_python.so
+7f7f1ce51000-7f7f1ce71000 r--p 01147000 fd:00 16519034                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_python.so
+7f7f1ce71000-7f7f1ced0000 rw-p 01167000 fd:00 16519034                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_python.so
+7f7f1ced0000-7f7f1cf43000 rw-p 00000000 00:00 0 
+7f7f1cf43000-7f7f1cfd2000 rw-p 019f3000 fd:00 16519034                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_python.so
+7f7f1cfd2000-7f7f1d297000 r--p 00000000 fd:00 16415471                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nvjitlink/lib/libnvJitLink.so.12
+7f7f1d297000-7f7f21798000 r-xp 002c5000 fd:00 16415471                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nvjitlink/lib/libnvJitLink.so.12
+7f7f21798000-7f7f220bd000 r--p 047c6000 fd:00 16415471                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nvjitlink/lib/libnvJitLink.so.12
+7f7f220bd000-7f7f220be000 ---p 050eb000 fd:00 16415471                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nvjitlink/lib/libnvJitLink.so.12
+7f7f220be000-7f7f22848000 r--p 050eb000 fd:00 16415471                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nvjitlink/lib/libnvJitLink.so.12
+7f7f22848000-7f7f22991000 rw-p 05875000 fd:00 16415471                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/nvjitlink/lib/libnvJitLink.so.12
+7f7f22991000-7f7f22aba000 rw-p 00000000 00:00 0 
+7f7f22aba000-7f7f22ed8000 r--p 00000000 fd:00 16415684                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_nvrtc/lib/libnvrtc.so.12
+7f7f22ed8000-7f7f2776d000 r-xp 0041e000 fd:00 16415684                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_nvrtc/lib/libnvrtc.so.12
+7f7f2776d000-7f7f2846b000 r--p 04cb3000 fd:00 16415684                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_nvrtc/lib/libnvrtc.so.12
+7f7f2846b000-7f7f28c3d000 r--p 059b0000 fd:00 16415684                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_nvrtc/lib/libnvrtc.so.12
+7f7f28c3d000-7f7f28e5f000 rw-p 06182000 fd:00 16415684                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_nvrtc/lib/libnvrtc.so.12
+7f7f28e5f000-7f7f291fe000 rw-p 00000000 00:00 0 
+7f7f291fe000-7f7f29200000 rw-p 063a4000 fd:00 16415684                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_nvrtc/lib/libnvrtc.so.12
+7f7f29200000-7f7f29237000 r-xp 00000000 fd:00 16519027                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libgomp.so.1
+7f7f29237000-7f7f29436000 ---p 00037000 fd:00 16519027                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libgomp.so.1
+7f7f29436000-7f7f29437000 r--p 00036000 fd:00 16519027                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libgomp.so.1
+7f7f29437000-7f7f29438000 rw-p 00037000 fd:00 16519027                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libgomp.so.1
+7f7f29438000-7f7f2943d000 rw-p 0003a000 fd:00 16519027                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libgomp.so.1
+7f7f2943d000-7f7f29440000 r--p 00000000 fd:00 16548114                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_sfc64.cpython-310-x86_64-linux-gnu.so
+7f7f29440000-7f7f29449000 r-xp 00003000 fd:00 16548114                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_sfc64.cpython-310-x86_64-linux-gnu.so
+7f7f29449000-7f7f2944c000 r--p 0000c000 fd:00 16548114                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_sfc64.cpython-310-x86_64-linux-gnu.so
+7f7f2944c000-7f7f2944d000 r--p 0000e000 fd:00 16548114                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_sfc64.cpython-310-x86_64-linux-gnu.so
+7f7f2944d000-7f7f2944e000 rw-p 0000f000 fd:00 16548114                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/_sfc64.cpython-310-x86_64-linux-gnu.so
+7f7f2944e000-7f7f29452000 r--p 00000000 fd:00 42361508                   /usr/lib/python3.10/lib-dynload/_hashlib.cpython-310-x86_64-linux-gnu.so
+7f7f29452000-7f7f29458000 r-xp 00004000 fd:00 42361508                   /usr/lib/python3.10/lib-dynload/_hashlib.cpython-310-x86_64-linux-gnu.so
+7f7f29458000-7f7f2945c000 r--p 0000a000 fd:00 42361508                   /usr/lib/python3.10/lib-dynload/_hashlib.cpython-310-x86_64-linux-gnu.so
+7f7f2945c000-7f7f2945d000 r--p 0000d000 fd:00 42361508                   /usr/lib/python3.10/lib-dynload/_hashlib.cpython-310-x86_64-linux-gnu.so
+7f7f2945d000-7f7f2945f000 rw-p 0000e000 fd:00 42361508                   /usr/lib/python3.10/lib-dynload/_hashlib.cpython-310-x86_64-linux-gnu.so
+7f7f2945f000-7f7f29464000 r--p 00000000 fd:00 16548133                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/bit_generator.cpython-310-x86_64-linux-gnu.so
+7f7f29464000-7f7f29487000 r-xp 00005000 fd:00 16548133                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/bit_generator.cpython-310-x86_64-linux-gnu.so
+7f7f29487000-7f7f29491000 r--p 00028000 fd:00 16548133                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/bit_generator.cpython-310-x86_64-linux-gnu.so
+7f7f29491000-7f7f29492000 r--p 00031000 fd:00 16548133                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/bit_generator.cpython-310-x86_64-linux-gnu.so
+7f7f29492000-7f7f29494000 rw-p 00032000 fd:00 16548133                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/random/bit_generator.cpython-310-x86_64-linux-gnu.so
+7f7f29494000-7f7f29495000 rw-p 00000000 00:00 0 
+7f7f29495000-7f7f2949b000 r--p 00000000 fd:00 16548071                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/linalg/_umath_linalg.cpython-310-x86_64-linux-gnu.so
+7f7f2949b000-7f7f294bb000 r-xp 00006000 fd:00 16548071                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/linalg/_umath_linalg.cpython-310-x86_64-linux-gnu.so
+7f7f294bb000-7f7f294c0000 r--p 00026000 fd:00 16548071                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/linalg/_umath_linalg.cpython-310-x86_64-linux-gnu.so
+7f7f294c0000-7f7f294c1000 r--p 0002a000 fd:00 16548071                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/linalg/_umath_linalg.cpython-310-x86_64-linux-gnu.so
+7f7f294c1000-7f7f294c2000 rw-p 0002b000 fd:00 16548071                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/linalg/_umath_linalg.cpython-310-x86_64-linux-gnu.so
+7f7f294c2000-7f7f294c3000 rw-p 00000000 00:00 0 
+7f7f294c3000-7f7f294c6000 rw-p 00032000 fd:00 16548071                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/linalg/_umath_linalg.cpython-310-x86_64-linux-gnu.so
+7f7f294c6000-7f7f294cd000 r--p 00000000 fd:00 16548195                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_tests.cpython-310-x86_64-linux-gnu.so
+7f7f294cd000-7f7f294e4000 r-xp 00007000 fd:00 16548195                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_tests.cpython-310-x86_64-linux-gnu.so
+7f7f294e4000-7f7f294ea000 r--p 0001e000 fd:00 16548195                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_tests.cpython-310-x86_64-linux-gnu.so
+7f7f294ea000-7f7f294eb000 r--p 00023000 fd:00 16548195                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_tests.cpython-310-x86_64-linux-gnu.so
+7f7f294eb000-7f7f294ed000 rw-p 00024000 fd:00 16548195                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/core/_multiarray_tests.cpython-310-x86_64-linux-gnu.so
+7f7f294ed000-7f7f29515000 r--p 00000000 fd:00 16519024                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10.so
+7f7f29515000-7f7f295ad000 r-xp 00028000 fd:00 16519024                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10.so
+7f7f295ad000-7f7f295df000 r--p 000c0000 fd:00 16519024                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10.so
+7f7f295df000-7f7f295e2000 r--p 000f2000 fd:00 16519024                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10.so
+7f7f295e2000-7f7f295e9000 rw-p 000f5000 fd:00 16519024                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10.so
+7f7f295e9000-7f7f295eb000 rw-p 00000000 00:00 0 
+7f7f295eb000-7f7f29600000 rw-p 0013f000 fd:00 16519024                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10.so
+7f7f29600000-7f7f296ad000 r-xp 00000000 fd:00 16415660                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12
+7f7f296ad000-7f7f298ad000 ---p 000ad000 fd:00 16415660                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12
+7f7f298ad000-7f7f298b1000 r--p 000ad000 fd:00 16415660                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12
+7f7f298b1000-7f7f298b2000 rw-p 000b1000 fd:00 16415660                   /home/brysonbrown/.local/lib/python3.10/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12
+7f7f298b2000-7f7f298b4000 rw-p 00000000 00:00 0 
+7f7f298b7000-7f7f298bf000 rw-s 00000000 fd:00 6948389                    /tmp/hsperfdata_brysonbrown/1332215 (deleted)
+7f7f298bf000-7f7f2993f000 rw-p 00000000 00:00 0 
+7f7f2993f000-7f7f29942000 r--p 00000000 fd:00 42338398                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f7f29942000-7f7f29959000 r-xp 00003000 fd:00 42338398                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f7f29959000-7f7f2995d000 r--p 0001a000 fd:00 42338398                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f7f2995d000-7f7f2995e000 r--p 0001d000 fd:00 42338398                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f7f2995e000-7f7f2995f000 rw-p 0001e000 fd:00 42338398                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f7f2995f000-7f7f2996e000 r--p 00000000 fd:00 16519025                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10_cuda.so
+7f7f2996e000-7f7f299bd000 r-xp 0000f000 fd:00 16519025                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10_cuda.so
+7f7f299bd000-7f7f299d4000 r--p 0005e000 fd:00 16519025                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10_cuda.so
+7f7f299d4000-7f7f299d5000 r--p 00075000 fd:00 16519025                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10_cuda.so
+7f7f299d5000-7f7f299d6000 rw-p 00076000 fd:00 16519025                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10_cuda.so
+7f7f299d6000-7f7f299fc000 rw-p 00000000 00:00 0 
+7f7f299fc000-7f7f29a04000 rw-p 0009c000 fd:00 16519025                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libc10_cuda.so
+7f7f29a04000-7f7f29a10000 r--p 00000000 fd:00 16519029                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch.so
+7f7f29a10000-7f7f29a3d000 r-xp 0000c000 fd:00 16519029                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch.so
+7f7f29a3d000-7f7f29a48000 r--p 00039000 fd:00 16519029                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch.so
+7f7f29a48000-7f7f29a49000 r--p 00044000 fd:00 16519029                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch.so
+7f7f29a49000-7f7f29a4a000 rw-p 00045000 fd:00 16519029                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch.so
+7f7f29a4a000-7f7f29a51000 rw-p 00059000 fd:00 16519029                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch.so
+7f7f29a54000-7f7f29a56000 r--p 00000000 fd:00 48365871                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+7f7f29a56000-7f7f29a59000 r-xp 00002000 fd:00 48365871                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+7f7f29a59000-7f7f29a5a000 r--p 00005000 fd:00 48365871                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+7f7f29a5a000-7f7f29a5b000 ---p 00006000 fd:00 48365871                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+7f7f29a5b000-7f7f29a5c000 r--p 00006000 fd:00 48365871                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+7f7f29a5c000-7f7f29a5d000 rw-p 00007000 fd:00 48365871                   /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+7f7f29a5d000-7f7f29a5f000 r--p 00000000 fd:00 15753586                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_posix.abi3.so
+7f7f29a5f000-7f7f29a61000 r-xp 00002000 fd:00 15753586                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_posix.abi3.so
+7f7f29a61000-7f7f29a62000 r--p 00004000 fd:00 15753586                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_posix.abi3.so
+7f7f29a62000-7f7f29a63000 r--p 00004000 fd:00 15753586                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_posix.abi3.so
+7f7f29a63000-7f7f29a64000 rw-p 00005000 fd:00 15753586                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_posix.abi3.so
+7f7f29a64000-7f7f29a66000 r--p 00000000 fd:00 42347553                   /usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.6
+7f7f29a66000-7f7f29a7f000 r-xp 00002000 fd:00 42347553                   /usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.6
+7f7f29a7f000-7f7f29a83000 r--p 0001b000 fd:00 42347553                   /usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.6
+7f7f29a83000-7f7f29a84000 r--p 0001e000 fd:00 42347553                   /usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.6
+7f7f29a84000-7f7f29a85000 rw-p 0001f000 fd:00 42347553                   /usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.6
+7f7f29a85000-7f7f29a8b000 r--p 00000000 fd:00 42345964                   /usr/lib/python3/dist-packages/yaml/_yaml.cpython-310-x86_64-linux-gnu.so
+7f7f29a8b000-7f7f29ab9000 r-xp 00006000 fd:00 42345964                   /usr/lib/python3/dist-packages/yaml/_yaml.cpython-310-x86_64-linux-gnu.so
+7f7f29ab9000-7f7f29abd000 r--p 00034000 fd:00 42345964                   /usr/lib/python3/dist-packages/yaml/_yaml.cpython-310-x86_64-linux-gnu.so
+7f7f29abd000-7f7f29abe000 ---p 00038000 fd:00 42345964                   /usr/lib/python3/dist-packages/yaml/_yaml.cpython-310-x86_64-linux-gnu.so
+7f7f29abe000-7f7f29abf000 r--p 00038000 fd:00 42345964                   /usr/lib/python3/dist-packages/yaml/_yaml.cpython-310-x86_64-linux-gnu.so
+7f7f29abf000-7f7f29ac2000 rw-p 00039000 fd:00 42345964                   /usr/lib/python3/dist-packages/yaml/_yaml.cpython-310-x86_64-linux-gnu.so
+7f7f29ac2000-7f7f29ac3000 rw-p 00000000 00:00 0 
+7f7f29ac3000-7f7f29ac5000 r--p 00000000 fd:00 42336935                   /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f7f29ac5000-7f7f29ac9000 r-xp 00002000 fd:00 42336935                   /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f7f29ac9000-7f7f29aca000 r--p 00006000 fd:00 42336935                   /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f7f29aca000-7f7f29acb000 r--p 00006000 fd:00 42336935                   /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f7f29acb000-7f7f29acc000 rw-p 00007000 fd:00 42336935                   /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f7f29acd000-7f7f29acf000 r--p 00000000 fd:00 15753585                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_linux.abi3.so
+7f7f29acf000-7f7f29ad2000 r-xp 00002000 fd:00 15753585                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_linux.abi3.so
+7f7f29ad2000-7f7f29ad3000 r--p 00005000 fd:00 15753585                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_linux.abi3.so
+7f7f29ad3000-7f7f29ad4000 r--p 00005000 fd:00 15753585                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_linux.abi3.so
+7f7f29ad4000-7f7f29ad5000 rw-p 00006000 fd:00 15753585                   /home/brysonbrown/.local/lib/python3.10/site-packages/psutil/_psutil_linux.abi3.so
+7f7f29ad5000-7f7f29ad7000 r--p 00000000 fd:00 42360097                   /usr/lib/python3.10/lib-dynload/resource.cpython-310-x86_64-linux-gnu.so
+7f7f29ad7000-7f7f29ad8000 r-xp 00002000 fd:00 42360097                   /usr/lib/python3.10/lib-dynload/resource.cpython-310-x86_64-linux-gnu.so
+7f7f29ad8000-7f7f29ad9000 r--p 00003000 fd:00 42360097                   /usr/lib/python3.10/lib-dynload/resource.cpython-310-x86_64-linux-gnu.so
+7f7f29ad9000-7f7f29ada000 r--p 00003000 fd:00 42360097                   /usr/lib/python3.10/lib-dynload/resource.cpython-310-x86_64-linux-gnu.so
+7f7f29ada000-7f7f29adb000 rw-p 00004000 fd:00 42360097                   /usr/lib/python3.10/lib-dynload/resource.cpython-310-x86_64-linux-gnu.so
+7f7f29adb000-7f7f29add000 r--p 00000000 fd:00 42360066                   /usr/lib/python3.10/lib-dynload/_queue.cpython-310-x86_64-linux-gnu.so
+7f7f29add000-7f7f29adf000 r-xp 00002000 fd:00 42360066                   /usr/lib/python3.10/lib-dynload/_queue.cpython-310-x86_64-linux-gnu.so
+7f7f29adf000-7f7f29ae0000 r--p 00004000 fd:00 42360066                   /usr/lib/python3.10/lib-dynload/_queue.cpython-310-x86_64-linux-gnu.so
+7f7f29ae0000-7f7f29ae1000 r--p 00004000 fd:00 42360066                   /usr/lib/python3.10/lib-dynload/_queue.cpython-310-x86_64-linux-gnu.so
+7f7f29ae1000-7f7f29ae2000 rw-p 00005000 fd:00 42360066                   /usr/lib/python3.10/lib-dynload/_queue.cpython-310-x86_64-linux-gnu.so
+7f7f29ae2000-7f7f29be2000 rw-p 00000000 00:00 0 
+7f7f29be2000-7f7f29be4000 r--p 00000000 fd:00 42347335                   /usr/lib/x86_64-linux-gnu/libffi.so.8.1.0
+7f7f29be4000-7f7f29beb000 r-xp 00002000 fd:00 42347335                   /usr/lib/x86_64-linux-gnu/libffi.so.8.1.0
+7f7f29beb000-7f7f29bec000 r--p 00009000 fd:00 42347335                   /usr/lib/x86_64-linux-gnu/libffi.so.8.1.0
+7f7f29bec000-7f7f29bed000 ---p 0000a000 fd:00 42347335                   /usr/lib/x86_64-linux-gnu/libffi.so.8.1.0
+7f7f29bed000-7f7f29bee000 r--p 0000a000 fd:00 42347335                   /usr/lib/x86_64-linux-gnu/libffi.so.8.1.0
+7f7f29bee000-7f7f29bef000 rw-p 0000b000 fd:00 42347335                   /usr/lib/x86_64-linux-gnu/libffi.so.8.1.0
+7f7f29bf0000-7f7f29bf1000 r--p 00000000 fd:00 42360079                   /usr/lib/python3.10/lib-dynload/_uuid.cpython-310-x86_64-linux-gnu.so
+7f7f29bf1000-7f7f29bf2000 r-xp 00001000 fd:00 42360079                   /usr/lib/python3.10/lib-dynload/_uuid.cpython-310-x86_64-linux-gnu.so
+7f7f29bf2000-7f7f29bf3000 r--p 00002000 fd:00 42360079                   /usr/lib/python3.10/lib-dynload/_uuid.cpython-310-x86_64-linux-gnu.so
+7f7f29bf3000-7f7f29bf4000 r--p 00002000 fd:00 42360079                   /usr/lib/python3.10/lib-dynload/_uuid.cpython-310-x86_64-linux-gnu.so
+7f7f29bf4000-7f7f29bf5000 rw-p 00003000 fd:00 42360079                   /usr/lib/python3.10/lib-dynload/_uuid.cpython-310-x86_64-linux-gnu.so
+7f7f29bf5000-7f7f29bf7000 r--p 00000000 fd:00 42360093                   /usr/lib/python3.10/lib-dynload/mmap.cpython-310-x86_64-linux-gnu.so
+7f7f29bf7000-7f7f29bfa000 r-xp 00002000 fd:00 42360093                   /usr/lib/python3.10/lib-dynload/mmap.cpython-310-x86_64-linux-gnu.so
+7f7f29bfa000-7f7f29bfc000 r--p 00005000 fd:00 42360093                   /usr/lib/python3.10/lib-dynload/mmap.cpython-310-x86_64-linux-gnu.so
+7f7f29bfc000-7f7f29bfd000 r--p 00006000 fd:00 42360093                   /usr/lib/python3.10/lib-dynload/mmap.cpython-310-x86_64-linux-gnu.so
+7f7f29bfd000-7f7f29bfe000 rw-p 00007000 fd:00 42360093                   /usr/lib/python3.10/lib-dynload/mmap.cpython-310-x86_64-linux-gnu.so
+7f7f29bfe000-7f7f29c04000 r--p 00000000 fd:00 42360003                   /usr/lib/python3.10/lib-dynload/_ctypes.cpython-310-x86_64-linux-gnu.so
+7f7f29c04000-7f7f29c14000 r-xp 00006000 fd:00 42360003                   /usr/lib/python3.10/lib-dynload/_ctypes.cpython-310-x86_64-linux-gnu.so
+7f7f29c14000-7f7f29c1a000 r--p 00016000 fd:00 42360003                   /usr/lib/python3.10/lib-dynload/_ctypes.cpython-310-x86_64-linux-gnu.so
+7f7f29c1a000-7f7f29c1b000 r--p 0001b000 fd:00 42360003                   /usr/lib/python3.10/lib-dynload/_ctypes.cpython-310-x86_64-linux-gnu.so
+7f7f29c1b000-7f7f29c1f000 rw-p 0001c000 fd:00 42360003                   /usr/lib/python3.10/lib-dynload/_ctypes.cpython-310-x86_64-linux-gnu.so
+7f7f29c1f000-7f7f29d1f000 rw-p 00000000 00:00 0 
+7f7f29d1f000-7f7f29d21000 r--p 00000000 fd:00 42360057                   /usr/lib/python3.10/lib-dynload/_json.cpython-310-x86_64-linux-gnu.so
+7f7f29d21000-7f7f29d28000 r-xp 00002000 fd:00 42360057                   /usr/lib/python3.10/lib-dynload/_json.cpython-310-x86_64-linux-gnu.so
+7f7f29d28000-7f7f29d2a000 r--p 00009000 fd:00 42360057                   /usr/lib/python3.10/lib-dynload/_json.cpython-310-x86_64-linux-gnu.so
+7f7f29d2a000-7f7f29d2b000 r--p 0000a000 fd:00 42360057                   /usr/lib/python3.10/lib-dynload/_json.cpython-310-x86_64-linux-gnu.so
+7f7f29d2b000-7f7f29d2c000 rw-p 0000b000 fd:00 42360057                   /usr/lib/python3.10/lib-dynload/_json.cpython-310-x86_64-linux-gnu.so
+7f7f29d2c000-7f7f29e2c000 rw-p 00000000 00:00 0 
+7f7f29e2c000-7f7f29e2f000 r--p 00000000 fd:00 42347405                   /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.5
+7f7f29e2f000-7f7f29e4a000 r-xp 00003000 fd:00 42347405                   /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.5
+7f7f29e4a000-7f7f29e55000 r--p 0001e000 fd:00 42347405                   /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.5
+7f7f29e55000-7f7f29e56000 r--p 00028000 fd:00 42347405                   /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.5
+7f7f29e56000-7f7f29e57000 rw-p 00029000 fd:00 42347405                   /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.5
+7f7f29e57000-7f7f29e59000 r--p 00000000 fd:00 42347296                   /usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4
+7f7f29e59000-7f7f29e66000 r-xp 00002000 fd:00 42347296                   /usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4
+7f7f29e66000-7f7f29e68000 r--p 0000f000 fd:00 42347296                   /usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4
+7f7f29e68000-7f7f29e69000 r--p 00010000 fd:00 42347296                   /usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4
+7f7f29e69000-7f7f29e6a000 rw-p 00011000 fd:00 42347296                   /usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4
+7f7f29e6a000-7f7f29f6a000 rw-p 00000000 00:00 0 
+7f7f29f6d000-7f7f29f6e000 r--p 00000000 fd:00 16547675                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft_internal.cpython-310-x86_64-linux-gnu.so
+7f7f29f6e000-7f7f29f81000 r-xp 00001000 fd:00 16547675                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft_internal.cpython-310-x86_64-linux-gnu.so
+7f7f29f81000-7f7f29f83000 r--p 00014000 fd:00 16547675                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft_internal.cpython-310-x86_64-linux-gnu.so
+7f7f29f83000-7f7f29f84000 r--p 00015000 fd:00 16547675                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft_internal.cpython-310-x86_64-linux-gnu.so
+7f7f29f84000-7f7f29f85000 rw-p 00016000 fd:00 16547675                   /home/brysonbrown/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft_internal.cpython-310-x86_64-linux-gnu.so
+7f7f29f85000-7f7f29f86000 r--p 00000000 fd:00 42359992                   /usr/lib/python3.10/lib-dynload/_contextvars.cpython-310-x86_64-linux-gnu.so
+7f7f29f86000-7f7f29f87000 r-xp 00001000 fd:00 42359992                   /usr/lib/python3.10/lib-dynload/_contextvars.cpython-310-x86_64-linux-gnu.so
+7f7f29f87000-7f7f29f88000 r--p 00002000 fd:00 42359992                   /usr/lib/python3.10/lib-dynload/_contextvars.cpython-310-x86_64-linux-gnu.so
+7f7f29f88000-7f7f29f89000 r--p 00002000 fd:00 42359992                   /usr/lib/python3.10/lib-dynload/_contextvars.cpython-310-x86_64-linux-gnu.so
+7f7f29f89000-7f7f29f8a000 rw-p 00003000 fd:00 42359992                   /usr/lib/python3.10/lib-dynload/_contextvars.cpython-310-x86_64-linux-gnu.so
+7f7f29f8a000-7f7f29f8d000 r--p 00000000 fd:00 16519028                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libshm.so
+7f7f29f8d000-7f7f29f90000 r-xp 00003000 fd:00 16519028                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libshm.so
+7f7f29f90000-7f7f29f91000 r--p 00006000 fd:00 16519028                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libshm.so
+7f7f29f91000-7f7f29f92000 r--p 00006000 fd:00 16519028                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libshm.so
+7f7f29f92000-7f7f29f93000 rw-p 00007000 fd:00 16519028                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libshm.so
+7f7f29f93000-7f7f29f95000 rw-p 0000b000 fd:00 16519028                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libshm.so
+7f7f29f95000-7f7f29f96000 r--p 00000000 fd:00 42343472                   /usr/lib/x86_64-linux-gnu/librt.so.1
+7f7f29f96000-7f7f29f97000 r-xp 00001000 fd:00 42343472                   /usr/lib/x86_64-linux-gnu/librt.so.1
+7f7f29f97000-7f7f29f98000 r--p 00002000 fd:00 42343472                   /usr/lib/x86_64-linux-gnu/librt.so.1
+7f7f29f98000-7f7f29f99000 r--p 00002000 fd:00 42343472                   /usr/lib/x86_64-linux-gnu/librt.so.1
+7f7f29f99000-7f7f29f9a000 rw-p 00003000 fd:00 42343472                   /usr/lib/x86_64-linux-gnu/librt.so.1
+7f7f29f9a000-7f7f29f9b000 r--p 00000000 fd:00 42340864                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7f7f29f9b000-7f7f29f9c000 r-xp 00001000 fd:00 42340864                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7f7f29f9c000-7f7f29f9d000 r--p 00002000 fd:00 42340864                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7f7f29f9d000-7f7f29f9e000 r--p 00002000 fd:00 42340864                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7f7f29f9e000-7f7f29f9f000 rw-p 00003000 fd:00 42340864                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7f7f29f9f000-7f7f29fa0000 r--p 00000000 fd:00 42343470                   /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7f7f29fa0000-7f7f29fa1000 r-xp 00001000 fd:00 42343470                   /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7f7f29fa1000-7f7f29fa2000 r--p 00002000 fd:00 42343470                   /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7f7f29fa2000-7f7f29fa3000 r--p 00002000 fd:00 42343470                   /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7f7f29fa3000-7f7f29fa4000 rw-p 00003000 fd:00 42343470                   /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7f7f29fa6000-7f7f29fa7000 ---p 00000000 00:00 0 
+7f7f29fa7000-7f7f29fa8000 r--p 00000000 00:00 0 
+7f7f29fa8000-7f7f29fa9000 r--p 00000000 fd:00 42343474                   /usr/lib/x86_64-linux-gnu/libutil.so.1
+7f7f29fa9000-7f7f29faa000 r-xp 00001000 fd:00 42343474                   /usr/lib/x86_64-linux-gnu/libutil.so.1
+7f7f29faa000-7f7f29fab000 r--p 00002000 fd:00 42343474                   /usr/lib/x86_64-linux-gnu/libutil.so.1
+7f7f29fab000-7f7f29fac000 r--p 00002000 fd:00 42343474                   /usr/lib/x86_64-linux-gnu/libutil.so.1
+7f7f29fac000-7f7f29fad000 rw-p 00003000 fd:00 42343474                   /usr/lib/x86_64-linux-gnu/libutil.so.1
+7f7f29fad000-7f7f29fae000 r--p 00000000 fd:00 15739282                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/_C.cpython-310-x86_64-linux-gnu.so
+7f7f29fae000-7f7f29faf000 r-xp 00001000 fd:00 15739282                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/_C.cpython-310-x86_64-linux-gnu.so
+7f7f29faf000-7f7f29fb0000 r--p 00002000 fd:00 15739282                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/_C.cpython-310-x86_64-linux-gnu.so
+7f7f29fb0000-7f7f29fb1000 r--p 00002000 fd:00 15739282                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/_C.cpython-310-x86_64-linux-gnu.so
+7f7f29fb1000-7f7f29fb2000 rw-p 00003000 fd:00 15739282                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/_C.cpython-310-x86_64-linux-gnu.so
+7f7f29fb2000-7f7f29fb3000 rw-p 00006000 fd:00 15739282                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/_C.cpython-310-x86_64-linux-gnu.so
+7f7f29fb3000-7f7f2a0b3000 rw-p 00000000 00:00 0 
+7f7f2a0b3000-7f7f2a0b4000 r--p 00000000 fd:00 16519033                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_global_deps.so
+7f7f2a0b4000-7f7f2a0b5000 r-xp 00001000 fd:00 16519033                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_global_deps.so
+7f7f2a0b5000-7f7f2a0b6000 r--p 00002000 fd:00 16519033                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_global_deps.so
+7f7f2a0b6000-7f7f2a0b7000 r--p 00002000 fd:00 16519033                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_global_deps.so
+7f7f2a0b7000-7f7f2a0b9000 rw-p 00003000 fd:00 16519033                   /home/brysonbrown/.local/lib/python3.10/site-packages/torch/lib/libtorch_global_deps.so
+7f7f2a0b9000-7f7f2a0ba000 r--p 00000000 fd:00 42361509                   /usr/lib/python3.10/lib-dynload/_opcode.cpython-310-x86_64-linux-gnu.so
+7f7f2a0ba000-7f7f2a0bb000 r-xp 00001000 fd:00 42361509                   /usr/lib/python3.10/lib-dynload/_opcode.cpython-310-x86_64-linux-gnu.so
+7f7f2a0bb000-7f7f2a0bc000 r--p 00002000 fd:00 42361509                   /usr/lib/python3.10/lib-dynload/_opcode.cpython-310-x86_64-linux-gnu.so
+7f7f2a0bc000-7f7f2a0bd000 r--p 00002000 fd:00 42361509                   /usr/lib/python3.10/lib-dynload/_opcode.cpython-310-x86_64-linux-gnu.so
+7f7f2a0bd000-7f7f2a0be000 rw-p 00003000 fd:00 42361509                   /usr/lib/python3.10/lib-dynload/_opcode.cpython-310-x86_64-linux-gnu.so
+7f7f2a0be000-7f7f2a0bf000 r--p 00000000 fd:00 42360065                   /usr/lib/python3.10/lib-dynload/_posixshmem.cpython-310-x86_64-linux-gnu.so
+7f7f2a0bf000-7f7f2a0c0000 r-xp 00001000 fd:00 42360065                   /usr/lib/python3.10/lib-dynload/_posixshmem.cpython-310-x86_64-linux-gnu.so
+7f7f2a0c0000-7f7f2a0c1000 r--p 00002000 fd:00 42360065                   /usr/lib/python3.10/lib-dynload/_posixshmem.cpython-310-x86_64-linux-gnu.so
+7f7f2a0c1000-7f7f2a0c2000 r--p 00002000 fd:00 42360065                   /usr/lib/python3.10/lib-dynload/_posixshmem.cpython-310-x86_64-linux-gnu.so
+7f7f2a0c2000-7f7f2a0c3000 rw-p 00003000 fd:00 42360065                   /usr/lib/python3.10/lib-dynload/_posixshmem.cpython-310-x86_64-linux-gnu.so
+7f7f2a0c3000-7f7f2a0c6000 r--p 00000000 fd:00 42360062                   /usr/lib/python3.10/lib-dynload/_lzma.cpython-310-x86_64-linux-gnu.so
+7f7f2a0c6000-7f7f2a0ca000 r-xp 00003000 fd:00 42360062                   /usr/lib/python3.10/lib-dynload/_lzma.cpython-310-x86_64-linux-gnu.so
+7f7f2a0ca000-7f7f2a0cd000 r--p 00007000 fd:00 42360062                   /usr/lib/python3.10/lib-dynload/_lzma.cpython-310-x86_64-linux-gnu.so
+7f7f2a0cd000-7f7f2a0ce000 r--p 00009000 fd:00 42360062                   /usr/lib/python3.10/lib-dynload/_lzma.cpython-310-x86_64-linux-gnu.so
+7f7f2a0ce000-7f7f2a0cf000 rw-p 0000a000 fd:00 42360062                   /usr/lib/python3.10/lib-dynload/_lzma.cpython-310-x86_64-linux-gnu.so
+7f7f2a0cf000-7f7f2a0d1000 r--p 00000000 fd:00 42359870                   /usr/lib/python3.10/lib-dynload/_bz2.cpython-310-x86_64-linux-gnu.so
+7f7f2a0d1000-7f7f2a0d4000 r-xp 00002000 fd:00 42359870                   /usr/lib/python3.10/lib-dynload/_bz2.cpython-310-x86_64-linux-gnu.so
+7f7f2a0d4000-7f7f2a0d6000 r--p 00005000 fd:00 42359870                   /usr/lib/python3.10/lib-dynload/_bz2.cpython-310-x86_64-linux-gnu.so
+7f7f2a0d6000-7f7f2a0d7000 r--p 00006000 fd:00 42359870                   /usr/lib/python3.10/lib-dynload/_bz2.cpython-310-x86_64-linux-gnu.so
+7f7f2a0d7000-7f7f2a0d8000 rw-p 00007000 fd:00 42359870                   /usr/lib/python3.10/lib-dynload/_bz2.cpython-310-x86_64-linux-gnu.so
+7f7f2a0d8000-7f7f2a33a000 rw-p 00000000 00:00 0 
+7f7f2a33a000-7f7f2a623000 r--p 00000000 fd:00 42340855                   /usr/lib/locale/locale-archive
+7f7f2a623000-7f7f2a625000 rw-p 00000000 00:00 0 
+7f7f2a625000-7f7f2a64d000 r--p 00000000 fd:00 42340275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7f7f2a64d000-7f7f2a7e2000 r-xp 00028000 fd:00 42340275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7f7f2a7e2000-7f7f2a83a000 r--p 001bd000 fd:00 42340275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7f7f2a83a000-7f7f2a83b000 ---p 00215000 fd:00 42340275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7f7f2a83b000-7f7f2a83f000 r--p 00215000 fd:00 42340275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7f7f2a83f000-7f7f2a841000 rw-p 00219000 fd:00 42340275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7f7f2a841000-7f7f2a84e000 rw-p 00000000 00:00 0 
+7f7f2a84e000-7f7f2a850000 r--p 00000000 fd:00 42347554                   /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f7f2a850000-7f7f2a861000 r-xp 00002000 fd:00 42347554                   /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f7f2a861000-7f7f2a867000 r--p 00013000 fd:00 42347554                   /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f7f2a867000-7f7f2a868000 ---p 00019000 fd:00 42347554                   /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f7f2a868000-7f7f2a869000 r--p 00019000 fd:00 42347554                   /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f7f2a869000-7f7f2a86a000 rw-p 0001a000 fd:00 42347554                   /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f7f2a86a000-7f7f2a86e000 r--p 00000000 fd:00 42340271                   /usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7
+7f7f2a86e000-7f7f2a88d000 r-xp 00004000 fd:00 42340271                   /usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7
+7f7f2a88d000-7f7f2a897000 r--p 00023000 fd:00 42340271                   /usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7
+7f7f2a897000-7f7f2a898000 ---p 0002d000 fd:00 42340271                   /usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7
+7f7f2a898000-7f7f2a89a000 r--p 0002d000 fd:00 42340271                   /usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7
+7f7f2a89a000-7f7f2a89b000 rw-p 0002f000 fd:00 42340271                   /usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7
+7f7f2a89b000-7f7f2a8a9000 r--p 00000000 fd:00 42340865                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7f7f2a8a9000-7f7f2a925000 r-xp 0000e000 fd:00 42340865                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7f7f2a925000-7f7f2a980000 r--p 0008a000 fd:00 42340865                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7f7f2a980000-7f7f2a981000 r--p 000e4000 fd:00 42340865                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7f7f2a981000-7f7f2a982000 rw-p 000e5000 fd:00 42340865                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7f7f2a982000-7f7f2a983000 r--p 00000000 00:00 0 
+7f7f2a983000-7f7f2a985000 r--p 00000000 fd:00 42360064                   /usr/lib/python3.10/lib-dynload/_multiprocessing.cpython-310-x86_64-linux-gnu.so
+7f7f2a985000-7f7f2a987000 r-xp 00002000 fd:00 42360064                   /usr/lib/python3.10/lib-dynload/_multiprocessing.cpython-310-x86_64-linux-gnu.so
+7f7f2a987000-7f7f2a988000 r--p 00004000 fd:00 42360064                   /usr/lib/python3.10/lib-dynload/_multiprocessing.cpython-310-x86_64-linux-gnu.so
+7f7f2a988000-7f7f2a989000 r--p 00004000 fd:00 42360064                   /usr/lib/python3.10/lib-dynload/_multiprocessing.cpython-310-x86_64-linux-gnu.so
+7f7f2a989000-7f7f2a98a000 rw-p 00005000 fd:00 42360064                   /usr/lib/python3.10/lib-dynload/_multiprocessing.cpython-310-x86_64-linux-gnu.so
+7f7f2a98a000-7f7f2a991000 r--s 00000000 fd:00 42374384                   /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+7f7f2a991000-7f7f2a993000 rw-p 00000000 00:00 0 
+7f7f2a993000-7f7f2a995000 r--p 00000000 fd:00 42339650                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f7f2a995000-7f7f2a9bf000 r-xp 00002000 fd:00 42339650                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f7f2a9bf000-7f7f2a9ca000 r--p 0002c000 fd:00 42339650                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f7f2a9ca000-7f7f2a9cb000 ---p 00000000 00:00 0 
+7f7f2a9cb000-7f7f2a9cd000 r--p 00037000 fd:00 42339650                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f7f2a9cd000-7f7f2a9cf000 rw-p 00039000 fd:00 42339650                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffcfb269000-7ffcfb26d000 ---p 00000000 00:00 0 
+7ffcfb26d000-7ffcfb369000 rw-p 00000000 00:00 0                          [stack]
+7ffcfb3e3000-7ffcfb3e7000 r--p 00000000 00:00 0                          [vvar]
+7ffcfb3e7000-7ffcfb3e9000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+Total number of mappings: 899
+
+JVMTI agents: none
+
+
+VM Arguments:
+java_command: <unknown>
+java_class_path (initial): /home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/hipparchus-stat-4.0.2.jar:/home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/hipparchus-geometry-4.0.2.jar:/home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/hipparchus-filtering-4.0.2.jar:/home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/hipparchus-fitting-4.0.2.jar:/home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/orekit-13.1.jar:/home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/hipparchus-core-4.0.2.jar:/home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/hipparchus-ode-4.0.2.jar:/home/brysonbrown/Orbital/OrbitalAvoidance/orekit_lib/hipparchus-optim-4.0.2.jar:/home/brysonbrown/.local/lib/python3.10/site-packages/org.jpype.jar
+Launcher Type: generic
+
+[Global flags]
+     intx CICompilerCount                          = 21                                        {product} {ergonomic}
+     uint ConcGCThreads                            = 21                                        {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 83                                        {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 16777216                                  {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 2147483648                                {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 31675383808                               {product} {ergonomic}
+   size_t MaxNewSize                               = 18991808512                               {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 16777216                                  {product} {ergonomic}
+   size_t MinHeapSize                              = 16777216                                  {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 9372180                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 121143030                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 121143030                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+   size_t SoftMaxHeapSize                          = 31675383808                            {manageable} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: 
+[error occurred during error reporting (printing log configuration), id 0xb, SIGSEGV (0xb) at pc=0x00007f7e1fc30f83]
+Environment Variables:
+PATH=/usr/local/cuda-12.8/bin:/home/brysonbrown/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+LD_LIBRARY_PATH=/home/brysonbrown/.local/lib/python3.10/site-packages/cv2/../../lib64:/usr/local/cuda-12.8/lib64:
+SHELL=/bin/bash
+LANG=en_US.UTF-8
+TERM=xterm-256color
+
+Active Locale:
+LC_ALL=LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=C;LC_COLLATE=C;LC_MONETARY=C;LC_MESSAGES=C;LC_PAPER=en_US.UTF-8;LC_NAME=en_US.UTF-8;LC_ADDRESS=en_US.UTF-8;LC_TELEPHONE=en_US.UTF-8;LC_MEASUREMENT=en_US.UTF-8;LC_IDENTIFICATION=en_US.UTF-8
+LC_COLLATE=C
+LC_CTYPE=en_US.UTF-8
+LC_MESSAGES=C
+LC_MONETARY=C
+LC_NUMERIC=C
+LC_TIME=C
+
+Signal Handlers:
+   SIGSEGV: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+    SIGBUS: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+    SIGFPE: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+   SIGPIPE: javaSignalHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+  *** Handler was modified!
+  *** Expected: 0x0000556a16c95d10, mask=01100000000000000000000000000000, flags=|Unknown_flags:20070f40
+   SIGXFSZ: javaSignalHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+  *** Handler was modified!
+  *** Expected: 0x0000556a16a0ac70, mask=10100000000000000000000000000000, flags=SA_RESTART|Unknown_flags:106a550
+    SIGILL: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+   SIGUSR2: SR_handler in libjvm.so, mask=00100000000000000000000000000000, flags=SA_RESTART|SA_SIGINFO, blocked
+    SIGHUP: UserHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+    SIGINT: UserHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+   SIGTERM: UserHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+   SIGQUIT: UserHandler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, blocked
+   SIGTRAP: crash_handler in libjvm.so, mask=11100100010111111101111111111110, flags=SA_RESTART|SA_SIGINFO, unblocked
+
+
+Periodic native trim disabled
+
+---------------  S Y S T E M  ---------------
+
+OS:
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.5 LTS"
+uname: Linux 5.15.0-153-generic #163-Ubuntu SMP Thu Aug 7 16:37:18 UTC 2025 x86_64
+OS uptime: 5 days 23:51 hours
+libc: glibc 2.35 NPTL 2.35 
+rlimit (soft/hard): STACK 8192k/infinity , CORE 0k/infinity , NPROC 2062111/2062111 , NOFILE 1048576/1048576 , AS infinity/infinity , CPU infinity/infinity , DATA infinity/infinity , FSIZE infinity/infinity , MEMLOCK 66022740k/66022740k
+load average: 39.45 39.60 46.95
+
+/proc/meminfo:
+MemTotal:       528181948 kB
+MemFree:        347565964 kB
+MemAvailable:   495770680 kB
+Buffers:         1391776 kB
+Cached:         144459312 kB
+SwapCached:            0 kB
+Active:         20520940 kB
+Inactive:       149517752 kB
+Active(anon):     113516 kB
+Inactive(anon): 24164800 kB
+Active(file):   20407424 kB
+Inactive(file): 125352952 kB
+Unevictable:       27908 kB
+Mlocked:           27908 kB
+SwapTotal:       8388604 kB
+SwapFree:        8388604 kB
+Dirty:              1120 kB
+Writeback:             0 kB
+AnonPages:      24181672 kB
+Mapped:          1941620 kB
+Shmem:             81644 kB
+KReclaimable:    5867220 kB
+Slab:            7385068 kB
+SReclaimable:    5867220 kB
+SUnreclaim:      1517848 kB
+KernelStack:       61136 kB
+PageTables:       200168 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    272479576 kB
+Committed_AS:   81852072 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:     1010244 kB
+VmallocChunk:          0 kB
+Percpu:           258048 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:     4677684 kB
+DirectMap2M:    50753536 kB
+DirectMap1G:    482344960 kB
+
+/sys/kernel/mm/transparent_hugepage/enabled: always [madvise] never
+/sys/kernel/mm/transparent_hugepage/hpage_pmd_size: 2097152
+/sys/kernel/mm/transparent_hugepage/defrag (defrag/compaction efforts parameter): always defer defer+madvise [madvise] never
+
+Process Memory:
+Virtual Size: 41007004K (peak: 41007004K)
+Resident Set Size: 994956K (peak: 994956K) (anon: 496676K, file: 498280K, shmem: 0K)
+Swapped out: 0K
+C-Heap outstanding allocations: 325328K, retained: 79687K
+glibc malloc tunables: (default)
+
+/proc/sys/kernel/threads-max (system-wide limit on the number of threads): 4124222
+/proc/sys/vm/max_map_count (maximum number of memory map areas a process may have): 65530
+/proc/sys/vm/swappiness (control to define how aggressively the kernel swaps out anonymous memory): 60
+/proc/sys/kernel/pid_max (system-wide limit on number of process identifiers): 4194304
+
+container (cgroup) information:
+container_type: cgroupv2
+cpu_cpuset_cpus: not supported
+cpu_memory_nodes: not supported
+active_processor_count: 128
+cpu_quota: not supported
+cpu_period: not supported
+cpu_shares: not supported
+memory_limit_in_bytes: unlimited
+memory_and_swap_limit_in_bytes: unlimited
+memory_soft_limit_in_bytes: 0
+memory_usage_in_bytes: 18363060 k
+memory_max_usage_in_bytes: not supported
+memory_swap_current_in_bytes: 0
+memory_swap_max_limit_in_bytes: unlimited
+maximum number of tasks: unlimited
+current number of tasks: 804
+
+Steal ticks since vm start: 0
+Steal ticks percentage since vm start:  0.000
+
+CPU: total 128 (initial active 128) (64 cores per cpu, 2 threads per core) family 23 model 49 stepping 0 microcode 0x830107c, cx8, cmov, fxsr, ht, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4a, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, clmul, bmi1, bmi2, adx, sha, fma, vzeroupper, clflush, clflushopt, rdtscp, rdpid, f16c
+CPU Model and flags from /proc/cpuinfo:
+model name	: AMD EPYC 7542 32-Core Processor
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid overflow_recov succor smca sme sev sev_es
+
+Online cpus: 0-127
+Offline cpus: 
+BIOS frequency limitation: 2900000
+Frequency switch latency (ns): 0
+Available cpu frequencies: 2900000 2400000 1500000 
+Current governor: schedutil
+Core performance/turbo boost: 1
+
+Memory: 4k page, physical 528181948k(495906528k free), swap 8388604k(8388604k free)
+Page Sizes: 4k
+
+vm_info: OpenJDK 64-Bit Server VM (21.0.8+9-Ubuntu-0ubuntu122.04.1) for linux-amd64 JRE (21.0.8+9-Ubuntu-0ubuntu122.04.1), built on 2025-07-16T21:56:18Z by "buildd" with gcc 12.3.0
+
+END.

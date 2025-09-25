@@ -1,0 +1,1546 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007f8bc1d4599e, pid=1317400, tid=1317400
+#
+# JRE version: OpenJDK Runtime Environment (21.0.8+9) (build 21.0.8+9-Ubuntu-0ubuntu122.04.1)
+# Java VM: OpenJDK 64-Bit Server VM (21.0.8+9-Ubuntu-0ubuntu122.04.1, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [_multiarray_umath.cpython-310-x86_64-linux-gnu.so+0x25c99e]  PyUFunc_FromFuncAndDataAndSignatureAndIdentity+0x7ae
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -F%F -- %E" (or dumping to /home/brysonbrown/Orbital/OrbitalAvoidance/core.1317400)
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugs.launchpad.net/ubuntu/+source/openjdk-21
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: 
+
+Host: AMD EPYC 7542 32-Core Processor, 128 cores, 503G, Ubuntu 22.04.5 LTS
+Time: Thu Sep 25 01:20:39 2025 UTC elapsed time: 73.996446 seconds (0d 0h 1m 13s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000055ab58f05140):  JavaThread "main"      [_thread_in_native, id=1317400, stack(0x00007ffe65533000,0x00007ffe65633000) (1024K)]
+
+Stack: [0x00007ffe65533000,0x00007ffe65633000],  sp=0x00007ffe656130e0,  free space=896k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [_multiarray_umath.cpython-310-x86_64-linux-gnu.so+0x25c99e]  PyUFunc_FromFuncAndDataAndSignatureAndIdentity+0x7ae
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x0000000000000008
+
+Registers:
+RAX=0x0000000000000000, RBX=0x000055ab567c2b40, RCX=0x0000000040085500, RDX=0x00007f8b6d88d000
+RSP=0x00007ffe656130e0, RBP=0x00007ffe65613120, RSI=0x0000000000000000, RDI=0x0000000000000000
+R8 =0x0000000000000000, R9 =0x00007f8cc5cc1120, R10=0x00007f8a50761d40, R11=0x00007f8a5074fe10
+R12=0x0000000000000003, R13=0x0000000000000000, R14=0x00007f8a50786f40, R15=0x0000000000000000
+RIP=0x00007f8bc1d4599e, EFLAGS=0x0000000000010206, CSGSFS=0x002b000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+XMM[0]=0x00007f8a5074fe20 0x000055ab3d0fb0a0
+XMM[1]=0x0000000000000000 0x00007f8a5074fe20
+XMM[2]=0x00007f8a50761d40 0x000055ab52b97cb0
+XMM[3]=0x00007f8a50790730 0x000055ab52b97cb0
+XMM[4]=0x0000000000000000 0x00007f8bc1d2c9d0
+XMM[5]=0xf4e059f5282a1ce3 0x00007f8a50784540
+XMM[6]=0x00007f8a50784440 0x00007f8a5072b530
+XMM[7]=0x0000000000000000 0x000000b000000003
+XMM[8]=0x6f4e5f00726f785f 0x6c616369676f6c00
+XMM[9]=0x0000000000000000 0x0000000000000000
+XMM[10]=0x00007ffe65614070 0x00007ffe65614070
+XMM[11]=0x000055ab575d3820 0x000055ab575d3820
+XMM[12]=0x0000000300000003 0x0000000300000003
+XMM[13]=0x0000000000000000 0x0000000000000000
+XMM[14]=0x0000000100000001 0x0000000100000001
+XMM[15]=0x0000000000000000 0x0000000000000000
+  MXCSR=0x00001fa0
+
+
+Register to memory mapping:
+
+RAX=0x0 is null
+RBX=0x000055ab567c2b40 points into unknown readable memory: 0x000055ab563bd900 | 00 d9 3b 56 ab 55 00 00
+RCX=0x0000000040085500 is an unknown value
+RDX=0x00007f8b6d88d000 points into unknown readable memory: 0x0000000000000003 | 03 00 00 00 00 00 00 00
+RSP=0x00007ffe656130e0 is pointing into the stack for thread: 0x000055ab58f05140
+RBP=0x00007ffe65613120 is pointing into the stack for thread: 0x000055ab58f05140
+RSI=0x0 is null
+RDI=0x0 is null
+R8 =0x0 is null
+R9 =0x00007f8cc5cc1120 points into unknown readable memory: 0x0000000000000001 | 01 00 00 00 00 00 00 00
+R10=0x00007f8a50761d40 points into unknown readable memory: 0x00007f8a5074fe10 | 10 fe 74 50 8a 7f 00 00
+R11=0x00007f8a5074fe10 points into unknown readable memory: 0x000055ab52b97cb0 | b0 7c b9 52 ab 55 00 00
+R12=0x0000000000000003 is an unknown value
+R13=0x0 is null
+R14=0x00007f8a50786f40 points into unknown readable memory: 0x0000000000000001 | 01 00 00 00 00 00 00 00
+R15=0x0 is null
+
+Top of Stack: (sp=0x00007ffe656130e0)
+0x00007ffe656130e0:   00007f8a50786f40 000055ab00000006
+0x00007ffe656130f0:   000055ab00000009 0000000000000003
+0x00007ffe65613100:   0000000000000004 330055ab00000001
+0x00007ffe65613110:   0000000265a76100 0000000300000001
+0x00007ffe65613120:   00007f8a5037527b 0000000000000001
+0x00007ffe65613130:   0000000400000005 000055ab57248f70
+0x00007ffe65613140:   000055ab57248bb0 000055ab57248bb0
+0x00007ffe65613150:   000055ab57248070 000055ab57248070
+0x00007ffe65613160:   000055ab6486da60 0000000100000005
+0x00007ffe65613170:   2ae104e860465ac1 000055ab66a7c8c0
+0x00007ffe65613180:   000000020000006e 9c3c5c59c3f19200
+0x00007ffe65613190:   000055ab57248430 000055ab57248f70
+0x00007ffe656131a0:   2ae104e860465ac1 000055ab64171a40
+0x00007ffe656131b0:   000055ab57248f70 00007f8cc60d67c1
+0x00007ffe656131c0:   00007f8cc624cce0 0000000000000000
+0x00007ffe656131d0:   2ae104e860465ac1 000055ab64a0bb40
+0x00007ffe656131e0:   0000006750779a00 0000000000001800
+0x00007ffe656131f0:   0000000000000000 2ae104e860465ac1
+0x00007ffe65613200:   000000000000018f ffffffffffffffb8
+0x00007ffe65613210:   0000000000000020 000055ab3cce0862
+0x00007ffe65613220:   00007f8a5037a8b7 0000000000000001
+0x00007ffe65613230:   0000000000000000 00007f8a50375272
+0x00007ffe65613240:   00007f8a50375283 00007f8a50275410
+0x00007ffe65613250:   00007ffe65613310 00007f8bc1d45e21
+0x00007ffe65613260:   00000000ffffffff 00007f8a50375283
+0x00007ffe65613270:   0000000000000000 0000000000000000
+0x00007ffe65613280:   00007f8a50375272 0000000000000000
+0x00007ffe65613290:   00007f8cc624dee8 00007f8a50280bbb
+0x00007ffe656132a0:   ffffffffffffffff 00007f8a50375283
+0x00007ffe656132b0:   0000000000000000 0000000000000000
+0x00007ffe656132c0:   00007f8a50375272 00007f8a50280b40
+0x00007ffe656132d0:   00007f8a50786e40 00007ffe65613520 
+
+Instructions: (pc=0x00007f8bc1d4599e)
+0x00007f8bc1d4589e:   47 10 44 39 c7 0f 84 c7 04 00 00 41 8b 5f 18 89
+0x00007f8bc1d458ae:   5c 24 3c 39 df 0f 85 6d 04 00 00 84 c0 0f 85 87
+0x00007f8bc1d458be:   fc ff ff 4d 89 fe 8b 44 24 3c 41 89 d7 4c 8d 25
+0x00007f8bc1d458ce:   86 2f 37 00 41 39 46 18 0f 85 4c 03 00 00 48 63
+0x00007f8bc1d458de:   74 24 38 49 8b 7e 78 48 89 f3 48 c1 e6 02 e8 7f
+0x00007f8bc1d458ee:   07 dd ff 49 63 76 6c 49 8b be c0 00 00 00 49 89
+0x00007f8bc1d458fe:   46 78 48 c1 e6 03 e8 67 07 dd ff 49 63 76 6c 49
+0x00007f8bc1d4590e:   8b be c8 00 00 00 49 89 86 c0 00 00 00 48 c1 e6
+0x00007f8bc1d4591e:   02 e8 4c 07 dd ff 49 89 86 c8 00 00 00 85 db 75
+0x00007f8bc1d4592e:   08 41 c7 46 68 00 00 00 00 48 8b 7c 24 08 e8 7f
+0x00007f8bc1d4593e:   f7 dc ff 8b 44 24 34 8b 74 24 18 49 8b 5e 40 0f
+0x00007f8bc1d4594e:   af c6 89 44 24 08 85 c0 0f 8e a1 00 00 00 4c 89
+0x00007f8bc1d4595e:   34 24 4c 63 e6 45 31 ed 48 8d 6c 24 40 0f 1f 44
+0x00007f8bc1d4596e:   00 00 8b 44 24 18 45 31 ff 85 c0 7f 19 eb 53 0f
+0x00007f8bc1d4597e:   1f 00 4e 89 74 fd 00 49 83 2e 01 74 34 49 83 c7
+0x00007f8bc1d4598e:   01 4d 39 fc 74 3c 42 0f be 3c 3b e8 52 64 e0 ff
+0x00007f8bc1d4599e:   4c 8b 70 08 48 89 c7 49 83 06 01 48 83 28 01 75
+0x00007f8bc1d459ae:   d1 e8 cc f5 dc ff 4e 89 74 fd 00 49 83 2e 01 75
+0x00007f8bc1d459be:   cc 4c 89 f7 49 83 c7 01 e8 b5 f5 dc ff 4d 39 fc
+0x00007f8bc1d459ce:   75 c4 48 8b 3c 24 ba 01 00 00 00 48 89 ee 4c 01
+0x00007f8bc1d459de:   e3 e8 5c e1 fe ff 48 85 c0 74 29 44 03 6c 24 18
+0x00007f8bc1d459ee:   44 3b 6c 24 08 0f 8c 77 ff ff ff 4c 8b 34 24 48
+0x00007f8bc1d459fe:   81 c4 48 01 00 00 4c 89 f0 5b 5d 41 5c 41 5d 41
+0x00007f8bc1d45a0e:   5e 41 5f c3 4c 8b 34 24 49 83 2e 01 74 3d 45 31
+0x00007f8bc1d45a1e:   f6 eb dc 48 83 03 01 48 89 98 d0 00 00 00 e9 85
+0x00007f8bc1d45a2e:   f8 ff ff 8b 7c 24 18 e8 26 14 fe ff 49 89 86 d8
+0x00007f8bc1d45a3e:   00 00 00 48 85 c0 0f 85 25 f9 ff ff eb 26 4c 89
+0x00007f8bc1d45a4e:   f7 e8 2c f5 dc ff e9 a7 fd ff ff 4c 89 f7 e8 1f
+0x00007f8bc1d45a5e:   f5 dc ff eb b9 e8 08 ef dc ff 48 8b 7c 24 08 e8
+0x00007f8bc1d45a6e:   4e f6 dc ff 49 83 2e 01 75 a4 4c 89 f7 45 31 f6
+0x00007f8bc1d45a7e:   e8 fd f4 dc ff e9 75 ff ff ff 0f 1f 84 00 00 00
+0x00007f8bc1d45a8e:   00 00 48 83 c7 01 e9 c7 fb ff ff 0f 1f 80 00 00 
+
+
+Stack slot to memory mapping:
+
+stack at sp + 0 slots: 0x00007f8a50786f40 points into unknown readable memory: 0x0000000000000001 | 01 00 00 00 00 00 00 00
+stack at sp + 1 slots: 0x000055ab00000006 is an unknown value
+stack at sp + 2 slots: 0x000055ab00000009 is an unknown value
+stack at sp + 3 slots: 0x0000000000000003 is an unknown value
+stack at sp + 4 slots: 0x0000000000000004 is an unknown value
+stack at sp + 5 slots: 0x330055ab00000001 is an unknown value
+stack at sp + 6 slots: 0x0000000265a76100 is an unallocated location in the heap
+stack at sp + 7 slots: 0x0000000300000001 is an unallocated location in the heap
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007f8b14108730, length=11, elements={
+0x000055ab58f05140, 0x000055ab63ab73c0, 0x000055ab63ab8a60, 0x000055ab63aba330,
+0x000055ab63abbaa0, 0x000055ab63abd170, 0x000055ab63abeea0, 0x000055ab63ac86c0,
+0x000055ab63ad46b0, 0x000055ab63ad8120, 0x00007f8b04001330
+}
+
+Java Threads: ( => current thread )
+=>0x000055ab58f05140 JavaThread "main"                       [_thread_in_native, id=1317400, stack(0x00007ffe65533000,0x00007ffe65633000) (1024K)]
+  0x000055ab63ab73c0 JavaThread "Reference Handler"          [_thread_blocked, id=1318463, stack(0x00007f8b7d830000,0x00007f8b7d930000) (1024K)]
+  0x000055ab63ab8a60 JavaThread "Finalizer"                  [_thread_blocked, id=1318467, stack(0x00007f8b7d730000,0x00007f8b7d830000) (1024K)]
+  0x000055ab63aba330 JavaThread "Signal Dispatcher"          [_thread_blocked, id=1318470, stack(0x00007f8b7d630000,0x00007f8b7d730000) (1024K)]
+  0x000055ab63abbaa0 JavaThread "Service Thread"             [_thread_blocked, id=1318477, stack(0x00007f8b7d530000,0x00007f8b7d630000) (1024K)]
+  0x000055ab63abd170 JavaThread "Monitor Deflation Thread"   [_thread_blocked, id=1318480, stack(0x00007f8b7d430000,0x00007f8b7d530000) (1024K)]
+  0x000055ab63abeea0 JavaThread "C2 CompilerThread0"         [_thread_blocked, id=1318482, stack(0x00007f8b7d330000,0x00007f8b7d430000) (1024K)]
+  0x000055ab63ac86c0 JavaThread "C1 CompilerThread0"         [_thread_blocked, id=1318485, stack(0x00007f8b7d230000,0x00007f8b7d330000) (1024K)]
+  0x000055ab63ad46b0 JavaThread "Notification Thread"        [_thread_blocked, id=1318547, stack(0x00007f8b7d05f000,0x00007f8b7d15f000) (1024K)]
+  0x000055ab63ad8120 JavaThread "Common-Cleaner"             [_thread_blocked, id=1318563, stack(0x00007f8b7cf5f000,0x00007f8b7d05f000) (1024K)]
+  0x00007f8b04001330 JavaThread "SIGINT handler"             [_thread_blocked, id=1327351, stack(0x00007f8b7ce5f000,0x00007f8b7cf5f000) (1024K)]
+Total: 11
+
+Other Threads:
+  0x000055ab63aaf4f0 VMThread "VM Thread"                           [id=1318429, stack(0x00007f8b7d931000,0x00007f8b7da31000) (1024K)]
+  0x000055ab58ec1130 WorkerThread "GC Thread#0"                     [id=1318163, stack(0x00007f8b7df37000,0x00007f8b7e037000) (1024K)]
+  0x00007f8b14001210 WorkerThread "GC Thread#1"                     [id=1319694, stack(0x00007f8b7c85f000,0x00007f8b7c95f000) (1024K)]
+  0x00007f8b1412bea0 WorkerThread "GC Thread#2"                     [id=1321043, stack(0x00007f8b6df00000,0x00007f8b6e000000) (1024K)]
+  0x00007f8b14129100 WorkerThread "GC Thread#3"                     [id=1323675, stack(0x00007f8b6dbff000,0x00007f8b6dcff000) (1024K)]
+  0x00007f8b14108960 WorkerThread "GC Thread#4"                     [id=1323676, stack(0x00007f8b6dafe000,0x00007f8b6dbfe000) (1024K)]
+  0x000055ab58f3c260 ConcurrentGCThread "G1 Main Marker"            terminated
+  0x000055ab58f3d070 WorkerThread "G1 Conc#0"                       [id=1318174, stack(0x00007f8b7dd35000,0x00007f8b7de35000) (1024K)]
+  0x000055ab63966cd0 ConcurrentGCThread "G1 Refine#0"               terminated
+  0x000055ab63967a40 ConcurrentGCThread "G1 Service"                terminated
+Total: 10
+
+Threads with active compile tasks:
+Total: 0
+
+VM state: at safepoint (shutting down)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f8bbbfc5e10] Threads_lock - owner thread: 0x000055ab63aaf4f0
+[0x00007f8bbbfc5d10] Heap_lock - owner thread: 0x00007f8b04001330
+
+Heap address: 0x00000000a0000000, size: 30208 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+
+CDS archive(s) mapped at: [0x00007f8b1f000000-0x00007f8b1fca0000-0x00007f8b1fca0000), size 13238272, SharedBaseAddress: 0x00007f8b1f000000, ArchiveRelocationMode: 1.
+Compressed class space mapped at: 0x00007f8b20000000-0x00007f8b60000000, reserved size: 1073741824
+Narrow klass base: 0x00007f8b1f000000, Narrow klass shift: 0, Narrow klass range: 0x100000000
+
+GC Precious Log:
+ CardTable entry size: 512
+ Card Set container configuration: InlinePtr #cards 3 size 8 Array Of Cards #cards 128 size 272 Howl #buckets 8 coarsen threshold 29491 Howl Bitmap #cards 4096 size 528 coarsen threshold 3686 Card regions per heap region 1 cards per card region 32768
+ CPUs: 128 total, 128 available
+ Memory: 503G
+ Large Page Support: Disabled
+ NUMA Support: Disabled
+ Compressed Oops: Enabled (Zero based)
+ Heap Region Size: 16M
+ Heap Min Capacity: 16M
+ Heap Initial Capacity: 2G
+ Heap Max Capacity: 30208M
+ Pre-touch: Disabled
+ Parallel Workers: 83
+ Concurrent Workers: 21
+ Concurrent Refinement Workers: 83
+ Periodic GC: Disabled
+
+Heap:
+ garbage-first heap   total 65536K, used 9637K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 5907K, committed 6080K, reserved 1114112K
+  class space    used 517K, committed 576K, reserved 1048576K
+
+Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=humongous(continues), CS=collection set, F=free, TAMS=top-at-mark-start, PB=parsable bottom
+|   0|0x00000000a0000000, 0x00000000a0655f88, 0x00000000a1000000| 39%| O|  |TAMS 0x00000000a0000000| PB 0x00000000a0000000| Untracked 
+|   1|0x00000000a1000000, 0x00000000a1000000, 0x00000000a2000000|  0%| F|  |TAMS 0x00000000a1000000| PB 0x00000000a1000000| Untracked 
+|   2|0x00000000a2000000, 0x00000000a23137e0, 0x00000000a3000000| 19%| S|CS|TAMS 0x00000000a2000000| PB 0x00000000a2000000| Complete 
+|   3|0x00000000a3000000, 0x00000000a3595b38, 0x00000000a4000000| 34%| E|  |TAMS 0x00000000a3000000| PB 0x00000000a3000000| Complete 
+
+Card table byte_map: [0x00007f8b9bc9c000,0x00007f8b9f79c000] _byte_map_base: 0x00007f8b9b79c000
+
+Marking Bits: (CMBitMap*) 0x000055ab58f3b550
+ Bits: [0x00007f8b7e49c000, 0x00007f8b9bc9c000)
+
+Polling page: 0x00007f8cc59b3000
+
+Metaspace:
+
+Usage:
+  Non-class:      5.26 MB used.
+      Class:    517.73 KB used.
+       Both:      5.77 MB used.
+
+Virtual space:
+  Non-class space:       64.00 MB reserved,       5.38 MB (  8%) committed,  1 nodes.
+      Class space:        1.00 GB reserved,     576.00 KB ( <1%) committed,  1 nodes.
+             Both:        1.06 GB reserved,       5.94 MB ( <1%) committed. 
+
+Chunk freelists:
+   Non-Class:  9.36 MB
+       Class:  15.44 MB
+        Both:  24.80 MB
+
+MaxMetaspaceSize: unlimited
+CompressedClassSpaceSize: 1.00 GB
+Initial GC threshold: 21.00 MB
+Current GC threshold: 21.00 MB
+CDS: on
+ - commit_granule_bytes: 65536.
+ - commit_granule_words: 8192.
+ - virtual_space_node_default_size: 8388608.
+ - enlarge_chunks_in_place: 1.
+ - use_allocation_guard: 0.
+
+
+Internal statistics:
+
+num_allocs_failed_limit: 0.
+num_arena_births: 76.
+num_arena_deaths: 0.
+num_vsnodes_births: 2.
+num_vsnodes_deaths: 0.
+num_space_committed: 95.
+num_space_uncommitted: 0.
+num_chunks_returned_to_freelist: 0.
+num_chunks_taken_from_freelist: 198.
+num_chunk_merges: 0.
+num_chunk_splits: 151.
+num_chunks_enlarged: 114.
+num_inconsistent_stats: 0.
+
+CodeHeap 'non-profiled nmethods': size=118304Kb used=865Kb max_used=865Kb free=117438Kb
+ bounds [0x00007f8bab0e4000, 0x00007f8bab354000, 0x00007f8bb246c000]
+CodeHeap 'profiled nmethods': size=118300Kb used=2718Kb max_used=2718Kb free=115581Kb
+ bounds [0x00007f8ba346c000, 0x00007f8ba371c000, 0x00007f8baa7f3000]
+CodeHeap 'non-nmethods': size=9156Kb used=1407Kb max_used=4820Kb free=7748Kb
+ bounds [0x00007f8baa7f3000, 0x00007f8baad13000, 0x00007f8bab0e4000]
+CodeCache: size=245760Kb, used=4990Kb, max_used=8403Kb, free=240767Kb
+ total_blobs=2147, nmethods=1630, adapters=422, full_count=0
+Compilation: enabled, stopped_count=0, restarted_count=0
+
+Compilation events (20 events):
+Event: 64.450 Thread 0x000055ab63ac86c0 1742       3       java.lang.StringLatin1::hashCode (52 bytes)
+Event: 64.460 Thread 0x000055ab63ac86c0 nmethod 1742 0x00007f8ba3711f10 code [0x00007f8ba37120c0, 0x00007f8ba37122e0]
+Event: 68.946 Thread 0x000055ab63ac86c0 1743       3       java.lang.Thread::isVirtual (5 bytes)
+Event: 68.959 Thread 0x000055ab63ac86c0 nmethod 1743 0x00007f8ba3712390 code [0x00007f8ba3712520, 0x00007f8ba3712720]
+Event: 69.625 Thread 0x000055ab63ac86c0 1744       3       jdk.internal.loader.BuiltinClassLoader$2::run (5 bytes)
+Event: 69.625 Thread 0x000055ab63abeea0 1745       4       jdk.internal.module.ModuleReferenceImpl::hashCode (56 bytes)
+Event: 69.639 Thread 0x000055ab63ac86c0 nmethod 1744 0x00007f8ba3712790 code [0x00007f8ba3712940, 0x00007f8ba3712a90]
+Event: 69.642 Thread 0x000055ab63abeea0 nmethod 1745 0x00007f8bab1b7e10 code [0x00007f8bab1b7f80, 0x00007f8bab1b8028]
+Event: 69.653 Thread 0x000055ab63abeea0 1746       4       java.util.concurrent.ConcurrentHashMap$ValueIterator::next (34 bytes)
+Event: 69.691 Thread 0x000055ab63abeea0 nmethod 1746 0x00007f8bab1b8110 code [0x00007f8bab1b82c0, 0x00007f8bab1b8750]
+Event: 72.993 Thread 0x000055ab63abeea0 1747       4       jdk.internal.jimage.BasicImageReader::getLocationIndex (52 bytes)
+Event: 73.062 Thread 0x000055ab63abeea0 nmethod 1747 0x00007f8bab1b8910 code [0x00007f8bab1b8b40, 0x00007f8bab1b94d8]
+Event: 73.063 Thread 0x000055ab63abeea0 1748       4       jdk.internal.loader.BuiltinClassLoader::moduleReaderFor (45 bytes)
+Event: 73.089 Thread 0x000055ab63abeea0 nmethod 1748 0x00007f8bab1b9e10 code [0x00007f8bab1b9fe0, 0x00007f8bab1ba390]
+Event: 73.090 Thread 0x000055ab63abeea0 1749       4       jdk.internal.module.SystemModuleFinders$SystemModuleReader::find (59 bytes)
+Event: 73.130 Thread 0x000055ab63abeea0 nmethod 1749 0x00007f8bab1ba710 code [0x00007f8bab1ba960, 0x00007f8bab1bb6a8]
+Event: 73.145 Thread 0x000055ab63ac86c0 1750       3       org.jpype.manager.TypeManager$Destroyer::add (101 bytes)
+Event: 73.154 Thread 0x000055ab63ac86c0 nmethod 1750 0x00007f8ba3712b10 code [0x00007f8ba3712d00, 0x00007f8ba3713180]
+Event: 73.154 Thread 0x000055ab63ac86c0 1751       3       org.jpype.manager.TypeManager$Destroyer::add (39 bytes)
+Event: 73.154 Thread 0x000055ab63ac86c0 nmethod 1751 0x00007f8ba3713390 code [0x00007f8ba3713540, 0x00007f8ba3713750]
+
+GC Heap History (14 events):
+Event: 14.405 GC heap before
+{Heap before GC invocations=0 (full 0):
+ garbage-first heap   total 2113536K, used 1074K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 1541K, committed 1664K, reserved 1114112K
+  class space    used 128K, committed 192K, reserved 1048576K
+}
+Event: 14.522 GC heap after
+{Heap after GC invocations=1 (full 1):
+ garbage-first heap   total 114688K, used 2450K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 0 young (0K), 0 survivors (0K)
+ Metaspace       used 1541K, committed 1664K, reserved 1114112K
+  class space    used 128K, committed 192K, reserved 1048576K
+}
+Event: 27.970 GC heap before
+{Heap before GC invocations=1 (full 1):
+ garbage-first heap   total 114688K, used 18834K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 2189K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 28.139 GC heap after
+{Heap after GC invocations=2 (full 1):
+ garbage-first heap   total 114688K, used 5106K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 2189K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 29.495 GC heap before
+{Heap before GC invocations=2 (full 1):
+ garbage-first heap   total 114688K, used 21490K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 2215K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 29.579 GC heap after
+{Heap after GC invocations=3 (full 1):
+ garbage-first heap   total 114688K, used 5216K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 2215K, committed 2368K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 31.097 GC heap before
+{Heap before GC invocations=3 (full 1):
+ garbage-first heap   total 114688K, used 21600K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 2281K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 31.222 GC heap after
+{Heap after GC invocations=4 (full 1):
+ garbage-first heap   total 114688K, used 6907K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 2281K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 31.876 GC heap before
+{Heap before GC invocations=4 (full 1):
+ garbage-first heap   total 114688K, used 6907K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 2 young (32768K), 1 survivors (16384K)
+ Metaspace       used 2282K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 32.424 GC heap after
+{Heap after GC invocations=5 (full 2):
+ garbage-first heap   total 65536K, used 6444K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 0 young (0K), 0 survivors (0K)
+ Metaspace       used 2282K, committed 2432K, reserved 1114112K
+  class space    used 187K, committed 256K, reserved 1048576K
+}
+Event: 34.747 GC heap before
+{Heap before GC invocations=5 (full 2):
+ garbage-first heap   total 65536K, used 6444K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 2355K, committed 2560K, reserved 1114112K
+  class space    used 195K, committed 320K, reserved 1048576K
+}
+Event: 35.097 GC heap after
+{Heap after GC invocations=6 (full 3):
+ garbage-first heap   total 65536K, used 6487K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 0 young (0K), 0 survivors (0K)
+ Metaspace       used 2355K, committed 2560K, reserved 1114112K
+  class space    used 195K, committed 320K, reserved 1048576K
+}
+Event: 50.023 GC heap before
+{Heap before GC invocations=6 (full 3):
+ garbage-first heap   total 65536K, used 22871K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 0 survivors (0K)
+ Metaspace       used 5328K, committed 5568K, reserved 1114112K
+  class space    used 456K, committed 576K, reserved 1048576K
+}
+Event: 50.091 GC heap after
+{Heap after GC invocations=7 (full 3):
+ garbage-first heap   total 65536K, used 9637K [0x00000000a0000000, 0x0000000800000000)
+  region size 16384K, 1 young (16384K), 1 survivors (16384K)
+ Metaspace       used 5328K, committed 5568K, reserved 1114112K
+  class space    used 456K, committed 576K, reserved 1048576K
+}
+
+Dll operation events (7 events):
+Event: 0.134 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so
+Event: 1.740 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so
+Event: 2.273 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so
+Event: 2.685 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so
+Event: 9.520 Loaded shared library /home/brysonbrown/.local/lib/python3.10/site-packages/_jpype.cpython-310-x86_64-linux-gnu.so
+Event: 12.801 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+Event: 35.924 Loaded shared library /usr/lib/jvm/java-21-openjdk-amd64/lib/libnet.so
+
+Deoptimization events (20 events):
+Event: 52.952 Thread 0x000055ab58f05140 Uncommon trap: trap_request=0xffffffde fr.pc=0x00007f8bab1b29bc relative=0x000000000000011c
+Event: 52.952 Thread 0x000055ab58f05140 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f8bab1b29bc method=jdk.internal.misc.Unsafe.allocateUninitializedArray(Ljava/lang/Class;I)Ljava/lang/Object; @ 51 c2
+Event: 52.952 Thread 0x000055ab58f05140 DEOPT PACKING pc=0x00007f8bab1b29bc sp=0x00007ffe6562a4f0
+Event: 52.952 Thread 0x000055ab58f05140 DEOPT UNPACKING pc=0x00007f8baa846f99 sp=0x00007ffe6562a488 mode 2
+Event: 52.952 Thread 0x000055ab58f05140 Uncommon trap: trap_request=0xffffffde fr.pc=0x00007f8bab1b29bc relative=0x000000000000011c
+Event: 52.952 Thread 0x000055ab58f05140 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f8bab1b29bc method=jdk.internal.misc.Unsafe.allocateUninitializedArray(Ljava/lang/Class;I)Ljava/lang/Object; @ 51 c2
+Event: 52.952 Thread 0x000055ab58f05140 DEOPT PACKING pc=0x00007f8bab1b29bc sp=0x00007ffe6562a500
+Event: 52.952 Thread 0x000055ab58f05140 DEOPT UNPACKING pc=0x00007f8baa846f99 sp=0x00007ffe6562a498 mode 2
+Event: 53.221 Thread 0x000055ab58f05140 Uncommon trap: trap_request=0xffffff45 fr.pc=0x00007f8bab118478 relative=0x0000000000000238
+Event: 53.222 Thread 0x000055ab58f05140 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8bab118478 method=java.lang.StringLatin1.hashCode([B)I @ 2 c2
+Event: 53.222 Thread 0x000055ab58f05140 DEOPT PACKING pc=0x00007f8bab118478 sp=0x00007ffe65618b40
+Event: 53.223 Thread 0x000055ab58f05140 DEOPT UNPACKING pc=0x00007f8baa846f99 sp=0x00007ffe65618af8 mode 2
+Event: 53.224 Thread 0x000055ab58f05140 Uncommon trap: trap_request=0xffffff45 fr.pc=0x00007f8bab1002dc relative=0x00000000000000bc
+Event: 53.224 Thread 0x000055ab58f05140 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8bab1002dc method=java.lang.String.hashCode()I @ 42 c2
+Event: 53.224 Thread 0x000055ab58f05140 DEOPT PACKING pc=0x00007f8bab1002dc sp=0x00007ffe65618b70
+Event: 53.224 Thread 0x000055ab58f05140 DEOPT UNPACKING pc=0x00007f8baa846f99 sp=0x00007ffe65618b20 mode 2
+Event: 53.227 Thread 0x000055ab58f05140 Uncommon trap: trap_request=0xffffff45 fr.pc=0x00007f8bab122cfc relative=0x000000000000023c
+Event: 53.227 Thread 0x000055ab58f05140 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8bab122cfc method=java.lang.String.startsWith(Ljava/lang/String;I)Z @ 1 c2
+Event: 53.227 Thread 0x000055ab58f05140 DEOPT PACKING pc=0x00007f8bab122cfc sp=0x00007ffe65618d40
+Event: 53.227 Thread 0x000055ab58f05140 DEOPT UNPACKING pc=0x00007f8baa846f99 sp=0x00007ffe65618cd0 mode 2
+
+Classes loaded (20 events):
+Event: 73.012 Loading class java/lang/System$Logger$Level
+Event: 73.012 Loading class java/lang/System$Logger$Level done
+Event: 73.013 Loading class jdk/internal/logger/SurrogateLogger
+Event: 73.013 Loading class jdk/internal/logger/SimpleConsoleLogger
+Event: 73.013 Loading class sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration
+Event: 73.013 Loading class sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration done
+Event: 73.013 Loading class jdk/internal/logger/SimpleConsoleLogger done
+Event: 73.013 Loading class jdk/internal/logger/SurrogateLogger done
+Event: 73.033 Loading class sun/util/logging/PlatformLogger
+Event: 73.033 Loading class sun/util/logging/PlatformLogger done
+Event: 73.033 Loading class sun/util/logging/PlatformLogger$Level
+Event: 73.034 Loading class sun/util/logging/PlatformLogger$Level done
+Event: 73.067 Loading class jdk/internal/event/ThreadSleepEvent
+Event: 73.067 Loading class jdk/internal/event/Event
+Event: 73.068 Loading class jdk/internal/event/Event done
+Event: 73.068 Loading class jdk/internal/event/ThreadSleepEvent done
+Event: 73.146 Loading class java/util/WeakHashMap$KeyIterator
+Event: 73.146 Loading class java/util/WeakHashMap$HashIterator
+Event: 73.148 Loading class java/util/WeakHashMap$HashIterator done
+Event: 73.148 Loading class java/util/WeakHashMap$KeyIterator done
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 9.797 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f156b80}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object)'> (0x000000011f156b80) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 9.970 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f15cda8}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, int)'> (0x000000011f15cda8) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 10.370 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f167200}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial(java.lang.Object, java.lang.Object, java.lang.Object)'> (0x000000011f167200) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 10.884 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f177108}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, int)'> (0x000000011f177108) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 10.972 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f1827c8}: 'void java.lang.invoke.DelegatingMethodHandle$Holder.delegate(java.lang.Object, java.lang.Object, int, java.lang.Object)'> (0x000000011f1827c8) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 13.469 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011f9d3170}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeInterface(java.lang.Object, java.lang.Object)'> (0x000000011f9d3170) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 13.476 Thread 0x000055ab58f05140 Exception <a 'java/lang/IncompatibleClassChangeError'{0x000000011f9d6408}: Found class java.lang.Object, but interface was expected> (0x000000011f9d6408) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 840]
+Event: 14.021 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011facdbf8}: method resolution failed> (0x000000011facdbf8) 
+thrown [./src/hotspot/share/prims/methodHandles.cpp, line 1144]
+Event: 14.105 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x000000011fad7028}: 'java.lang.Object java.lang.invoke.Invokers$Holder.invokeExact_MT(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x000000011fad7028) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+Event: 23.796 Thread 0x000055ab58f05140 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a63530e0}: 'void java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, java.lang.Object)'> (0x00000000a63530e0) 
+thrown [./src/hotspot/share/interpreter/linkResolver.cpp, line 772]
+
+ZGC Phase Switch (0 events):
+No events
+
+VM Operations (20 events):
+Event: 45.061 Executing VM operation: Cleanup done
+Event: 46.062 Executing VM operation: Cleanup
+Event: 46.063 Executing VM operation: Cleanup done
+Event: 49.064 Executing VM operation: Cleanup
+Event: 49.150 Executing VM operation: Cleanup done
+Event: 50.021 Executing VM operation: G1CollectForAllocation (G1 Evacuation Pause)
+Event: 50.109 Executing VM operation: G1CollectForAllocation (G1 Evacuation Pause) done
+Event: 52.121 Executing VM operation: Cleanup
+Event: 52.122 Executing VM operation: Cleanup done
+Event: 53.123 Executing VM operation: Cleanup
+Event: 53.124 Executing VM operation: Cleanup done
+Event: 60.141 Executing VM operation: Cleanup
+Event: 60.143 Executing VM operation: Cleanup done
+Event: 61.144 Executing VM operation: Cleanup
+Event: 61.145 Executing VM operation: Cleanup done
+Event: 70.147 Executing VM operation: Cleanup
+Event: 70.149 Executing VM operation: Cleanup done
+Event: 73.138 Executing VM operation: ThreadDump
+Event: 73.140 Executing VM operation: ThreadDump done
+Event: 73.159 Executing VM operation: Exit
+
+Memory protections (20 events):
+Event: 36.173 Protecting memory [0x00007f8b7c95f000,0x00007f8b7c963000] with protection modes 0
+Event: 36.186 Protecting memory [0x00007f8b7c25e000,0x00007f8b7c262000] with protection modes 0
+Event: 36.194 Protecting memory [0x00007f8b7c35e000,0x00007f8b7c362000] with protection modes 0
+Event: 36.206 Protecting memory [0x00007f8b7c15e000,0x00007f8b7c162000] with protection modes 0
+Event: 36.362 Protecting memory [0x00007f8b7c45e000,0x00007f8b7c462000] with protection modes 0
+Event: 36.377 Protecting memory [0x00007f8b7c05e000,0x00007f8b7c062000] with protection modes 0
+Event: 36.399 Protecting memory [0x00007f8b6ddff000,0x00007f8b6de03000] with protection modes 0
+Event: 39.694 Protecting memory [0x00007f8b7c65e000,0x00007f8b7c662000] with protection modes 0
+Event: 40.415 Protecting memory [0x00007f8b7c65e000,0x00007f8b7c662000] with protection modes 0
+Event: 40.886 Protecting memory [0x00007f8b7c55e000,0x00007f8b7c562000] with protection modes 0
+Event: 40.943 Protecting memory [0x00007f8b7c95f000,0x00007f8b7c963000] with protection modes 0
+Event: 40.960 Protecting memory [0x00007f8b7c35e000,0x00007f8b7c362000] with protection modes 0
+Event: 49.758 Protecting memory [0x00007f8b7ce5f000,0x00007f8b7ce63000] with protection modes 0
+Event: 52.284 Protecting memory [0x00007f8b7cb5f000,0x00007f8b7cb63000] with protection modes 0
+Event: 52.285 Protecting memory [0x00007f8b7cc5f000,0x00007f8b7cc63000] with protection modes 0
+Event: 52.296 Protecting memory [0x00007f8b7ca5f000,0x00007f8b7ca63000] with protection modes 0
+Event: 52.322 Protecting memory [0x00007f8b7c75e000,0x00007f8b7c762000] with protection modes 0
+Event: 52.335 Protecting memory [0x00007f8b7c65e000,0x00007f8b7c662000] with protection modes 0
+Event: 72.989 Protecting memory [0x00007f8b7ce5f000,0x00007f8b7ce63000] with protection modes 0
+Event: 73.061 Protecting memory [0x00007f8b7cc5f000,0x00007f8b7cc63000] with protection modes 0
+
+Nmethod flushes (20 events):
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3570690
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3572790
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3573510
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3573b10
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3574a90
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3576290
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba357fa10
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3580a10
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3581b10
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3584790
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3586a10
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3586f10
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba3589110
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba358a490
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba358bc10
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba358c790
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba358df90
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba358e410
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba35a1910
+Event: 35.023 Thread 0x000055ab63aaf4f0 flushing  nmethod 0x00007f8ba35adc90
+
+Events (20 events):
+Event: 44.613 Thread 0x00007f8af00aa190 Thread exited: 0x00007f8af00aa190
+Event: 47.321 Thread 0x00007f8af00a9a50 Thread exited: 0x00007f8af00a9a50
+Event: 49.670 Thread 0x00007f8af4045f30 Thread exited: 0x00007f8af4045f30
+Event: 49.758 Thread 0x000055ab63ac86c0 Thread added: 0x00007f8af403f180
+Event: 52.271 Thread 0x00007f8af403f180 Thread added: 0x00007f8af0019b00
+Event: 52.282 Thread 0x00007f8af403f180 Thread added: 0x00007f8af001a240
+Event: 52.294 Thread 0x00007f8af403f180 Thread added: 0x00007f8af001ae50
+Event: 52.313 Thread 0x00007f8af403f180 Thread added: 0x00007f8af001d9a0
+Event: 52.335 Thread 0x00007f8af403f180 Thread added: 0x00007f8af001e760
+Event: 52.604 Thread 0x00007f8af001d9a0 Thread exited: 0x00007f8af001d9a0
+Event: 52.606 Thread 0x00007f8af001e760 Thread exited: 0x00007f8af001e760
+Event: 52.614 Thread 0x00007f8af001ae50 Thread exited: 0x00007f8af001ae50
+Event: 53.304 Thread 0x00007f8af001a240 Thread exited: 0x00007f8af001a240
+Event: 53.306 Thread 0x00007f8af0019b00 Thread exited: 0x00007f8af0019b00
+Event: 55.227 Thread 0x00007f8af403f180 Thread exited: 0x00007f8af403f180
+Event: 72.989 Thread 0x000055ab63aba330 Thread added: 0x00007f8b04001330
+Event: 73.057 Thread 0x00007f8b04001330 Thread added: 0x00007f8acc005e00
+Event: 73.143 Thread 0x000055ab63b6eb10 Thread exited: 0x000055ab63b6eb10
+Event: 73.149 Thread 0x00007f8acc005e00 Thread exited: 0x00007f8acc005e00
+Event: 73.154 Thread 0x00007f8b04001330 Before exit entered
+
+
+Dynamic libraries:
+a0000000-a4000000 rw-p 00000000 00:00 0 
+a4000000-800000000 ---p 00000000 00:00 0 
+55ab3cb90000-55ab3cbfd000 r--p 00000000 fd:00 42337173                   /usr/bin/python3.10
+55ab3cbfd000-55ab3ceb2000 r-xp 0006d000 fd:00 42337173                   /usr/bin/python3.10
+55ab3ceb2000-55ab3d0f4000 r--p 00322000 fd:00 42337173                   /usr/bin/python3.10
+55ab3d0f4000-55ab3d0fb000 r--p 00563000 fd:00 42337173                   /usr/bin/python3.10
+55ab3d0fb000-55ab3d13a000 rw-p 0056a000 fd:00 42337173                   /usr/bin/python3.10
+55ab3d13a000-55ab3d180000 rw-p 00000000 00:00 0 
+55ab52b92000-55ab52ce2000 rw-p 00000000 00:00 0                          [heap]
+55ab52ce2000-55ab68bf8000 rw-p 00000000 00:00 0                          [heap]
+7f8a5026f000-7f8a50272000 r--p 00000000 fd:00 16274181                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_special_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a50272000-7f8a50375000 r-xp 00003000 fd:00 16274181                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_special_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a50375000-7f8a503b8000 r--p 00106000 fd:00 16274181                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_special_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a503b8000-7f8a503b9000 r--p 00148000 fd:00 16274181                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_special_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a503b9000-7f8a503ba000 rw-p 00149000 fd:00 16274181                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_special_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a503ba000-7f8a503bf000 r--p 00000000 fd:00 16274161                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs_cxx.cpython-310-x86_64-linux-gnu.so
+7f8a503bf000-7f8a5050e000 r-xp 00005000 fd:00 16274161                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs_cxx.cpython-310-x86_64-linux-gnu.so
+7f8a5050e000-7f8a50541000 r--p 00154000 fd:00 16274161                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs_cxx.cpython-310-x86_64-linux-gnu.so
+7f8a50541000-7f8a50542000 r--p 00186000 fd:00 16274161                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs_cxx.cpython-310-x86_64-linux-gnu.so
+7f8a50542000-7f8a50543000 rw-p 00187000 fd:00 16274161                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs_cxx.cpython-310-x86_64-linux-gnu.so
+7f8a50543000-7f8a50544000 rw-p 00000000 00:00 0 
+7f8a50544000-7f8a5054a000 r--p 00000000 fd:00 16274171                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a5054a000-7f8a5064f000 r-xp 00006000 fd:00 16274171                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a5064f000-7f8a506a4000 r--p 0010b000 fd:00 16274171                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a506a4000-7f8a506a5000 r--p 0015f000 fd:00 16274171                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a506a5000-7f8a506a6000 rw-p 00160000 fd:00 16274171                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a506a6000-7f8a506ae000 rw-p 00000000 00:00 0 
+7f8a506ae000-7f8a506b3000 rw-p 00189000 fd:00 16274171                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/special/_ufuncs.cpython-310-x86_64-linux-gnu.so
+7f8a506b3000-7f8a50cb3000 rw-p 00000000 00:00 0 
+7f8a50cb3000-7f8a50cd1000 r--p 00000000 fd:00 42336560                   /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
+7f8a50cd1000-7f8a50dbd000 r-xp 0001e000 fd:00 42336560                   /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
+7f8a50dbd000-7f8a50df8000 r--p 0010a000 fd:00 42336560                   /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
+7f8a50df8000-7f8a50dfc000 r--p 00144000 fd:00 42336560                   /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
+7f8a50dfc000-7f8a50e00000 rw-p 00148000 fd:00 42336560                   /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
+7f8a50e00000-7f8a51800000 rw-p 00000000 00:00 0 
+7f8a51800000-7f8a51839000 r-xp 00000000 fd:00 16417528                   /home/brysonbrown/.local/lib/python3.10/site-packages/kiwisolver/_cext.cpython-310-x86_64-linux-gnu.so
+7f8a51839000-7f8a51a38000 ---p 00039000 fd:00 16417528                   /home/brysonbrown/.local/lib/python3.10/site-packages/kiwisolver/_cext.cpython-310-x86_64-linux-gnu.so
+7f8a51a38000-7f8a51a39000 r--p 00038000 fd:00 16417528                   /home/brysonbrown/.local/lib/python3.10/site-packages/kiwisolver/_cext.cpython-310-x86_64-linux-gnu.so
+7f8a51a39000-7f8a51a3a000 rw-p 00039000 fd:00 16417528                   /home/brysonbrown/.local/lib/python3.10/site-packages/kiwisolver/_cext.cpython-310-x86_64-linux-gnu.so
+7f8a51a3a000-7f8a51a3b000 rw-p 00000000 00:00 0 
+7f8a51abd000-7f8a51bbd000 rw-p 00000000 00:00 0 
+7f8a51bbd000-7f8a51bd6000 r--p 00000000 fd:00 15738391                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/ft2font.cpython-310-x86_64-linux-gnu.so
+7f8a51bd6000-7f8a51ca3000 r-xp 00019000 fd:00 15738391                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/ft2font.cpython-310-x86_64-linux-gnu.so
+7f8a51ca3000-7f8a51ce0000 r--p 000e6000 fd:00 15738391                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/ft2font.cpython-310-x86_64-linux-gnu.so
+7f8a51ce0000-7f8a51ce7000 r--p 00122000 fd:00 15738391                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/ft2font.cpython-310-x86_64-linux-gnu.so
+7f8a51ce7000-7f8a51ce8000 rw-p 00129000 fd:00 15738391                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/ft2font.cpython-310-x86_64-linux-gnu.so
+7f8a51ce8000-7f8a51fe9000 rw-p 00000000 00:00 0 
+7f8a51fe9000-7f8a51ff8000 r--p 00000000 fd:00 15738333                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_image.cpython-310-x86_64-linux-gnu.so
+7f8a51ff8000-7f8a52049000 r-xp 0000f000 fd:00 15738333                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_image.cpython-310-x86_64-linux-gnu.so
+7f8a52049000-7f8a5205a000 r--p 00060000 fd:00 15738333                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_image.cpython-310-x86_64-linux-gnu.so
+7f8a5205a000-7f8a5205b000 r--p 00070000 fd:00 15738333                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_image.cpython-310-x86_64-linux-gnu.so
+7f8a5205b000-7f8a5205c000 rw-p 00071000 fd:00 15738333                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_image.cpython-310-x86_64-linux-gnu.so
+7f8a5205c000-7f8a5205d000 rw-p 00000000 00:00 0 
+7f8a5205d000-7f8a5206c000 r--p 00000000 fd:00 15738339                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_path.cpython-310-x86_64-linux-gnu.so
+7f8a5206c000-7f8a520ac000 r-xp 0000f000 fd:00 15738339                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_path.cpython-310-x86_64-linux-gnu.so
+7f8a520ac000-7f8a520bc000 r--p 0004f000 fd:00 15738339                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_path.cpython-310-x86_64-linux-gnu.so
+7f8a520bc000-7f8a520bd000 ---p 0005f000 fd:00 15738339                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_path.cpython-310-x86_64-linux-gnu.so
+7f8a520bd000-7f8a520be000 r--p 0005f000 fd:00 15738339                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_path.cpython-310-x86_64-linux-gnu.so
+7f8a520be000-7f8a520bf000 rw-p 00060000 fd:00 15738339                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_path.cpython-310-x86_64-linux-gnu.so
+7f8a520bf000-7f8a522c0000 rw-p 00000000 00:00 0 
+7f8a522c0000-7f8a522d9000 r--p 00000000 fd:00 42360808                   /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0
+7f8a522d9000-7f8a52365000 r-xp 00019000 fd:00 42360808                   /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0
+7f8a52365000-7f8a523fa000 r--p 000a5000 fd:00 42360808                   /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0
+7f8a523fa000-7f8a523fb000 ---p 0013a000 fd:00 42360808                   /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0
+7f8a523fb000-7f8a523fc000 r--p 0013a000 fd:00 42360808                   /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0
+7f8a523fc000-7f8a52400000 rw-p 0013b000 fd:00 42360808                   /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0
+7f8a52400000-7f8a5251f000 r-xp 00000000 fd:00 16282538                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libgfortran-91cc3cb1.so.3.0.0
+7f8a5251f000-7f8a5271f000 ---p 0011f000 fd:00 16282538                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libgfortran-91cc3cb1.so.3.0.0
+7f8a5271f000-7f8a52720000 r--p 0011f000 fd:00 16282538                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libgfortran-91cc3cb1.so.3.0.0
+7f8a52720000-7f8a52734000 rw-p 00120000 fd:00 16282538                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libgfortran-91cc3cb1.so.3.0.0
+7f8a5274b000-7f8a52751000 r--p 00000000 fd:00 42360067                   /usr/lib/python3.10/lib-dynload/_sqlite3.cpython-310-x86_64-linux-gnu.so
+7f8a52751000-7f8a5275f000 r-xp 00006000 fd:00 42360067                   /usr/lib/python3.10/lib-dynload/_sqlite3.cpython-310-x86_64-linux-gnu.so
+7f8a5275f000-7f8a52764000 r--p 00014000 fd:00 42360067                   /usr/lib/python3.10/lib-dynload/_sqlite3.cpython-310-x86_64-linux-gnu.so
+7f8a52764000-7f8a52765000 r--p 00018000 fd:00 42360067                   /usr/lib/python3.10/lib-dynload/_sqlite3.cpython-310-x86_64-linux-gnu.so
+7f8a52765000-7f8a52767000 rw-p 00019000 fd:00 42360067                   /usr/lib/python3.10/lib-dynload/_sqlite3.cpython-310-x86_64-linux-gnu.so
+7f8a52767000-7f8a52774000 r--p 00000000 fd:00 15738319                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_c_internal_utils.cpython-310-x86_64-linux-gnu.so
+7f8a52774000-7f8a5278e000 r-xp 0000d000 fd:00 15738319                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_c_internal_utils.cpython-310-x86_64-linux-gnu.so
+7f8a5278e000-7f8a52797000 r--p 00027000 fd:00 15738319                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_c_internal_utils.cpython-310-x86_64-linux-gnu.so
+7f8a52797000-7f8a52798000 r--p 0002f000 fd:00 15738319                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_c_internal_utils.cpython-310-x86_64-linux-gnu.so
+7f8a52798000-7f8a52799000 rw-p 00030000 fd:00 15738319                   /home/brysonbrown/.local/lib/python3.10/site-packages/matplotlib/_c_internal_utils.cpython-310-x86_64-linux-gnu.so
+7f8a52799000-7f8a5279d000 r--p 00000000 fd:00 42347295                   /usr/lib/x86_64-linux-gnu/libbsd.so.0.11.5
+7f8a5279d000-7f8a527aa000 r-xp 00004000 fd:00 42347295                   /usr/lib/x86_64-linux-gnu/libbsd.so.0.11.5
+7f8a527aa000-7f8a527ad000 r--p 00011000 fd:00 42347295                   /usr/lib/x86_64-linux-gnu/libbsd.so.0.11.5
+7f8a527ad000-7f8a527ae000 ---p 00014000 fd:00 42347295                   /usr/lib/x86_64-linux-gnu/libbsd.so.0.11.5
+7f8a527ae000-7f8a527af000 r--p 00014000 fd:00 42347295                   /usr/lib/x86_64-linux-gnu/libbsd.so.0.11.5
+7f8a527af000-7f8a527b0000 rw-p 00015000 fd:00 42347295                   /usr/lib/x86_64-linux-gnu/libbsd.so.0.11.5
+7f8a527b0000-7f8a527b1000 rw-p 00000000 00:00 0 
+7f8a527b1000-7f8a527bc000 r--p 00000000 fd:00 42347545                   /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f8a527bc000-7f8a527d0000 r-xp 0000b000 fd:00 42347545                   /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f8a527d0000-7f8a527d9000 r--p 0001f000 fd:00 42347545                   /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f8a527d9000-7f8a527da000 r--p 00027000 fd:00 42347545                   /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f8a527da000-7f8a527db000 rw-p 00028000 fd:00 42347545                   /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f8a527db000-7f8a527dd000 r--p 00000000 fd:00 42347463                   /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f8a527dd000-7f8a52832000 r-xp 00002000 fd:00 42347463                   /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f8a52832000-7f8a5284f000 r--p 00057000 fd:00 42347463                   /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f8a5284f000-7f8a52850000 r--p 00073000 fd:00 42347463                   /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f8a52850000-7f8a52851000 rw-p 00074000 fd:00 42347463                   /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f8a52851000-7f8a52891000 r--p 00000000 fd:00 42336605                   /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f8a52891000-7f8a528d0000 r-xp 00040000 fd:00 42336605                   /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f8a528d0000-7f8a528e3000 r--p 0007f000 fd:00 42336605                   /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f8a528e3000-7f8a528e4000 ---p 00092000 fd:00 42336605                   /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f8a528e4000-7f8a52900000 r--p 00092000 fd:00 42336605                   /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f8a52900000-7f8a52901000 rw-p 000ae000 fd:00 42336605                   /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f8a52901000-7f8a52909000 rw-p 00000000 00:00 0 
+7f8a52909000-7f8a52926000 r--p 00000000 fd:00 42339600                   /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4
+7f8a52926000-7f8a529b5000 r-xp 0001d000 fd:00 42339600                   /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4
+7f8a529b5000-7f8a52a3f000 r--p 000ac000 fd:00 42339600                   /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4
+7f8a52a3f000-7f8a52a40000 ---p 00136000 fd:00 42339600                   /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4
+7f8a52a40000-7f8a52a41000 r--p 00136000 fd:00 42339600                   /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4
+7f8a52a41000-7f8a52a42000 rw-p 00137000 fd:00 42339600                   /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4
+7f8a52a42000-7f8a52a43000 rw-p 00000000 00:00 0 
+7f8a52a43000-7f8a52a86000 r--p 00000000 fd:00 42340137                   /usr/lib/x86_64-linux-gnu/libGL.so.1.7.0
+7f8a52a86000-7f8a52aa5000 r-xp 00043000 fd:00 42340137                   /usr/lib/x86_64-linux-gnu/libGL.so.1.7.0
+7f8a52aa5000-7f8a52aba000 r--p 00062000 fd:00 42340137                   /usr/lib/x86_64-linux-gnu/libGL.so.1.7.0
+7f8a52aba000-7f8a52ac8000 r--p 00076000 fd:00 42340137                   /usr/lib/x86_64-linux-gnu/libGL.so.1.7.0
+7f8a52ac8000-7f8a52ac9000 rw-p 00084000 fd:00 42340137                   /usr/lib/x86_64-linux-gnu/libGL.so.1.7.0
+7f8a52ac9000-7f8a52aca000 rw-p 00000000 00:00 0 
+7f8a52aca000-7f8a52b41000 r--p 00000000 fd:00 16282537                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libcrypto-01067bc0.so.1.1
+7f8a52b41000-7f8a52cec000 r-xp 00077000 fd:00 16282537                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libcrypto-01067bc0.so.1.1
+7f8a52cec000-7f8a52d7a000 r--p 00222000 fd:00 16282537                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libcrypto-01067bc0.so.1.1
+7f8a52d7a000-7f8a52d7b000 ---p 002b0000 fd:00 16282537                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libcrypto-01067bc0.so.1.1
+7f8a52d7b000-7f8a52da6000 r--p 002b0000 fd:00 16282537                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libcrypto-01067bc0.so.1.1
+7f8a52da6000-7f8a52da9000 rw-p 002db000 fd:00 16282537                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libcrypto-01067bc0.so.1.1
+7f8a52da9000-7f8a52dad000 rw-p 00000000 00:00 0 
+7f8a52dad000-7f8a52dcc000 rw-p 00333000 fd:00 16282537                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libcrypto-01067bc0.so.1.1
+7f8a52dcc000-7f8a52dd2000 r--p 00000000 fd:00 16282545                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libvpx-127417df.so.11.0.0
+7f8a52dd2000-7f8a530a1000 r-xp 00006000 fd:00 16282545                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libvpx-127417df.so.11.0.0
+7f8a530a1000-7f8a530f1000 r--p 002d5000 fd:00 16282545                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libvpx-127417df.so.11.0.0
+7f8a530f1000-7f8a530f4000 r--p 00324000 fd:00 16282545                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libvpx-127417df.so.11.0.0
+7f8a530f4000-7f8a530f5000 rw-p 00327000 fd:00 16282545                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libvpx-127417df.so.11.0.0
+7f8a530f5000-7f8a530fc000 rw-p 00000000 00:00 0 
+7f8a530fc000-7f8a530fd000 rw-p 0035c000 fd:00 16282545                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libvpx-127417df.so.11.0.0
+7f8a530fd000-7f8a53114000 r--p 00000000 fd:00 16282532                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libaom-49d00b71.so.3.12.1
+7f8a53114000-7f8a536a7000 r-xp 00017000 fd:00 16282532                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libaom-49d00b71.so.3.12.1
+7f8a536a7000-7f8a5379c000 r--p 005aa000 fd:00 16282532                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libaom-49d00b71.so.3.12.1
+7f8a5379c000-7f8a537ac000 r--p 0069e000 fd:00 16282532                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libaom-49d00b71.so.3.12.1
+7f8a537ac000-7f8a537b3000 rw-p 006ae000 fd:00 16282532                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libaom-49d00b71.so.3.12.1
+7f8a537b3000-7f8a537ff000 rw-p 00000000 00:00 0 
+7f8a537ff000-7f8a53800000 rw-p 00728000 fd:00 16282532                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libaom-49d00b71.so.3.12.1
+7f8a53800000-7f8a55acc000 r-xp 00000000 fd:00 16282539                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libopenblas-r0-f650aae0.3.3.so
+7f8a55acc000-7f8a55ccb000 ---p 022cc000 fd:00 16282539                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libopenblas-r0-f650aae0.3.3.so
+7f8a55ccb000-7f8a55ccf000 r--p 022cb000 fd:00 16282539                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libopenblas-r0-f650aae0.3.3.so
+7f8a55ccf000-7f8a55ce9000 rw-p 022cf000 fd:00 16282539                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libopenblas-r0-f650aae0.3.3.so
+7f8a55ce9000-7f8a55cf4000 rw-p 00000000 00:00 0 
+7f8a55cf4000-7f8a55d8e000 rw-p 022ff000 fd:00 16282539                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libopenblas-r0-f650aae0.3.3.so
+7f8a55d98000-7f8a55d9a000 r--p 00000000 fd:00 42347411                   /usr/lib/x86_64-linux-gnu/libmd.so.0.0.5
+7f8a55d9a000-7f8a55da1000 r-xp 00002000 fd:00 42347411                   /usr/lib/x86_64-linux-gnu/libmd.so.0.0.5
+7f8a55da1000-7f8a55da3000 r--p 00009000 fd:00 42347411                   /usr/lib/x86_64-linux-gnu/libmd.so.0.0.5
+7f8a55da3000-7f8a55da4000 r--p 0000a000 fd:00 42347411                   /usr/lib/x86_64-linux-gnu/libmd.so.0.0.5
+7f8a55da4000-7f8a55da5000 rw-p 0000b000 fd:00 42347411                   /usr/lib/x86_64-linux-gnu/libmd.so.0.0.5
+7f8a55da5000-7f8a55da8000 r--p 00000000 fd:00 42336519                   /usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f8a55da8000-7f8a55dc3000 r-xp 00003000 fd:00 42336519                   /usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f8a55dc3000-7f8a55dc6000 r--p 0001e000 fd:00 42336519                   /usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f8a55dc6000-7f8a55dc7000 ---p 00021000 fd:00 42336519                   /usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f8a55dc7000-7f8a55dc8000 r--p 00021000 fd:00 42336519                   /usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f8a55dc8000-7f8a55dc9000 rw-p 00022000 fd:00 42336519                   /usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f8a55dc9000-7f8a55dd9000 rw-p 00000000 00:00 0 
+7f8a55ddf000-7f8a55de1000 r--p 00000000 fd:00 15749362                   /home/brysonbrown/.local/lib/python3.10/site-packages/sklearn/__check_build/_check_build.cpython-310-x86_64-linux-gnu.so
+7f8a55de1000-7f8a55de4000 r-xp 00002000 fd:00 15749362                   /home/brysonbrown/.local/lib/python3.10/site-packages/sklearn/__check_build/_check_build.cpython-310-x86_64-linux-gnu.so
+7f8a55de4000-7f8a55de5000 r--p 00005000 fd:00 15749362                   /home/brysonbrown/.local/lib/python3.10/site-packages/sklearn/__check_build/_check_build.cpython-310-x86_64-linux-gnu.so
+7f8a55de5000-7f8a55de6000 ---p 00006000 fd:00 15749362                   /home/brysonbrown/.local/lib/python3.10/site-packages/sklearn/__check_build/_check_build.cpython-310-x86_64-linux-gnu.so
+7f8a55de6000-7f8a55de7000 r--p 00006000 fd:00 15749362                   /home/brysonbrown/.local/lib/python3.10/site-packages/sklearn/__check_build/_check_build.cpython-310-x86_64-linux-gnu.so
+7f8a55de7000-7f8a55de8000 rw-p 00007000 fd:00 15749362                   /home/brysonbrown/.local/lib/python3.10/site-packages/sklearn/__check_build/_check_build.cpython-310-x86_64-linux-gnu.so
+7f8a55de8000-7f8a55e04000 r--p 00000000 fd:00 16282542                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libssl-28bef1ac.so.1.1
+7f8a55e04000-7f8a55e54000 r-xp 0001c000 fd:00 16282542                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libssl-28bef1ac.so.1.1
+7f8a55e54000-7f8a55e6e000 r--p 0006c000 fd:00 16282542                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libssl-28bef1ac.so.1.1
+7f8a55e6e000-7f8a55e6f000 ---p 00086000 fd:00 16282542                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libssl-28bef1ac.so.1.1
+7f8a55e6f000-7f8a55e77000 r--p 00086000 fd:00 16282542                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libssl-28bef1ac.so.1.1
+7f8a55e77000-7f8a55e7c000 rw-p 0008e000 fd:00 16282542                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libssl-28bef1ac.so.1.1
+7f8a55e7c000-7f8a55e87000 rw-p 000a9000 fd:00 16282542                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libssl-28bef1ac.so.1.1
+7f8a55e87000-7f8a55e8a000 r--p 00000000 fd:00 16282543                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswresample-3e7db482.so.4.7.100
+7f8a55e8a000-7f8a55e9e000 r-xp 00003000 fd:00 16282543                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswresample-3e7db482.so.4.7.100
+7f8a55e9e000-7f8a55ea3000 r--p 00017000 fd:00 16282543                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswresample-3e7db482.so.4.7.100
+7f8a55ea3000-7f8a55ea4000 ---p 0001c000 fd:00 16282543                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswresample-3e7db482.so.4.7.100
+7f8a55ea4000-7f8a55ea6000 r--p 0001c000 fd:00 16282543                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswresample-3e7db482.so.4.7.100
+7f8a55ea6000-7f8a55ea9000 rw-p 0001e000 fd:00 16282543                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswresample-3e7db482.so.4.7.100
+7f8a55ea9000-7f8a55f57000 r--p 00000000 fd:00 16282525                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Core-e7f476e2.so.5.15.16
+7f8a55f57000-7f8a562a6000 r-xp 000ae000 fd:00 16282525                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Core-e7f476e2.so.5.15.16
+7f8a562a6000-7f8a56549000 r--p 003fd000 fd:00 16282525                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Core-e7f476e2.so.5.15.16
+7f8a56549000-7f8a5654a000 ---p 006a0000 fd:00 16282525                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Core-e7f476e2.so.5.15.16
+7f8a5654a000-7f8a56558000 r--p 006a0000 fd:00 16282525                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Core-e7f476e2.so.5.15.16
+7f8a56558000-7f8a5655a000 rw-p 006ae000 fd:00 16282525                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Core-e7f476e2.so.5.15.16
+7f8a5655a000-7f8a5655d000 rw-p 00000000 00:00 0 
+7f8a5655d000-7f8a565c2000 rw-p 006b0000 fd:00 16282525                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Core-e7f476e2.so.5.15.16
+7f8a565c2000-7f8a565d3000 r--p 00000000 fd:00 16282527                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Test-9ac3ed15.so.5.15.16
+7f8a565d3000-7f8a565fc000 r-xp 00011000 fd:00 16282527                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Test-9ac3ed15.so.5.15.16
+7f8a565fc000-7f8a5660e000 r--p 0003a000 fd:00 16282527                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Test-9ac3ed15.so.5.15.16
+7f8a5660e000-7f8a56610000 r--p 0004b000 fd:00 16282527                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Test-9ac3ed15.so.5.15.16
+7f8a56610000-7f8a56611000 rw-p 0004d000 fd:00 16282527                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Test-9ac3ed15.so.5.15.16
+7f8a56611000-7f8a56615000 rw-p 00000000 00:00 0 
+7f8a56615000-7f8a5662e000 rw-p 0004f000 fd:00 16282527                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Test-9ac3ed15.so.5.15.16
+7f8a5662e000-7f8a56731000 r--p 00000000 fd:00 16282526                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Gui-3e966859.so.5.15.16
+7f8a56731000-7f8a56c69000 r-xp 00103000 fd:00 16282526                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Gui-3e966859.so.5.15.16
+7f8a56c69000-7f8a56d8e000 r--p 0063b000 fd:00 16282526                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Gui-3e966859.so.5.15.16
+7f8a56d8e000-7f8a56d9f000 r--p 0075f000 fd:00 16282526                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Gui-3e966859.so.5.15.16
+7f8a56d9f000-7f8a56da4000 rw-p 00770000 fd:00 16282526                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Gui-3e966859.so.5.15.16
+7f8a56da4000-7f8a56daf000 rw-p 00000000 00:00 0 
+7f8a56daf000-7f8a56f5a000 rw-p 00775000 fd:00 16282526                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Gui-3e966859.so.5.15.16
+7f8a56f5a000-7f8a570da000 r--p 00000000 fd:00 16282528                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Widgets-cd430389.so.5.15.16
+7f8a570da000-7f8a57450000 r-xp 00180000 fd:00 16282528                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Widgets-cd430389.so.5.15.16
+7f8a57450000-7f8a575b9000 r--p 004f6000 fd:00 16282528                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Widgets-cd430389.so.5.15.16
+7f8a575b9000-7f8a575ba000 ---p 0065f000 fd:00 16282528                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Widgets-cd430389.so.5.15.16
+7f8a575ba000-7f8a575e7000 r--p 0065f000 fd:00 16282528                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Widgets-cd430389.so.5.15.16
+7f8a575e7000-7f8a577df000 rw-p 0068c000 fd:00 16282528                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libQt5Widgets-cd430389.so.5.15.16
+7f8a577df000-7f8a577e2000 r--p 00000000 fd:00 16282544                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswscale-95ddd674.so.6.7.100
+7f8a577e2000-7f8a57863000 r-xp 00003000 fd:00 16282544                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswscale-95ddd674.so.6.7.100
+7f8a57863000-7f8a57873000 r--p 00084000 fd:00 16282544                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswscale-95ddd674.so.6.7.100
+7f8a57873000-7f8a57874000 ---p 00094000 fd:00 16282544                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswscale-95ddd674.so.6.7.100
+7f8a57874000-7f8a57875000 r--p 00094000 fd:00 16282544                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswscale-95ddd674.so.6.7.100
+7f8a57875000-7f8a57876000 rw-p 00095000 fd:00 16282544                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswscale-95ddd674.so.6.7.100
+7f8a57876000-7f8a5787e000 rw-p 00000000 00:00 0 
+7f8a5787e000-7f8a57880000 rw-p 00096000 fd:00 16282544                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libswscale-95ddd674.so.6.7.100
+7f8a57880000-7f8a57892000 r--p 00000000 fd:00 16282536                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavutil-734d06dd.so.57.28.100
+7f8a57892000-7f8a57922000 r-xp 00012000 fd:00 16282536                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavutil-734d06dd.so.57.28.100
+7f8a57922000-7f8a5793c000 r--p 000a2000 fd:00 16282536                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavutil-734d06dd.so.57.28.100
+7f8a5793c000-7f8a5793d000 ---p 000bc000 fd:00 16282536                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavutil-734d06dd.so.57.28.100
+7f8a5793d000-7f8a57949000 r--p 000bc000 fd:00 16282536                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavutil-734d06dd.so.57.28.100
+7f8a57949000-7f8a5794a000 rw-p 000c8000 fd:00 16282536                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavutil-734d06dd.so.57.28.100
+7f8a5794a000-7f8a57a59000 rw-p 00000000 00:00 0 
+7f8a57a59000-7f8a57a5e000 rw-p 000ca000 fd:00 16282536                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavutil-734d06dd.so.57.28.100
+7f8a57a5e000-7f8a57a97000 r--p 00000000 fd:00 16282534                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavformat-d296e685.so.59.27.100
+7f8a57a97000-7f8a57c21000 r-xp 00039000 fd:00 16282534                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavformat-d296e685.so.59.27.100
+7f8a57c21000-7f8a57c98000 r--p 001c3000 fd:00 16282534                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavformat-d296e685.so.59.27.100
+7f8a57c98000-7f8a57cca000 r--p 00239000 fd:00 16282534                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavformat-d296e685.so.59.27.100
+7f8a57cca000-7f8a57cd3000 rw-p 0026b000 fd:00 16282534                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavformat-d296e685.so.59.27.100
+7f8a57cd3000-7f8a57d30000 r--p 00000000 fd:00 16282533                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavcodec-e0dd92b8.so.59.37.100
+7f8a57d30000-7f8a58652000 r-xp 0005d000 fd:00 16282533                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavcodec-e0dd92b8.so.59.37.100
+7f8a58652000-7f8a58946000 r--p 0097f000 fd:00 16282533                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavcodec-e0dd92b8.so.59.37.100
+7f8a58946000-7f8a589a0000 r--p 00c72000 fd:00 16282533                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavcodec-e0dd92b8.so.59.37.100
+7f8a589a0000-7f8a589a3000 rw-p 00ccc000 fd:00 16282533                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavcodec-e0dd92b8.so.59.37.100
+7f8a589a3000-7f8a58f76000 rw-p 00000000 00:00 0 
+7f8a58f76000-7f8a58f7c000 rw-p 00ccf000 fd:00 16282533                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavcodec-e0dd92b8.so.59.37.100
+7f8a58f7c000-7f8a58f81000 r--p 00000000 fd:00 16282540                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libpng16-04239421.so.16.48.0
+7f8a58f81000-7f8a58fa3000 r-xp 00005000 fd:00 16282540                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libpng16-04239421.so.16.48.0
+7f8a58fa3000-7f8a58fae000 r--p 00027000 fd:00 16282540                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libpng16-04239421.so.16.48.0
+7f8a58fae000-7f8a58faf000 r--p 00031000 fd:00 16282540                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libpng16-04239421.so.16.48.0
+7f8a58faf000-7f8a58fb0000 rw-p 00032000 fd:00 16282540                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libpng16-04239421.so.16.48.0
+7f8a58fb0000-7f8a58fb2000 rw-p 00109000 fd:00 16282540                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libpng16-04239421.so.16.48.0
+7f8a58fb2000-7f8a58fcd000 r--p 00000000 fd:00 16282535                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavif-850e7649.so.16.3.0
+7f8a58fcd000-7f8a59066000 r-xp 0001b000 fd:00 16282535                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavif-850e7649.so.16.3.0
+7f8a59066000-7f8a59086000 r--p 000b4000 fd:00 16282535                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavif-850e7649.so.16.3.0
+7f8a59086000-7f8a5908a000 r--p 000d3000 fd:00 16282535                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavif-850e7649.so.16.3.0
+7f8a5908a000-7f8a5908c000 rw-p 000d7000 fd:00 16282535                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavif-850e7649.so.16.3.0
+7f8a5908c000-7f8a5909c000 rw-p 000f7000 fd:00 16282535                   /home/brysonbrown/.local/lib/python3.10/site-packages/opencv_python.libs/libavif-850e7649.so.16.3.0
+7f8a5909c000-7f8a5928e000 r--p 00000000 fd:00 16277031                   /home/brysonbrown/.local/lib/python3.10/site-packages/cv2/cv2.abi3.so
+7f8a5928e000-7f8a5c5ce000 r-xp 001f2000 fd:00 16277031                   /home/brysonbrown/.local/lib/python3.10/site-packages/cv2/cv2.abi3.so
+7f8a5c5ce000-7f8a5cf46000 r--p 03532000 fd:00 16277031                   /home/brysonbrown/.local/lib/python3.10/site-packages/cv2/cv2.abi3.so
+7f8a5cf46000-7f8a5cf47000 ---p 03eaa000 fd:00 16277031                   /home/brysonbrown/.local/lib/python3.10/site-packages/cv2/cv2.abi3.so
+7f8a5cf47000-7f8a5cfdf000 r--p 03eaa000 fd:00 16277031                   /home/brysonbrown/.local/lib/python3.10/site-packages/cv2/cv2.abi3.so
+7f8a5cfdf000-7f8a5d041000 rw-p 03f42000 fd:00 16277031                   /home/brysonbrown/.local/lib/python3.10/site-packages/cv2/cv2.abi3.so
+7f8a5d041000-7f8a5d158000 rw-p 00000000 00:00 0 
+7f8a5d158000-7f8a5d16e000 rw-p 03fa5000 fd:00 16277031                   /home/brysonbrown/.local/lib/python3.10/site-packages/cv2/cv2.abi3.so
+7f8a5d16e000-7f8a5d26e000 rw-p 00000000 00:00 0 
+7f8a5d26e000-7f8a5d272000 r--p 00000000 fd:00 16420566                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/testing.cpython-310-x86_64-linux-gnu.so
+7f8a5d272000-7f8a5d285000 r-xp 00004000 fd:00 16420566                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/testing.cpython-310-x86_64-linux-gnu.so
+7f8a5d285000-7f8a5d289000 r--p 00017000 fd:00 16420566                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/testing.cpython-310-x86_64-linux-gnu.so
+7f8a5d289000-7f8a5d28a000 r--p 0001a000 fd:00 16420566                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/testing.cpython-310-x86_64-linux-gnu.so
+7f8a5d28a000-7f8a5d28b000 rw-p 0001b000 fd:00 16420566                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/testing.cpython-310-x86_64-linux-gnu.so
+7f8a5d28b000-7f8a5d38b000 rw-p 00000000 00:00 0 
+7f8a5d38b000-7f8a5d395000 r--p 00000000 fd:00 16420556                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/parsers.cpython-310-x86_64-linux-gnu.so
+7f8a5d395000-7f8a5d400000 r-xp 0000a000 fd:00 16420556                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/parsers.cpython-310-x86_64-linux-gnu.so
+7f8a5d400000-7f8a5d40e000 r--p 00075000 fd:00 16420556                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/parsers.cpython-310-x86_64-linux-gnu.so
+7f8a5d40e000-7f8a5d40f000 ---p 00083000 fd:00 16420556                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/parsers.cpython-310-x86_64-linux-gnu.so
+7f8a5d40f000-7f8a5d411000 r--p 00083000 fd:00 16420556                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/parsers.cpython-310-x86_64-linux-gnu.so
+7f8a5d411000-7f8a5d414000 rw-p 00085000 fd:00 16420556                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/parsers.cpython-310-x86_64-linux-gnu.so
+7f8a5d414000-7f8a5d416000 rw-p 00000000 00:00 0 
+7f8a5d416000-7f8a5d418000 r--p 00000000 fd:00 16420544                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/json.cpython-310-x86_64-linux-gnu.so
+7f8a5d418000-7f8a5d421000 r-xp 00002000 fd:00 16420544                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/json.cpython-310-x86_64-linux-gnu.so
+7f8a5d421000-7f8a5d425000 r--p 0000b000 fd:00 16420544                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/json.cpython-310-x86_64-linux-gnu.so
+7f8a5d425000-7f8a5d426000 r--p 0000e000 fd:00 16420544                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/json.cpython-310-x86_64-linux-gnu.so
+7f8a5d426000-7f8a5d427000 rw-p 0000f000 fd:00 16420544                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/json.cpython-310-x86_64-linux-gnu.so
+7f8a5d427000-7f8a5d527000 rw-p 00000000 00:00 0 
+7f8a5d527000-7f8a5d532000 r--p 00000000 fd:00 16420528                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/groupby.cpython-310-x86_64-linux-gnu.so
+7f8a5d532000-7f8a5d742000 r-xp 0000b000 fd:00 16420528                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/groupby.cpython-310-x86_64-linux-gnu.so
+7f8a5d742000-7f8a5d765000 r--p 0021b000 fd:00 16420528                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/groupby.cpython-310-x86_64-linux-gnu.so
+7f8a5d765000-7f8a5d766000 ---p 0023e000 fd:00 16420528                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/groupby.cpython-310-x86_64-linux-gnu.so
+7f8a5d766000-7f8a5d769000 r--p 0023e000 fd:00 16420528                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/groupby.cpython-310-x86_64-linux-gnu.so
+7f8a5d769000-7f8a5d76f000 rw-p 00241000 fd:00 16420528                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/groupby.cpython-310-x86_64-linux-gnu.so
+7f8a5d76f000-7f8a5d873000 rw-p 00000000 00:00 0 
+7f8a5d873000-7f8a5d87a000 r--p 00000000 fd:00 16420560                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/reshape.cpython-310-x86_64-linux-gnu.so
+7f8a5d87a000-7f8a5d8ad000 r-xp 00007000 fd:00 16420560                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/reshape.cpython-310-x86_64-linux-gnu.so
+7f8a5d8ad000-7f8a5d8b6000 r--p 0003a000 fd:00 16420560                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/reshape.cpython-310-x86_64-linux-gnu.so
+7f8a5d8b6000-7f8a5d8b8000 r--p 00042000 fd:00 16420560                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/reshape.cpython-310-x86_64-linux-gnu.so
+7f8a5d8b8000-7f8a5d8ba000 rw-p 00044000 fd:00 16420560                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/reshape.cpython-310-x86_64-linux-gnu.so
+7f8a5d8ba000-7f8a5d8bb000 rw-p 00000000 00:00 0 
+7f8a5d8bb000-7f8a5d8c1000 r--p 00000000 fd:00 16420609                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/indexers.cpython-310-x86_64-linux-gnu.so
+7f8a5d8c1000-7f8a5d8e2000 r-xp 00006000 fd:00 16420609                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/indexers.cpython-310-x86_64-linux-gnu.so
+7f8a5d8e2000-7f8a5d8e9000 r--p 00027000 fd:00 16420609                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/indexers.cpython-310-x86_64-linux-gnu.so
+7f8a5d8e9000-7f8a5d8ea000 ---p 0002e000 fd:00 16420609                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/indexers.cpython-310-x86_64-linux-gnu.so
+7f8a5d8ea000-7f8a5d8eb000 r--p 0002e000 fd:00 16420609                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/indexers.cpython-310-x86_64-linux-gnu.so
+7f8a5d8eb000-7f8a5d8ed000 rw-p 0002f000 fd:00 16420609                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/indexers.cpython-310-x86_64-linux-gnu.so
+7f8a5d8ed000-7f8a5d8ee000 rw-p 00000000 00:00 0 
+7f8a5d8ee000-7f8a5d8f6000 r--p 00000000 fd:00 16420607                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/aggregations.cpython-310-x86_64-linux-gnu.so
+7f8a5d8f6000-7f8a5d93f000 r-xp 00008000 fd:00 16420607                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/aggregations.cpython-310-x86_64-linux-gnu.so
+7f8a5d93f000-7f8a5d949000 r--p 00051000 fd:00 16420607                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/aggregations.cpython-310-x86_64-linux-gnu.so
+7f8a5d949000-7f8a5d94a000 ---p 0005b000 fd:00 16420607                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/aggregations.cpython-310-x86_64-linux-gnu.so
+7f8a5d94a000-7f8a5d94c000 r--p 0005b000 fd:00 16420607                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/aggregations.cpython-310-x86_64-linux-gnu.so
+7f8a5d94c000-7f8a5d94e000 rw-p 0005d000 fd:00 16420607                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/window/aggregations.cpython-310-x86_64-linux-gnu.so
+7f8a5d94e000-7f8a5db4f000 rw-p 00000000 00:00 0 
+7f8a5db4f000-7f8a5db57000 r--p 00000000 fd:00 16420542                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/join.cpython-310-x86_64-linux-gnu.so
+7f8a5db57000-7f8a5dc8c000 r-xp 00008000 fd:00 16420542                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/join.cpython-310-x86_64-linux-gnu.so
+7f8a5dc8c000-7f8a5dc9c000 r--p 0013d000 fd:00 16420542                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/join.cpython-310-x86_64-linux-gnu.so
+7f8a5dc9c000-7f8a5dc9e000 r--p 0014c000 fd:00 16420542                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/join.cpython-310-x86_64-linux-gnu.so
+7f8a5dc9e000-7f8a5dca1000 rw-p 0014e000 fd:00 16420542                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/join.cpython-310-x86_64-linux-gnu.so
+7f8a5dca1000-7f8a5dca3000 rw-p 00000000 00:00 0 
+7f8a5dca3000-7f8a5dca9000 r--p 00000000 fd:00 16420570                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/writers.cpython-310-x86_64-linux-gnu.so
+7f8a5dca9000-7f8a5dcd2000 r-xp 00006000 fd:00 16420570                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/writers.cpython-310-x86_64-linux-gnu.so
+7f8a5dcd2000-7f8a5dcda000 r--p 0002f000 fd:00 16420570                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/writers.cpython-310-x86_64-linux-gnu.so
+7f8a5dcda000-7f8a5dcdc000 r--p 00036000 fd:00 16420570                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/writers.cpython-310-x86_64-linux-gnu.so
+7f8a5dcdc000-7f8a5dcde000 rw-p 00038000 fd:00 16420570                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/writers.cpython-310-x86_64-linux-gnu.so
+7f8a5dcde000-7f8a5dcdf000 rw-p 00000000 00:00 0 
+7f8a5dcdf000-7f8a5dcec000 r--p 00000000 fd:00 16420534                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/index.cpython-310-x86_64-linux-gnu.so
+7f8a5dcec000-7f8a5dd93000 r-xp 0000d000 fd:00 16420534                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/index.cpython-310-x86_64-linux-gnu.so
+7f8a5dd93000-7f8a5ddab000 r--p 000b4000 fd:00 16420534                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/index.cpython-310-x86_64-linux-gnu.so
+7f8a5ddab000-7f8a5ddae000 r--p 000cb000 fd:00 16420534                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/index.cpython-310-x86_64-linux-gnu.so
+7f8a5ddae000-7f8a5ddb6000 rw-p 000ce000 fd:00 16420534                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/index.cpython-310-x86_64-linux-gnu.so
+7f8a5ddb6000-7f8a5ddba000 rw-p 00000000 00:00 0 
+7f8a5ddba000-7f8a5ddbe000 r--p 00000000 fd:00 16420536                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/indexing.cpython-310-x86_64-linux-gnu.so
+7f8a5ddbe000-7f8a5ddc6000 r-xp 00004000 fd:00 16420536                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/indexing.cpython-310-x86_64-linux-gnu.so
+7f8a5ddc6000-7f8a5ddc9000 r--p 0000c000 fd:00 16420536                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/indexing.cpython-310-x86_64-linux-gnu.so
+7f8a5ddc9000-7f8a5ddca000 r--p 0000e000 fd:00 16420536                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/indexing.cpython-310-x86_64-linux-gnu.so
+7f8a5ddca000-7f8a5ddcb000 rw-p 0000f000 fd:00 16420536                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/indexing.cpython-310-x86_64-linux-gnu.so
+7f8a5ddcb000-7f8a5decb000 rw-p 00000000 00:00 0 
+7f8a5decb000-7f8a5ded3000 r--p 00000000 fd:00 16420538                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/internals.cpython-310-x86_64-linux-gnu.so
+7f8a5ded3000-7f8a5df19000 r-xp 00008000 fd:00 16420538                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/internals.cpython-310-x86_64-linux-gnu.so
+7f8a5df19000-7f8a5df25000 r--p 0004e000 fd:00 16420538                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/internals.cpython-310-x86_64-linux-gnu.so
+7f8a5df25000-7f8a5df26000 ---p 0005a000 fd:00 16420538                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/internals.cpython-310-x86_64-linux-gnu.so
+7f8a5df26000-7f8a5df28000 r--p 0005a000 fd:00 16420538                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/internals.cpython-310-x86_64-linux-gnu.so
+7f8a5df28000-7f8a5df2b000 rw-p 0005c000 fd:00 16420538                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/internals.cpython-310-x86_64-linux-gnu.so
+7f8a5df2b000-7f8a5df2d000 rw-p 00000000 00:00 0 
+7f8a5df2d000-7f8a5df35000 r--p 00000000 fd:00 16420564                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/sparse.cpython-310-x86_64-linux-gnu.so
+7f8a5df35000-7f8a5dfe7000 r-xp 00008000 fd:00 16420564                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/sparse.cpython-310-x86_64-linux-gnu.so
+7f8a5dfe7000-7f8a5dff5000 r--p 000ba000 fd:00 16420564                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/sparse.cpython-310-x86_64-linux-gnu.so
+7f8a5dff5000-7f8a5dff7000 r--p 000c7000 fd:00 16420564                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/sparse.cpython-310-x86_64-linux-gnu.so
+7f8a5dff7000-7f8a5dffa000 rw-p 000c9000 fd:00 16420564                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/sparse.cpython-310-x86_64-linux-gnu.so
+7f8a5dffa000-7f8a5e0fc000 rw-p 00000000 00:00 0 
+7f8a5e0fc000-7f8a5e103000 r--p 00000000 fd:00 16420568                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslib.cpython-310-x86_64-linux-gnu.so
+7f8a5e103000-7f8a5e13e000 r-xp 00007000 fd:00 16420568                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslib.cpython-310-x86_64-linux-gnu.so
+7f8a5e13e000-7f8a5e148000 r--p 00042000 fd:00 16420568                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslib.cpython-310-x86_64-linux-gnu.so
+7f8a5e148000-7f8a5e14a000 r--p 0004b000 fd:00 16420568                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslib.cpython-310-x86_64-linux-gnu.so
+7f8a5e14a000-7f8a5e14c000 rw-p 0004d000 fd:00 16420568                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslib.cpython-310-x86_64-linux-gnu.so
+7f8a5e14c000-7f8a5e14d000 rw-p 00000000 00:00 0 
+7f8a5e14d000-7f8a5e152000 r--p 00000000 fd:00 16420524                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/arrays.cpython-310-x86_64-linux-gnu.so
+7f8a5e152000-7f8a5e165000 r-xp 00005000 fd:00 16420524                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/arrays.cpython-310-x86_64-linux-gnu.so
+7f8a5e165000-7f8a5e169000 r--p 00018000 fd:00 16420524                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/arrays.cpython-310-x86_64-linux-gnu.so
+7f8a5e169000-7f8a5e16a000 ---p 0001c000 fd:00 16420524                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/arrays.cpython-310-x86_64-linux-gnu.so
+7f8a5e16a000-7f8a5e16b000 r--p 0001c000 fd:00 16420524                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/arrays.cpython-310-x86_64-linux-gnu.so
+7f8a5e16b000-7f8a5e16d000 rw-p 0001d000 fd:00 16420524                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/arrays.cpython-310-x86_64-linux-gnu.so
+7f8a5e16d000-7f8a5e173000 r--p 00000000 fd:00 16420530                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashing.cpython-310-x86_64-linux-gnu.so
+7f8a5e173000-7f8a5e195000 r-xp 00006000 fd:00 16420530                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashing.cpython-310-x86_64-linux-gnu.so
+7f8a5e195000-7f8a5e19d000 r--p 00028000 fd:00 16420530                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashing.cpython-310-x86_64-linux-gnu.so
+7f8a5e19d000-7f8a5e19e000 r--p 0002f000 fd:00 16420530                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashing.cpython-310-x86_64-linux-gnu.so
+7f8a5e19e000-7f8a5e1a0000 rw-p 00030000 fd:00 16420530                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashing.cpython-310-x86_64-linux-gnu.so
+7f8a5e1a0000-7f8a5e2a1000 rw-p 00000000 00:00 0 
+7f8a5e2a1000-7f8a5e2a7000 r--p 00000000 fd:00 16420550                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops.cpython-310-x86_64-linux-gnu.so
+7f8a5e2a7000-7f8a5e2d3000 r-xp 00006000 fd:00 16420550                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops.cpython-310-x86_64-linux-gnu.so
+7f8a5e2d3000-7f8a5e2db000 r--p 00032000 fd:00 16420550                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops.cpython-310-x86_64-linux-gnu.so
+7f8a5e2db000-7f8a5e2dc000 ---p 0003a000 fd:00 16420550                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops.cpython-310-x86_64-linux-gnu.so
+7f8a5e2dc000-7f8a5e2dd000 r--p 0003a000 fd:00 16420550                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops.cpython-310-x86_64-linux-gnu.so
+7f8a5e2dd000-7f8a5e2df000 rw-p 0003b000 fd:00 16420550                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops.cpython-310-x86_64-linux-gnu.so
+7f8a5e2df000-7f8a5e3e0000 rw-p 00000000 00:00 0 
+7f8a5e3e0000-7f8a5e40b000 r--p 00000000 fd:00 15741944                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/_compute.cpython-310-x86_64-linux-gnu.so
+7f8a5e40b000-7f8a5e4a1000 r-xp 0002b000 fd:00 15741944                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/_compute.cpython-310-x86_64-linux-gnu.so
+7f8a5e4a1000-7f8a5e4ce000 r--p 000c1000 fd:00 15741944                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/_compute.cpython-310-x86_64-linux-gnu.so
+7f8a5e4ce000-7f8a5e4d0000 r--p 000ed000 fd:00 15741944                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/_compute.cpython-310-x86_64-linux-gnu.so
+7f8a5e4d0000-7f8a5e4dc000 rw-p 000ef000 fd:00 15741944                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/_compute.cpython-310-x86_64-linux-gnu.so
+7f8a5e4dc000-7f8a5e5e0000 rw-p 00000000 00:00 0 
+7f8a5e5e0000-7f8a5e5ec000 r--p 00000000 fd:00 16420546                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/lib.cpython-310-x86_64-linux-gnu.so
+7f8a5e5ec000-7f8a5e68c000 r-xp 0000c000 fd:00 16420546                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/lib.cpython-310-x86_64-linux-gnu.so
+7f8a5e68c000-7f8a5e6a5000 r--p 000ac000 fd:00 16420546                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/lib.cpython-310-x86_64-linux-gnu.so
+7f8a5e6a5000-7f8a5e6a6000 ---p 000c5000 fd:00 16420546                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/lib.cpython-310-x86_64-linux-gnu.so
+7f8a5e6a6000-7f8a5e6a9000 r--p 000c5000 fd:00 16420546                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/lib.cpython-310-x86_64-linux-gnu.so
+7f8a5e6a9000-7f8a5e6af000 rw-p 000c8000 fd:00 16420546                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/lib.cpython-310-x86_64-linux-gnu.so
+7f8a5e6af000-7f8a5e6b1000 rw-p 00000000 00:00 0 
+7f8a5e6b1000-7f8a5e6bd000 r--p 00000000 fd:00 16420522                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/algos.cpython-310-x86_64-linux-gnu.so
+7f8a5e6bd000-7f8a5e87f000 r-xp 0000c000 fd:00 16420522                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/algos.cpython-310-x86_64-linux-gnu.so
+7f8a5e87f000-7f8a5e8a1000 r--p 001ce000 fd:00 16420522                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/algos.cpython-310-x86_64-linux-gnu.so
+7f8a5e8a1000-7f8a5e8a2000 ---p 001f0000 fd:00 16420522                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/algos.cpython-310-x86_64-linux-gnu.so
+7f8a5e8a2000-7f8a5e8a5000 r--p 001f0000 fd:00 16420522                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/algos.cpython-310-x86_64-linux-gnu.so
+7f8a5e8a5000-7f8a5e8a9000 rw-p 001f3000 fd:00 16420522                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/algos.cpython-310-x86_64-linux-gnu.so
+7f8a5e8a9000-7f8a5e8ae000 rw-p 00000000 00:00 0 
+7f8a5e8ae000-7f8a5e8b4000 r--p 00000000 fd:00 16420603                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/vectorized.cpython-310-x86_64-linux-gnu.so
+7f8a5e8b4000-7f8a5e8dc000 r-xp 00006000 fd:00 16420603                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/vectorized.cpython-310-x86_64-linux-gnu.so
+7f8a5e8dc000-7f8a5e8e5000 r--p 0002e000 fd:00 16420603                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/vectorized.cpython-310-x86_64-linux-gnu.so
+7f8a5e8e5000-7f8a5e8e6000 ---p 00037000 fd:00 16420603                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/vectorized.cpython-310-x86_64-linux-gnu.so
+7f8a5e8e6000-7f8a5e8e7000 r--p 00037000 fd:00 16420603                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/vectorized.cpython-310-x86_64-linux-gnu.so
+7f8a5e8e7000-7f8a5e8e9000 rw-p 00038000 fd:00 16420603                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/vectorized.cpython-310-x86_64-linux-gnu.so
+7f8a5e8e9000-7f8a5e8ea000 rw-p 00000000 00:00 0 
+7f8a5e8ea000-7f8a5e8f3000 r--p 00000000 fd:00 16420591                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/period.cpython-310-x86_64-linux-gnu.so
+7f8a5e8f3000-7f8a5e946000 r-xp 00009000 fd:00 16420591                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/period.cpython-310-x86_64-linux-gnu.so
+7f8a5e946000-7f8a5e95f000 r--p 0005c000 fd:00 16420591                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/period.cpython-310-x86_64-linux-gnu.so
+7f8a5e95f000-7f8a5e962000 r--p 00074000 fd:00 16420591                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/period.cpython-310-x86_64-linux-gnu.so
+7f8a5e962000-7f8a5e965000 rw-p 00077000 fd:00 16420591                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/period.cpython-310-x86_64-linux-gnu.so
+7f8a5e965000-7f8a5e966000 rw-p 00000000 00:00 0 
+7f8a5e966000-7f8a5e96d000 r--p 00000000 fd:00 16420593                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/strptime.cpython-310-x86_64-linux-gnu.so
+7f8a5e96d000-7f8a5e9b3000 r-xp 00007000 fd:00 16420593                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/strptime.cpython-310-x86_64-linux-gnu.so
+7f8a5e9b3000-7f8a5e9be000 r--p 0004d000 fd:00 16420593                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/strptime.cpython-310-x86_64-linux-gnu.so
+7f8a5e9be000-7f8a5e9c0000 r--p 00057000 fd:00 16420593                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/strptime.cpython-310-x86_64-linux-gnu.so
+7f8a5e9c0000-7f8a5e9c2000 rw-p 00059000 fd:00 16420593                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/strptime.cpython-310-x86_64-linux-gnu.so
+7f8a5e9c2000-7f8a5e9c4000 rw-p 00000000 00:00 0 
+7f8a5e9c4000-7f8a5e9cc000 r--p 00000000 fd:00 16420589                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/parsing.cpython-310-x86_64-linux-gnu.so
+7f8a5e9cc000-7f8a5ea19000 r-xp 00008000 fd:00 16420589                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/parsing.cpython-310-x86_64-linux-gnu.so
+7f8a5ea19000-7f8a5ea27000 r--p 00055000 fd:00 16420589                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/parsing.cpython-310-x86_64-linux-gnu.so
+7f8a5ea27000-7f8a5ea29000 r--p 00062000 fd:00 16420589                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/parsing.cpython-310-x86_64-linux-gnu.so
+7f8a5ea29000-7f8a5ea2c000 rw-p 00064000 fd:00 16420589                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/parsing.cpython-310-x86_64-linux-gnu.so
+7f8a5ea2c000-7f8a5eb2d000 rw-p 00000000 00:00 0 
+7f8a5eb2d000-7f8a5eb33000 r--p 00000000 fd:00 16420601                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/tzconversion.cpython-310-x86_64-linux-gnu.so
+7f8a5eb33000-7f8a5eb6c000 r-xp 00006000 fd:00 16420601                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/tzconversion.cpython-310-x86_64-linux-gnu.so
+7f8a5eb6c000-7f8a5eb76000 r--p 0003f000 fd:00 16420601                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/tzconversion.cpython-310-x86_64-linux-gnu.so
+7f8a5eb76000-7f8a5eb78000 r--p 00048000 fd:00 16420601                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/tzconversion.cpython-310-x86_64-linux-gnu.so
+7f8a5eb78000-7f8a5eb7a000 rw-p 0004a000 fd:00 16420601                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/tzconversion.cpython-310-x86_64-linux-gnu.so
+7f8a5eb7a000-7f8a5eb7b000 rw-p 00000000 00:00 0 
+7f8a5eb7b000-7f8a5eb82000 r--p 00000000 fd:00 16420581                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/fields.cpython-310-x86_64-linux-gnu.so
+7f8a5eb82000-7f8a5ebbc000 r-xp 00007000 fd:00 16420581                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/fields.cpython-310-x86_64-linux-gnu.so
+7f8a5ebbc000-7f8a5ebc6000 r--p 00041000 fd:00 16420581                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/fields.cpython-310-x86_64-linux-gnu.so
+7f8a5ebc6000-7f8a5ebc7000 ---p 0004b000 fd:00 16420581                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/fields.cpython-310-x86_64-linux-gnu.so
+7f8a5ebc7000-7f8a5ebc9000 r--p 0004b000 fd:00 16420581                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/fields.cpython-310-x86_64-linux-gnu.so
+7f8a5ebc9000-7f8a5ebcb000 rw-p 0004d000 fd:00 16420581                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/fields.cpython-310-x86_64-linux-gnu.so
+7f8a5ebcb000-7f8a5ebcc000 rw-p 00000000 00:00 0 
+7f8a5ebcc000-7f8a5ebd2000 r--p 00000000 fd:00 16420599                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timezones.cpython-310-x86_64-linux-gnu.so
+7f8a5ebd2000-7f8a5ec02000 r-xp 00006000 fd:00 16420599                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timezones.cpython-310-x86_64-linux-gnu.so
+7f8a5ec02000-7f8a5ec0c000 r--p 00036000 fd:00 16420599                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timezones.cpython-310-x86_64-linux-gnu.so
+7f8a5ec0c000-7f8a5ec0e000 r--p 0003f000 fd:00 16420599                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timezones.cpython-310-x86_64-linux-gnu.so
+7f8a5ec0e000-7f8a5ec10000 rw-p 00041000 fd:00 16420599                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timezones.cpython-310-x86_64-linux-gnu.so
+7f8a5ec10000-7f8a5ec11000 rw-p 00000000 00:00 0 
+7f8a5ec11000-7f8a5ec1b000 r--p 00000000 fd:00 16420595                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timedeltas.cpython-310-x86_64-linux-gnu.so
+7f8a5ec1b000-7f8a5ec86000 r-xp 0000a000 fd:00 16420595                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timedeltas.cpython-310-x86_64-linux-gnu.so
+7f8a5ec86000-7f8a5ec9b000 r--p 00075000 fd:00 16420595                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timedeltas.cpython-310-x86_64-linux-gnu.so
+7f8a5ec9b000-7f8a5ec9e000 r--p 00089000 fd:00 16420595                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timedeltas.cpython-310-x86_64-linux-gnu.so
+7f8a5ec9e000-7f8a5eca1000 rw-p 0008c000 fd:00 16420595                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timedeltas.cpython-310-x86_64-linux-gnu.so
+7f8a5eca1000-7f8a5eca3000 rw-p 00000000 00:00 0 
+7f8a5eca3000-7f8a5ecb3000 r--p 00000000 fd:00 16420587                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/offsets.cpython-310-x86_64-linux-gnu.so
+7f8a5ecb3000-7f8a5ed67000 r-xp 00010000 fd:00 16420587                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/offsets.cpython-310-x86_64-linux-gnu.so
+7f8a5ed67000-7f8a5ed8b000 r--p 000c4000 fd:00 16420587                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/offsets.cpython-310-x86_64-linux-gnu.so
+7f8a5ed8b000-7f8a5ed8c000 ---p 000e8000 fd:00 16420587                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/offsets.cpython-310-x86_64-linux-gnu.so
+7f8a5ed8c000-7f8a5ed90000 r--p 000e8000 fd:00 16420587                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/offsets.cpython-310-x86_64-linux-gnu.so
+7f8a5ed90000-7f8a5ed9a000 rw-p 000ec000 fd:00 16420587                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/offsets.cpython-310-x86_64-linux-gnu.so
+7f8a5ed9a000-7f8a5ed9e000 rw-p 00000000 00:00 0 
+7f8a5ed9e000-7f8a5edb2000 r--p 00000000 fd:00 16420532                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashtable.cpython-310-x86_64-linux-gnu.so
+7f8a5edb2000-7f8a5ef4d000 r-xp 00014000 fd:00 16420532                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashtable.cpython-310-x86_64-linux-gnu.so
+7f8a5ef4d000-7f8a5ef88000 r--p 001af000 fd:00 16420532                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashtable.cpython-310-x86_64-linux-gnu.so
+7f8a5ef88000-7f8a5ef89000 ---p 001ea000 fd:00 16420532                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashtable.cpython-310-x86_64-linux-gnu.so
+7f8a5ef89000-7f8a5ef8d000 r--p 001ea000 fd:00 16420532                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashtable.cpython-310-x86_64-linux-gnu.so
+7f8a5ef8d000-7f8a5ef9a000 rw-p 001ee000 fd:00 16420532                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/hashtable.cpython-310-x86_64-linux-gnu.so
+7f8a5ef9a000-7f8a5f0a2000 rw-p 00000000 00:00 0 
+7f8a5f0a2000-7f8a5f0af000 r--p 00000000 fd:00 16420540                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/interval.cpython-310-x86_64-linux-gnu.so
+7f8a5f0af000-7f8a5f1cf000 r-xp 0000d000 fd:00 16420540                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/interval.cpython-310-x86_64-linux-gnu.so
+7f8a5f1cf000-7f8a5f1f3000 r--p 0012d000 fd:00 16420540                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/interval.cpython-310-x86_64-linux-gnu.so
+7f8a5f1f3000-7f8a5f1f4000 ---p 00151000 fd:00 16420540                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/interval.cpython-310-x86_64-linux-gnu.so
+7f8a5f1f4000-7f8a5f1f6000 r--p 00151000 fd:00 16420540                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/interval.cpython-310-x86_64-linux-gnu.so
+7f8a5f1f6000-7f8a5f1fd000 rw-p 00153000 fd:00 16420540                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/interval.cpython-310-x86_64-linux-gnu.so
+7f8a5f1fd000-7f8a5f1ff000 rw-p 00000000 00:00 0 
+7f8a5f1ff000-7f8a5f200000 ---p 00000000 00:00 0 
+7f8a5f200000-7f8a5fa00000 rw-p 00000000 00:00 0 
+7f8a5fa00000-7f8a60200000 rw-p 00000000 00:00 0 
+7f8a60202000-7f8a60204000 r--p 00000000 fd:00 42360061                   /usr/lib/python3.10/lib-dynload/_lsprof.cpython-310-x86_64-linux-gnu.so
+7f8a60204000-7f8a60207000 r-xp 00002000 fd:00 42360061                   /usr/lib/python3.10/lib-dynload/_lsprof.cpython-310-x86_64-linux-gnu.so
+7f8a60207000-7f8a60209000 r--p 00005000 fd:00 42360061                   /usr/lib/python3.10/lib-dynload/_lsprof.cpython-310-x86_64-linux-gnu.so
+7f8a60209000-7f8a6020a000 r--p 00006000 fd:00 42360061                   /usr/lib/python3.10/lib-dynload/_lsprof.cpython-310-x86_64-linux-gnu.so
+7f8a6020a000-7f8a6020b000 rw-p 00007000 fd:00 42360061                   /usr/lib/python3.10/lib-dynload/_lsprof.cpython-310-x86_64-linux-gnu.so
+7f8a6020b000-7f8a6020f000 r--p 00000000 fd:00 16420552                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops_dispatch.cpython-310-x86_64-linux-gnu.so
+7f8a6020f000-7f8a60215000 r-xp 00004000 fd:00 16420552                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops_dispatch.cpython-310-x86_64-linux-gnu.so
+7f8a60215000-7f8a60217000 r--p 0000a000 fd:00 16420552                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops_dispatch.cpython-310-x86_64-linux-gnu.so
+7f8a60217000-7f8a60218000 ---p 0000c000 fd:00 16420552                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops_dispatch.cpython-310-x86_64-linux-gnu.so
+7f8a60218000-7f8a60219000 r--p 0000c000 fd:00 16420552                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops_dispatch.cpython-310-x86_64-linux-gnu.so
+7f8a60219000-7f8a6021a000 rw-p 0000d000 fd:00 16420552                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/ops_dispatch.cpython-310-x86_64-linux-gnu.so
+7f8a6021a000-7f8a60220000 r--p 00000000 fd:00 16420583                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/nattype.cpython-310-x86_64-linux-gnu.so
+7f8a60220000-7f8a60240000 r-xp 00006000 fd:00 16420583                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/nattype.cpython-310-x86_64-linux-gnu.so
+7f8a60240000-7f8a6024d000 r--p 00026000 fd:00 16420583                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/nattype.cpython-310-x86_64-linux-gnu.so
+7f8a6024d000-7f8a6024e000 ---p 00033000 fd:00 16420583                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/nattype.cpython-310-x86_64-linux-gnu.so
+7f8a6024e000-7f8a60250000 r--p 00033000 fd:00 16420583                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/nattype.cpython-310-x86_64-linux-gnu.so
+7f8a60250000-7f8a60252000 rw-p 00035000 fd:00 16420583                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/nattype.cpython-310-x86_64-linux-gnu.so
+7f8a60252000-7f8a60253000 rw-p 00000000 00:00 0 
+7f8a60253000-7f8a6025e000 r--p 00000000 fd:00 16420597                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timestamps.cpython-310-x86_64-linux-gnu.so
+7f8a6025e000-7f8a602c2000 r-xp 0000b000 fd:00 16420597                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timestamps.cpython-310-x86_64-linux-gnu.so
+7f8a602c2000-7f8a602e3000 r--p 0006f000 fd:00 16420597                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timestamps.cpython-310-x86_64-linux-gnu.so
+7f8a602e3000-7f8a602e4000 ---p 00090000 fd:00 16420597                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timestamps.cpython-310-x86_64-linux-gnu.so
+7f8a602e4000-7f8a602e7000 r--p 00090000 fd:00 16420597                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timestamps.cpython-310-x86_64-linux-gnu.so
+7f8a602e7000-7f8a602ea000 rw-p 00093000 fd:00 16420597                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/timestamps.cpython-310-x86_64-linux-gnu.so
+7f8a602ea000-7f8a603ec000 rw-p 00000000 00:00 0 
+7f8a603ec000-7f8a60888000 r--p 00000000 fd:00 15741932                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow.so.1900
+7f8a60888000-7f8a62b60000 r-xp 0049c000 fd:00 15741932                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow.so.1900
+7f8a62b60000-7f8a633f6000 r--p 02774000 fd:00 15741932                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow.so.1900
+7f8a633f6000-7f8a633f7000 ---p 0300a000 fd:00 15741932                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow.so.1900
+7f8a633f7000-7f8a634e6000 r--p 0300a000 fd:00 15741932                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow.so.1900
+7f8a634e6000-7f8a63519000 rw-p 030f9000 fd:00 15741932                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow.so.1900
+7f8a63519000-7f8a637a2000 rw-p 00000000 00:00 0 
+7f8a637a2000-7f8a637f9000 r--p 00000000 fd:00 15741928                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_acero.so.1900
+7f8a637f9000-7f8a638dd000 r-xp 00057000 fd:00 15741928                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_acero.so.1900
+7f8a638dd000-7f8a63916000 r--p 0013b000 fd:00 15741928                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_acero.so.1900
+7f8a63916000-7f8a63917000 ---p 00174000 fd:00 15741928                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_acero.so.1900
+7f8a63917000-7f8a6391c000 r--p 00174000 fd:00 15741928                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_acero.so.1900
+7f8a6391c000-7f8a6391f000 rw-p 00179000 fd:00 15741928                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_acero.so.1900
+7f8a6391f000-7f8a63ad3000 r--p 00000000 fd:00 15741964                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libparquet.so.1900
+7f8a63ad3000-7f8a63fd2000 r-xp 001b4000 fd:00 15741964                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libparquet.so.1900
+7f8a63fd2000-7f8a64133000 r--p 006b3000 fd:00 15741964                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libparquet.so.1900
+7f8a64133000-7f8a641b1000 r--p 00813000 fd:00 15741964                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libparquet.so.1900
+7f8a641b1000-7f8a641bf000 rw-p 00891000 fd:00 15741964                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libparquet.so.1900
+7f8a641bf000-7f8a641c2000 rw-p 00000000 00:00 0 
+7f8a641c2000-7f8a6426a000 r--p 00000000 fd:00 15741889                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_dataset.so.1900
+7f8a6426a000-7f8a6433c000 r-xp 000a8000 fd:00 15741889                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_dataset.so.1900
+7f8a6433c000-7f8a64381000 r--p 0017a000 fd:00 15741889                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_dataset.so.1900
+7f8a64381000-7f8a64382000 ---p 001bf000 fd:00 15741889                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_dataset.so.1900
+7f8a64382000-7f8a6438a000 r--p 001bf000 fd:00 15741889                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_dataset.so.1900
+7f8a6438a000-7f8a6438c000 rw-p 001c7000 fd:00 15741889                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_dataset.so.1900
+7f8a6438c000-7f8a6438d000 rw-p 00000000 00:00 0 
+7f8a6438d000-7f8a64401000 r--p 00000000 fd:00 15741953                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_substrait.so.1900
+7f8a64401000-7f8a6463d000 r-xp 00074000 fd:00 15741953                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_substrait.so.1900
+7f8a6463d000-7f8a646f6000 r--p 002b0000 fd:00 15741953                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_substrait.so.1900
+7f8a646f6000-7f8a646f7000 ---p 00369000 fd:00 15741953                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_substrait.so.1900
+7f8a646f7000-7f8a64709000 r--p 00369000 fd:00 15741953                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_substrait.so.1900
+7f8a64709000-7f8a6470e000 rw-p 0037b000 fd:00 15741953                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_substrait.so.1900
+7f8a6470e000-7f8a64710000 rw-p 00000000 00:00 0 
+7f8a64710000-7f8a647a6000 r--p 00000000 fd:00 15741973                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_python.so.1900
+7f8a647a6000-7f8a648d1000 r-xp 00096000 fd:00 15741973                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_python.so.1900
+7f8a648d1000-7f8a64918000 r--p 001c1000 fd:00 15741973                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_python.so.1900
+7f8a64918000-7f8a64925000 r--p 00207000 fd:00 15741973                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_python.so.1900
+7f8a64925000-7f8a64928000 rw-p 00214000 fd:00 15741973                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/libarrow_python.so.1900
+7f8a64928000-7f8a64973000 r--p 00000000 fd:00 15741893                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/lib.cpython-310-x86_64-linux-gnu.so
+7f8a64973000-7f8a64bd5000 r-xp 0004b000 fd:00 15741893                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/lib.cpython-310-x86_64-linux-gnu.so
+7f8a64bd5000-7f8a64cc7000 r--p 002ad000 fd:00 15741893                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/lib.cpython-310-x86_64-linux-gnu.so
+7f8a64cc7000-7f8a64cc8000 ---p 0039f000 fd:00 15741893                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/lib.cpython-310-x86_64-linux-gnu.so
+7f8a64cc8000-7f8a64cca000 r--p 0039f000 fd:00 15741893                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/lib.cpython-310-x86_64-linux-gnu.so
+7f8a64cca000-7f8a64cf1000 rw-p 003a1000 fd:00 15741893                   /home/brysonbrown/.local/lib/python3.10/site-packages/pyarrow/lib.cpython-310-x86_64-linux-gnu.so
+7f8a64cf1000-7f8a65400000 rw-p 00000000 00:00 0 
+7f8a65400000-7f8a65403000 r-xp 00000000 fd:00 16415250                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libXau-154567c4.so.6.0.0
+7f8a65403000-7f8a65602000 ---p 00003000 fd:00 16415250                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libXau-154567c4.so.6.0.0
+7f8a65602000-7f8a65603000 r--p 00002000 fd:00 16415250                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libXau-154567c4.so.6.0.0
+7f8a65603000-7f8a65604000 rw-p 00000000 00:00 0 
+7f8a65604000-7f8a65605000 rw-p 00005000 fd:00 16415250                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libXau-154567c4.so.6.0.0
+7f8a6560b000-7f8a6560f000 r--p 00000000 fd:00 16420558                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/properties.cpython-310-x86_64-linux-gnu.so
+7f8a6560f000-7f8a6561b000 r-xp 00004000 fd:00 16420558                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/properties.cpython-310-x86_64-linux-gnu.so
+7f8a6561b000-7f8a6561e000 r--p 00010000 fd:00 16420558                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/properties.cpython-310-x86_64-linux-gnu.so
+7f8a6561e000-7f8a6561f000 r--p 00012000 fd:00 16420558                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/properties.cpython-310-x86_64-linux-gnu.so
+7f8a6561f000-7f8a65620000 rw-p 00013000 fd:00 16420558                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/properties.cpython-310-x86_64-linux-gnu.so
+7f8a65620000-7f8a65621000 rw-p 00000000 00:00 0 
+7f8a65621000-7f8a65623000 r--p 00000000 fd:00 42360087                   /usr/lib/python3.10/lib-dynload/_zoneinfo.cpython-310-x86_64-linux-gnu.so
+7f8a65623000-7f8a65629000 r-xp 00002000 fd:00 42360087                   /usr/lib/python3.10/lib-dynload/_zoneinfo.cpython-310-x86_64-linux-gnu.so
+7f8a65629000-7f8a6562b000 r--p 00008000 fd:00 42360087                   /usr/lib/python3.10/lib-dynload/_zoneinfo.cpython-310-x86_64-linux-gnu.so
+7f8a6562b000-7f8a6562c000 r--p 00009000 fd:00 42360087                   /usr/lib/python3.10/lib-dynload/_zoneinfo.cpython-310-x86_64-linux-gnu.so
+7f8a6562c000-7f8a6562d000 rw-p 0000a000 fd:00 42360087                   /usr/lib/python3.10/lib-dynload/_zoneinfo.cpython-310-x86_64-linux-gnu.so
+7f8a6562d000-7f8a65634000 r--p 00000000 fd:00 16420577                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/conversion.cpython-310-x86_64-linux-gnu.so
+7f8a65634000-7f8a65668000 r-xp 00007000 fd:00 16420577                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/conversion.cpython-310-x86_64-linux-gnu.so
+7f8a65668000-7f8a65672000 r--p 0003b000 fd:00 16420577                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/conversion.cpython-310-x86_64-linux-gnu.so
+7f8a65672000-7f8a65674000 r--p 00044000 fd:00 16420577                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/conversion.cpython-310-x86_64-linux-gnu.so
+7f8a65674000-7f8a65676000 rw-p 00046000 fd:00 16420577                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/conversion.cpython-310-x86_64-linux-gnu.so
+7f8a65676000-7f8a65677000 rw-p 00000000 00:00 0 
+7f8a65677000-7f8a6567b000 r--p 00000000 fd:00 16420585                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/np_datetime.cpython-310-x86_64-linux-gnu.so
+7f8a6567b000-7f8a65691000 r-xp 00004000 fd:00 16420585                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/np_datetime.cpython-310-x86_64-linux-gnu.so
+7f8a65691000-7f8a65696000 r--p 0001a000 fd:00 16420585                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/np_datetime.cpython-310-x86_64-linux-gnu.so
+7f8a65696000-7f8a65697000 ---p 0001f000 fd:00 16420585                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/np_datetime.cpython-310-x86_64-linux-gnu.so
+7f8a65697000-7f8a65698000 r--p 0001f000 fd:00 16420585                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/np_datetime.cpython-310-x86_64-linux-gnu.so
+7f8a65698000-7f8a65699000 rw-p 00020000 fd:00 16420585                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/np_datetime.cpython-310-x86_64-linux-gnu.so
+7f8a65699000-7f8a6569a000 rw-p 00000000 00:00 0 
+7f8a6569a000-7f8a656a1000 r--p 00000000 fd:00 16420579                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/dtypes.cpython-310-x86_64-linux-gnu.so
+7f8a656a1000-7f8a656bf000 r-xp 00007000 fd:00 16420579                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/dtypes.cpython-310-x86_64-linux-gnu.so
+7f8a656bf000-7f8a656c5000 r--p 00025000 fd:00 16420579                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/dtypes.cpython-310-x86_64-linux-gnu.so
+7f8a656c5000-7f8a656c6000 ---p 0002b000 fd:00 16420579                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/dtypes.cpython-310-x86_64-linux-gnu.so
+7f8a656c6000-7f8a656c8000 r--p 0002b000 fd:00 16420579                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/dtypes.cpython-310-x86_64-linux-gnu.so
+7f8a656c8000-7f8a656ca000 rw-p 0002d000 fd:00 16420579                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/dtypes.cpython-310-x86_64-linux-gnu.so
+7f8a656ca000-7f8a656cb000 rw-p 00000000 00:00 0 
+7f8a656cb000-7f8a656d1000 r--p 00000000 fd:00 16420548                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/missing.cpython-310-x86_64-linux-gnu.so
+7f8a656d1000-7f8a656f0000 r-xp 00006000 fd:00 16420548                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/missing.cpython-310-x86_64-linux-gnu.so
+7f8a656f0000-7f8a656f7000 r--p 00025000 fd:00 16420548                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/missing.cpython-310-x86_64-linux-gnu.so
+7f8a656f7000-7f8a656f9000 r--p 0002b000 fd:00 16420548                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/missing.cpython-310-x86_64-linux-gnu.so
+7f8a656f9000-7f8a656fb000 rw-p 0002d000 fd:00 16420548                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/missing.cpython-310-x86_64-linux-gnu.so
+7f8a656fb000-7f8a656fc000 rw-p 00000000 00:00 0 
+7f8a656fc000-7f8a65700000 r--p 00000000 fd:00 16415258                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/liblzma-64b7ab39.so.5.8.1
+7f8a65700000-7f8a6572d000 r-xp 00004000 fd:00 16415258                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/liblzma-64b7ab39.so.5.8.1
+7f8a6572d000-7f8a6573a000 r--p 00031000 fd:00 16415258                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/liblzma-64b7ab39.so.5.8.1
+7f8a6573a000-7f8a6573b000 r--p 0003e000 fd:00 16415258                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/liblzma-64b7ab39.so.5.8.1
+7f8a6573b000-7f8a6573e000 rw-p 0003f000 fd:00 16415258                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/liblzma-64b7ab39.so.5.8.1
+7f8a6573e000-7f8a6574a000 r--p 00000000 fd:00 16415266                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libxcb-64009ff3.so.1.1.0
+7f8a6574a000-7f8a65765000 r-xp 0000c000 fd:00 16415266                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libxcb-64009ff3.so.1.1.0
+7f8a65765000-7f8a6576f000 r--p 00027000 fd:00 16415266                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libxcb-64009ff3.so.1.1.0
+7f8a6576f000-7f8a65770000 r--p 00030000 fd:00 16415266                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libxcb-64009ff3.so.1.1.0
+7f8a65770000-7f8a65771000 rw-p 00031000 fd:00 16415266                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libxcb-64009ff3.so.1.1.0
+7f8a65771000-7f8a6577c000 rw-p 00033000 fd:00 16415266                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libxcb-64009ff3.so.1.1.0
+7f8a6577c000-7f8a65784000 r--p 00000000 fd:00 16415259                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libopenjp2-56811f71.so.2.5.3
+7f8a65784000-7f8a657f3000 r-xp 00008000 fd:00 16415259                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libopenjp2-56811f71.so.2.5.3
+7f8a657f3000-7f8a65806000 r--p 00077000 fd:00 16415259                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libopenjp2-56811f71.so.2.5.3
+7f8a65806000-7f8a65807000 r--p 0008a000 fd:00 16415259                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libopenjp2-56811f71.so.2.5.3
+7f8a65807000-7f8a65808000 rw-p 0008b000 fd:00 16415259                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libopenjp2-56811f71.so.2.5.3
+7f8a65808000-7f8a6580b000 rw-p 0008d000 fd:00 16415259                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libopenjp2-56811f71.so.2.5.3
+7f8a6580b000-7f8a65811000 r--p 00000000 fd:00 16415256                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libjpeg-8a13c6e0.so.62.4.0
+7f8a65811000-7f8a658a8000 r-xp 00006000 fd:00 16415256                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libjpeg-8a13c6e0.so.62.4.0
+7f8a658a8000-7f8a658d1000 r--p 0009d000 fd:00 16415256                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libjpeg-8a13c6e0.so.62.4.0
+7f8a658d1000-7f8a658d2000 r--p 000c6000 fd:00 16415256                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libjpeg-8a13c6e0.so.62.4.0
+7f8a658d2000-7f8a658d7000 rw-p 000c7000 fd:00 16415256                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libjpeg-8a13c6e0.so.62.4.0
+7f8a658d7000-7f8a658df000 r--p 00000000 fd:00 16415262                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libtiff-13a02c81.so.6.1.0
+7f8a658df000-7f8a65952000 r-xp 00008000 fd:00 16415262                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libtiff-13a02c81.so.6.1.0
+7f8a65952000-7f8a65984000 r--p 0007b000 fd:00 16415262                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libtiff-13a02c81.so.6.1.0
+7f8a65984000-7f8a65988000 r--p 000ad000 fd:00 16415262                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libtiff-13a02c81.so.6.1.0
+7f8a65988000-7f8a65989000 rw-p 000b1000 fd:00 16415262                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libtiff-13a02c81.so.6.1.0
+7f8a65989000-7f8a6598d000 rw-p 000b3000 fd:00 16415262                   /home/brysonbrown/.local/lib/python3.10/site-packages/pillow.libs/libtiff-13a02c81.so.6.1.0
+7f8a6598d000-7f8a659a1000 r--p 00000000 fd:00 16415228                   /home/brysonbrown/.local/lib/python3.10/site-packages/PIL/_imaging.cpython-310-x86_64-linux-gnu.so
+7f8a659a1000-7f8a65a27000 r-xp 00014000 fd:00 16415228                   /home/brysonbrown/.local/lib/python3.10/site-packages/PIL/_imaging.cpython-310-x86_64-linux-gnu.so
+7f8a65a27000-7f8a65a38000 r--p 0009a000 fd:00 16415228                   /home/brysonbrown/.local/lib/python3.10/site-packages/PIL/_imaging.cpython-310-x86_64-linux-gnu.so
+7f8a65a38000-7f8a65a3c000 r--p 000ab000 fd:00 16415228                   /home/brysonbrown/.local/lib/python3.10/site-packages/PIL/_imaging.cpython-310-x86_64-linux-gnu.so
+7f8a65a3c000-7f8a65a40000 rw-p 000af000 fd:00 16415228                   /home/brysonbrown/.local/lib/python3.10/site-packages/PIL/_imaging.cpython-310-x86_64-linux-gnu.so
+7f8a65a40000-7f8a65a47000 rw-p 0032a000 fd:00 16415228                   /home/brysonbrown/.local/lib/python3.10/site-packages/PIL/_imaging.cpython-310-x86_64-linux-gnu.so
+7f8a65a47000-7f8a65b47000 rw-p 00000000 00:00 0 
+7f8a65b47000-7f8a65e7f000 r--p 00000000 fd:00 16017892                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/core/kernels/libtfkernel_sobol_op.so
+7f8a65e7f000-7f8a65f64000 r-xp 00337000 fd:00 16017892                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/core/kernels/libtfkernel_sobol_op.so
+7f8a65f64000-7f8a65f6c000 r--p 0041b000 fd:00 16017892                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/core/kernels/libtfkernel_sobol_op.so
+7f8a65f6c000-7f8a65f70000 rw-p 00422000 fd:00 16017892                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/core/kernels/libtfkernel_sobol_op.so
+7f8a65f70000-7f8a66074000 rw-p 00000000 00:00 0 
+7f8a66074000-7f8a86b8e000 r--p 00000000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f8a86b8e000-7f8a9b40b000 r-xp 20b19000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f8a9b40b000-7f8a9bb43000 r--p 35395000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f8a9bb43000-7f8a9bb97000 rw-p 35acc000 fd:00 16017651                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.so.2
+7f8a9bb97000-7f8a9bc7b000 rw-p 00000000 00:00 0 
+7f8a9bc7b000-7f8aa282e000 r--p 00000000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f8aa282e000-7f8aa3ebc000 r-xp 06bb2000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f8aa3ebc000-7f8aa3f73000 r--p 0823f000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f8aa3f73000-7f8aa3fcf000 rw-p 082f5000 fd:00 16017650                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/libtensorflow_framework.so.2
+7f8aa3fcf000-7f8aa4000000 rw-p 00000000 00:00 0 
+7f8aa4000000-7f8aa4032000 rw-p 00000000 00:00 0 
+7f8aa4032000-7f8aa8000000 ---p 00000000 00:00 0 
+7f8aa8002000-7f8aa8005000 r--p 00000000 fd:00 16420574                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/base.cpython-310-x86_64-linux-gnu.so
+7f8aa8005000-7f8aa800c000 r-xp 00003000 fd:00 16420574                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/base.cpython-310-x86_64-linux-gnu.so
+7f8aa800c000-7f8aa800e000 r--p 0000a000 fd:00 16420574                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/base.cpython-310-x86_64-linux-gnu.so
+7f8aa800e000-7f8aa800f000 ---p 0000c000 fd:00 16420574                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/base.cpython-310-x86_64-linux-gnu.so
+7f8aa800f000-7f8aa8010000 r--p 0000c000 fd:00 16420574                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/base.cpython-310-x86_64-linux-gnu.so
+7f8aa8010000-7f8aa8011000 rw-p 0000d000 fd:00 16420574                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/base.cpython-310-x86_64-linux-gnu.so
+7f8aa8011000-7f8aa8015000 r--p 00000000 fd:00 16420575                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/ccalendar.cpython-310-x86_64-linux-gnu.so
+7f8aa8015000-7f8aa8023000 r-xp 00004000 fd:00 16420575                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/ccalendar.cpython-310-x86_64-linux-gnu.so
+7f8aa8023000-7f8aa8026000 r--p 00012000 fd:00 16420575                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/ccalendar.cpython-310-x86_64-linux-gnu.so
+7f8aa8026000-7f8aa8027000 ---p 00015000 fd:00 16420575                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/ccalendar.cpython-310-x86_64-linux-gnu.so
+7f8aa8027000-7f8aa8028000 r--p 00015000 fd:00 16420575                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/ccalendar.cpython-310-x86_64-linux-gnu.so
+7f8aa8028000-7f8aa8029000 rw-p 00016000 fd:00 16420575                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/tslibs/ccalendar.cpython-310-x86_64-linux-gnu.so
+7f8aa8029000-7f8aa803a000 r--p 00000000 fd:00 48247421                   /usr/local/lib/python3.10/dist-packages/optree/_C.cpython-310-x86_64-linux-gnu.so
+7f8aa803a000-7f8aa80a2000 r-xp 00011000 fd:00 48247421                   /usr/local/lib/python3.10/dist-packages/optree/_C.cpython-310-x86_64-linux-gnu.so
+7f8aa80a2000-7f8aa80be000 r--p 00079000 fd:00 48247421                   /usr/local/lib/python3.10/dist-packages/optree/_C.cpython-310-x86_64-linux-gnu.so
+7f8aa80be000-7f8aa80c0000 r--p 00094000 fd:00 48247421                   /usr/local/lib/python3.10/dist-packages/optree/_C.cpython-310-x86_64-linux-gnu.so
+7f8aa80c0000-7f8aa80c1000 rw-p 00096000 fd:00 48247421                   /usr/local/lib/python3.10/dist-packages/optree/_C.cpython-310-x86_64-linux-gnu.so
+7f8aa80c1000-7f8aa81c1000 rw-p 00000000 00:00 0 
+7f8aa81c1000-7f8aa81d1000 r--p 00000000 fd:00 16018071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_quantize_training.so
+7f8aa81d1000-7f8aa81e8000 r-xp 0000f000 fd:00 16018071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_quantize_training.so
+7f8aa81e8000-7f8aa81ea000 r--p 00025000 fd:00 16018071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_quantize_training.so
+7f8aa81ea000-7f8aa81eb000 rw-p 00026000 fd:00 16018071                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_quantize_training.so
+7f8aa81eb000-7f8aa82ed000 rw-p 00000000 00:00 0 
+7f8aa82ed000-7f8aa834f000 r--p 00000000 fd:00 16019270                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/tpu/_pywrap_sparse_core_layout.so
+7f8aa834f000-7f8aa8444000 r-xp 00061000 fd:00 16019270                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/tpu/_pywrap_sparse_core_layout.so
+7f8aa8444000-7f8aa844b000 r--p 00155000 fd:00 16019270                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/tpu/_pywrap_sparse_core_layout.so
+7f8aa844b000-7f8aa844e000 rw-p 0015b000 fd:00 16019270                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/tpu/_pywrap_sparse_core_layout.so
+7f8aa844e000-7f8aa8551000 rw-p 00000000 00:00 0 
+7f8aa8551000-7f8aa85b2000 r--p 00000000 fd:00 16017722                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_quantize_model.so
+7f8aa85b2000-7f8aa86a1000 r-xp 00060000 fd:00 16017722                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_quantize_model.so
+7f8aa86a1000-7f8aa86a8000 r--p 0014e000 fd:00 16017722                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_quantize_model.so
+7f8aa86a8000-7f8aa86aa000 rw-p 00154000 fd:00 16017722                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_quantize_model.so
+7f8aa86aa000-7f8aa86ad000 rw-p 00000000 00:00 0 
+7f8aa86ad000-7f8aa86b2000 rw-p 001ea000 fd:00 16017722                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_quantize_model.so
+7f8aa86b2000-7f8aa86c1000 r--p 00000000 fd:00 16018221                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tfprof.so
+7f8aa86c1000-7f8aa86d4000 r-xp 0000e000 fd:00 16018221                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tfprof.so
+7f8aa86d4000-7f8aa86d6000 r--p 00020000 fd:00 16018221                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tfprof.so
+7f8aa86d6000-7f8aa86d7000 rw-p 00021000 fd:00 16018221                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/_pywrap_tfprof.so
+7f8aa86d7000-7f8aa87d7000 rw-p 00000000 00:00 0 
+7f8aa87d7000-7f8aa87e6000 r--p 00000000 fd:00 16018063                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_mlir.so
+7f8aa87e6000-7f8aa87fd000 r-xp 0000e000 fd:00 16018063                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_mlir.so
+7f8aa87fd000-7f8aa87fe000 r--p 00024000 fd:00 16018063                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_mlir.so
+7f8aa87fe000-7f8aa87ff000 rw-p 00024000 fd:00 16018063                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/_pywrap_mlir.so
+7f8aa87ff000-7f8aa8815000 r--p 00000000 fd:00 16017998                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/analyzer_wrapper/_pywrap_analyzer_wrapper.so
+7f8aa8815000-7f8aa882d000 r-xp 00015000 fd:00 16017998                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/analyzer_wrapper/_pywrap_analyzer_wrapper.so
+7f8aa882d000-7f8aa8830000 r--p 0002c000 fd:00 16017998                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/analyzer_wrapper/_pywrap_analyzer_wrapper.so
+7f8aa8830000-7f8aa8831000 rw-p 0002e000 fd:00 16017998                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/analyzer_wrapper/_pywrap_analyzer_wrapper.so
+7f8aa8831000-7f8aa88c3000 r--p 00000000 fd:00 16018018                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/interpreter_wrapper/_pywrap_tensorflow_interpreter_wrapper.so
+7f8aa88c3000-7f8aa8d52000 r-xp 00091000 fd:00 16018018                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/interpreter_wrapper/_pywrap_tensorflow_interpreter_wrapper.so
+7f8aa8d52000-7f8aa8d57000 r--p 0051f000 fd:00 16018018                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/interpreter_wrapper/_pywrap_tensorflow_interpreter_wrapper.so
+7f8aa8d57000-7f8aa8d5d000 rw-p 00523000 fd:00 16018018                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/interpreter_wrapper/_pywrap_tensorflow_interpreter_wrapper.so
+7f8aa8d5d000-7f8aa8d61000 rw-p 00000000 00:00 0 
+7f8aa8d61000-7f8aa8da5000 r--p 00000000 fd:00 16017972                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/experimental/microfrontend/python/ops/_audio_microfrontend_op.so
+7f8aa8da5000-7f8aa8e3a000 r-xp 00043000 fd:00 16017972                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/experimental/microfrontend/python/ops/_audio_microfrontend_op.so
+7f8aa8e3a000-7f8aa8e40000 r--p 000d8000 fd:00 16017972                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/experimental/microfrontend/python/ops/_audio_microfrontend_op.so
+7f8aa8e40000-7f8aa8e41000 rw-p 000dd000 fd:00 16017972                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/experimental/microfrontend/python/ops/_audio_microfrontend_op.so
+7f8aa8e41000-7f8aa8e43000 rw-p 00000000 00:00 0 
+7f8aa8e43000-7f8aa8e96000 r--p 00000000 fd:00 16018004                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/metrics/_pywrap_tensorflow_lite_metrics_wrapper.so
+7f8aa8e96000-7f8aa8f6a000 r-xp 00052000 fd:00 16018004                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/metrics/_pywrap_tensorflow_lite_metrics_wrapper.so
+7f8aa8f6a000-7f8aa8f70000 r--p 00125000 fd:00 16018004                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/metrics/_pywrap_tensorflow_lite_metrics_wrapper.so
+7f8aa8f70000-7f8aa8f72000 rw-p 0012b000 fd:00 16018004                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/lite/python/metrics/_pywrap_tensorflow_lite_metrics_wrapper.so
+7f8aa8f72000-7f8aa9272000 rw-p 00000000 00:00 0 
+7f8aa9272000-7f8aa9282000 r--p 00000000 fd:00 16017719                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_function_lib.so
+7f8aa9282000-7f8aa92a1000 r-xp 0000f000 fd:00 16017719                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_function_lib.so
+7f8aa92a1000-7f8aa92a3000 r--p 0002d000 fd:00 16017719                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_function_lib.so
+7f8aa92a3000-7f8aa92a4000 rw-p 0002e000 fd:00 16017719                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_function_lib.so
+7f8aa92a4000-7f8aa92a8000 rw-p 0004b000 fd:00 16017719                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/quantization/tensorflow/python/pywrap_function_lib.so
+7f8aa92a8000-7f8aa92b5000 r--p 00000000 fd:00 16017750                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/lite/python/_pywrap_converter_api.so
+7f8aa92b5000-7f8aa92ca000 r-xp 0000c000 fd:00 16017750                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/lite/python/_pywrap_converter_api.so
+7f8aa92ca000-7f8aa92cb000 r--p 00020000 fd:00 16017750                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/lite/python/_pywrap_converter_api.so
+7f8aa92cb000-7f8aa92cc000 rw-p 00020000 fd:00 16017750                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/lite/python/_pywrap_converter_api.so
+7f8aa92cc000-7f8aa92cf000 rw-p 00035000 fd:00 16017750                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/compiler/mlir/lite/python/_pywrap_converter_api.so
+7f8aa92cf000-7f8aa93cf000 rw-p 00000000 00:00 0 
+7f8aa93cf000-7f8aa93d8000 r--p 00000000 fd:00 16019060                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_op_gen.so
+7f8aa93d8000-7f8aa93ea000 r-xp 00008000 fd:00 16019060                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_op_gen.so
+7f8aa93ea000-7f8aa93eb000 r--p 00019000 fd:00 16019060                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_op_gen.so
+7f8aa93eb000-7f8aa93ec000 rw-p 00019000 fd:00 16019060                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/framework/_pywrap_python_op_gen.so
+7f8aa93ec000-7f8aa94ec000 rw-p 00000000 00:00 0 
+7f8aa94ec000-7f8aa94fd000 r--p 00000000 fd:00 16018173                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_debug_events_writer.so
+7f8aa94fd000-7f8aa9518000 r-xp 00010000 fd:00 16018173                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_debug_events_writer.so
+7f8aa9518000-7f8aa9519000 r--p 0002a000 fd:00 16018173                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_debug_events_writer.so
+7f8aa9519000-7f8aa951a000 rw-p 0002a000 fd:00 16018173                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/client/_pywrap_debug_events_writer.so
+7f8aa951a000-7f8aa961d000 rw-p 00000000 00:00 0 
+7f8aa961d000-7f8aa9629000 r--p 00000000 fd:00 16018224                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/fast_module_type.so
+7f8aa9629000-7f8aa963b000 r-xp 0000b000 fd:00 16018224                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/fast_module_type.so
+7f8aa963b000-7f8aa963d000 r--p 0001c000 fd:00 16018224                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/fast_module_type.so
+7f8aa963d000-7f8aa963e000 rw-p 0001d000 fd:00 16018224                   /home/brysonbrown/.local/lib/python3.10/site-packages/tensorflow/python/util/fast_module_type.so
+7f8aa963e000-7f8aa9643000 r--p 00000000 fd:00 16274106                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_reordering.cpython-310-x86_64-linux-gnu.so
+7f8aa9643000-7f8aa967a000 r-xp 00005000 fd:00 16274106                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_reordering.cpython-310-x86_64-linux-gnu.so
+7f8aa967a000-7f8aa9684000 r--p 0003c000 fd:00 16274106                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_reordering.cpython-310-x86_64-linux-gnu.so
+7f8aa9684000-7f8aa9685000 r--p 00045000 fd:00 16274106                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_reordering.cpython-310-x86_64-linux-gnu.so
+7f8aa9685000-7f8aa9687000 rw-p 00046000 fd:00 16274106                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_reordering.cpython-310-x86_64-linux-gnu.so
+7f8aa9687000-7f8aa9688000 rw-p 00000000 00:00 0 
+7f8aa9688000-7f8aa968d000 r--p 00000000 fd:00 16274099                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_matching.cpython-310-x86_64-linux-gnu.so
+7f8aa968d000-7f8aa96c6000 r-xp 00005000 fd:00 16274099                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_matching.cpython-310-x86_64-linux-gnu.so
+7f8aa96c6000-7f8aa96d4000 r--p 0003e000 fd:00 16274099                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_matching.cpython-310-x86_64-linux-gnu.so
+7f8aa96d4000-7f8aa96d5000 r--p 0004b000 fd:00 16274099                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_matching.cpython-310-x86_64-linux-gnu.so
+7f8aa96d5000-7f8aa96d7000 rw-p 0004c000 fd:00 16274099                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_matching.cpython-310-x86_64-linux-gnu.so
+7f8aa96d7000-7f8aa96d8000 rw-p 00000000 00:00 0 
+7f8aa96d8000-7f8aa96dd000 r--p 00000000 fd:00 16274104                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_flow.cpython-310-x86_64-linux-gnu.so
+7f8aa96dd000-7f8aa9716000 r-xp 00005000 fd:00 16274104                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_flow.cpython-310-x86_64-linux-gnu.so
+7f8aa9716000-7f8aa9722000 r--p 0003e000 fd:00 16274104                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_flow.cpython-310-x86_64-linux-gnu.so
+7f8aa9722000-7f8aa9723000 ---p 0004a000 fd:00 16274104                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_flow.cpython-310-x86_64-linux-gnu.so
+7f8aa9723000-7f8aa9724000 r--p 0004a000 fd:00 16274104                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_flow.cpython-310-x86_64-linux-gnu.so
+7f8aa9724000-7f8aa9726000 rw-p 0004b000 fd:00 16274104                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_flow.cpython-310-x86_64-linux-gnu.so
+7f8aa9726000-7f8aa9727000 rw-p 00000000 00:00 0 
+7f8aa9727000-7f8aa972c000 r--p 00000000 fd:00 16274101                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_min_spanning_tree.cpython-310-x86_64-linux-gnu.so
+7f8aa972c000-7f8aa9756000 r-xp 00005000 fd:00 16274101                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_min_spanning_tree.cpython-310-x86_64-linux-gnu.so
+7f8aa9756000-7f8aa975f000 r--p 0002f000 fd:00 16274101                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_min_spanning_tree.cpython-310-x86_64-linux-gnu.so
+7f8aa975f000-7f8aa9760000 r--p 00037000 fd:00 16274101                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_min_spanning_tree.cpython-310-x86_64-linux-gnu.so
+7f8aa9760000-7f8aa9762000 rw-p 00038000 fd:00 16274101                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_min_spanning_tree.cpython-310-x86_64-linux-gnu.so
+7f8aa9762000-7f8aa9763000 rw-p 00000000 00:00 0 
+7f8aa9763000-7f8aa9768000 r--p 00000000 fd:00 16274103                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_traversal.cpython-310-x86_64-linux-gnu.so
+7f8aa9768000-7f8aa97e6000 r-xp 00005000 fd:00 16274103                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_traversal.cpython-310-x86_64-linux-gnu.so
+7f8aa97e6000-7f8aa97f7000 r--p 00083000 fd:00 16274103                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_traversal.cpython-310-x86_64-linux-gnu.so
+7f8aa97f7000-7f8aa97f8000 r--p 00093000 fd:00 16274103                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_traversal.cpython-310-x86_64-linux-gnu.so
+7f8aa97f8000-7f8aa97fa000 rw-p 00094000 fd:00 16274103                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_traversal.cpython-310-x86_64-linux-gnu.so
+7f8aa97fa000-7f8aa97fb000 rw-p 00000000 00:00 0 
+7f8aa97fb000-7f8aa97fe000 r--p 00000000 fd:00 16274098                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_tools.cpython-310-x86_64-linux-gnu.so
+7f8aa97fe000-7f8aa981f000 r-xp 00003000 fd:00 16274098                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_tools.cpython-310-x86_64-linux-gnu.so
+7f8aa981f000-7f8aa9829000 r--p 00024000 fd:00 16274098                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_tools.cpython-310-x86_64-linux-gnu.so
+7f8aa9829000-7f8aa982a000 r--p 0002d000 fd:00 16274098                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_tools.cpython-310-x86_64-linux-gnu.so
+7f8aa982a000-7f8aa982b000 rw-p 0002e000 fd:00 16274098                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_tools.cpython-310-x86_64-linux-gnu.so
+7f8aa982b000-7f8aa982c000 rw-p 00000000 00:00 0 
+7f8aa982c000-7f8aa9831000 r--p 00000000 fd:00 16274105                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_shortest_path.cpython-310-x86_64-linux-gnu.so
+7f8aa9831000-7f8aa9894000 r-xp 00005000 fd:00 16274105                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_shortest_path.cpython-310-x86_64-linux-gnu.so
+7f8aa9894000-7f8aa98a9000 r--p 00068000 fd:00 16274105                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_shortest_path.cpython-310-x86_64-linux-gnu.so
+7f8aa98a9000-7f8aa98aa000 ---p 0007d000 fd:00 16274105                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_shortest_path.cpython-310-x86_64-linux-gnu.so
+7f8aa98aa000-7f8aa98ab000 r--p 0007d000 fd:00 16274105                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_shortest_path.cpython-310-x86_64-linux-gnu.so
+7f8aa98ab000-7f8aa98ad000 rw-p 0007e000 fd:00 16274105                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/csgraph/_shortest_path.cpython-310-x86_64-linux-gnu.so
+7f8aa98ad000-7f8aa99af000 rw-p 00000000 00:00 0 
+7f8aa99af000-7f8aa99cc000 r--p 00000000 fd:00 16274034                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_zpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa99cc000-7f8aa99eb000 r-xp 0001d000 fd:00 16274034                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_zpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa99eb000-7f8aa99fb000 r--p 0003c000 fd:00 16274034                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_zpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa99fb000-7f8aa99fc000 ---p 0004c000 fd:00 16274034                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_zpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa99fc000-7f8aa99fd000 r--p 0004c000 fd:00 16274034                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_zpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa99fd000-7f8aa9a05000 rw-p 0004d000 fd:00 16274034                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_zpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9a05000-7f8aa9a3b000 rw-p 00000000 00:00 0 
+7f8aa9a3b000-7f8aa9a53000 rw-p 00071000 fd:00 16274034                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_zpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9a53000-7f8aa9a70000 r--p 00000000 fd:00 16274035                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_cpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9a70000-7f8aa9a91000 r-xp 0001d000 fd:00 16274035                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_cpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9a91000-7f8aa9aa1000 r--p 0003e000 fd:00 16274035                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_cpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9aa1000-7f8aa9aa2000 ---p 0004e000 fd:00 16274035                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_cpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9aa2000-7f8aa9aa3000 r--p 0004e000 fd:00 16274035                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_cpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9aa3000-7f8aa9aab000 rw-p 0004f000 fd:00 16274035                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_cpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9aab000-7f8aa9ac6000 rw-p 00000000 00:00 0 
+7f8aa9ac6000-7f8aa9ade000 rw-p 00073000 fd:00 16274035                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_cpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9ade000-7f8aa9afb000 r--p 00000000 fd:00 16274036                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_dpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9afb000-7f8aa9b16000 r-xp 0001d000 fd:00 16274036                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_dpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9b16000-7f8aa9b26000 r--p 00038000 fd:00 16274036                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_dpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9b26000-7f8aa9b27000 r--p 00047000 fd:00 16274036                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_dpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9b27000-7f8aa9b2f000 rw-p 00048000 fd:00 16274036                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_dpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9b2f000-7f8aa9b47000 rw-p 0006b000 fd:00 16274036                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_dpropack.cpython-310-x86_64-linux-gnu.so
+7f8aa9b47000-7f8aa9b65000 r--p 00000000 fd:00 16274064                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_eigen/arpack/_arpack.cpython-310-x86_64-linux-gnu.so
+7f8aa9b65000-7f8aa9bbc000 r-xp 0001e000 fd:00 16274064                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_eigen/arpack/_arpack.cpython-310-x86_64-linux-gnu.so
+7f8aa9bbc000-7f8aa9bd8000 r--p 00075000 fd:00 16274064                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_eigen/arpack/_arpack.cpython-310-x86_64-linux-gnu.so
+7f8aa9bd8000-7f8aa9bd9000 r--p 00090000 fd:00 16274064                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_eigen/arpack/_arpack.cpython-310-x86_64-linux-gnu.so
+7f8aa9bd9000-7f8aa9be7000 rw-p 00091000 fd:00 16274064                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_eigen/arpack/_arpack.cpython-310-x86_64-linux-gnu.so
+7f8aa9be7000-7f8aa9be8000 rw-p 00000000 00:00 0 
+7f8aa9be8000-7f8aa9c00000 rw-p 000bf000 fd:00 16274064                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_eigen/arpack/_arpack.cpython-310-x86_64-linux-gnu.so
+7f8aa9c00000-7f8aabc00000 rw-p 00000000 00:00 0 
+7f8aabc00000-7f8aabc3b000 r-xp 00000000 fd:00 16274353                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libquadmath-96973f99-934c22de.so.0.0.0
+7f8aabc3b000-7f8aabe3a000 ---p 0003b000 fd:00 16274353                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libquadmath-96973f99-934c22de.so.0.0.0
+7f8aabe3a000-7f8aabe3b000 r--p 0003a000 fd:00 16274353                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libquadmath-96973f99-934c22de.so.0.0.0
+7f8aabe3b000-7f8aabe3e000 rw-p 0003b000 fd:00 16274353                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libquadmath-96973f99-934c22de.so.0.0.0
+7f8aabe3e000-7f8aabe5b000 r--p 00000000 fd:00 16274033                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-310-x86_64-linux-gnu.so
+7f8aabe5b000-7f8aabe76000 r-xp 0001d000 fd:00 16274033                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-310-x86_64-linux-gnu.so
+7f8aabe76000-7f8aabe86000 r--p 00038000 fd:00 16274033                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-310-x86_64-linux-gnu.so
+7f8aabe86000-7f8aabe87000 r--p 00047000 fd:00 16274033                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-310-x86_64-linux-gnu.so
+7f8aabe87000-7f8aabe8f000 rw-p 00048000 fd:00 16274033                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-310-x86_64-linux-gnu.so
+7f8aabe8f000-7f8aabea7000 rw-p 0006b000 fd:00 16274033                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-310-x86_64-linux-gnu.so
+7f8aabea7000-7f8aabec3000 r--p 00000000 fd:00 16274051                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_dsolve/_superlu.cpython-310-x86_64-linux-gnu.so
+7f8aabec3000-7f8aabf1c000 r-xp 0001c000 fd:00 16274051                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_dsolve/_superlu.cpython-310-x86_64-linux-gnu.so
+7f8aabf1c000-7f8aabf32000 r--p 00075000 fd:00 16274051                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_dsolve/_superlu.cpython-310-x86_64-linux-gnu.so
+7f8aabf32000-7f8aabf33000 r--p 0008a000 fd:00 16274051                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_dsolve/_superlu.cpython-310-x86_64-linux-gnu.so
+7f8aabf33000-7f8aabf38000 rw-p 0008b000 fd:00 16274051                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_dsolve/_superlu.cpython-310-x86_64-linux-gnu.so
+7f8aabf38000-7f8aabf50000 rw-p 000af000 fd:00 16274051                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/linalg/_dsolve/_superlu.cpython-310-x86_64-linux-gnu.so
+7f8aabf50000-7f8aabf57000 r--p 00000000 fd:00 16272809                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_blas.cpython-310-x86_64-linux-gnu.so
+7f8aabf57000-7f8aabf83000 r-xp 00007000 fd:00 16272809                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_blas.cpython-310-x86_64-linux-gnu.so
+7f8aabf83000-7f8aabf91000 r--p 00033000 fd:00 16272809                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_blas.cpython-310-x86_64-linux-gnu.so
+7f8aabf91000-7f8aabf92000 ---p 00041000 fd:00 16272809                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_blas.cpython-310-x86_64-linux-gnu.so
+7f8aabf92000-7f8aabf93000 r--p 00041000 fd:00 16272809                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_blas.cpython-310-x86_64-linux-gnu.so
+7f8aabf93000-7f8aabf95000 rw-p 00042000 fd:00 16272809                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_blas.cpython-310-x86_64-linux-gnu.so
+7f8aabf95000-7f8aabf96000 rw-p 00000000 00:00 0 
+7f8aabf96000-7f8aabf9c000 rw-p 00051000 fd:00 16272809                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_blas.cpython-310-x86_64-linux-gnu.so
+7f8aabf9c000-7f8aabfb7000 r--p 00000000 fd:00 16272788                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_expm.cpython-310-x86_64-linux-gnu.so
+7f8aabfb7000-7f8aabfd7000 r-xp 0001b000 fd:00 16272788                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_expm.cpython-310-x86_64-linux-gnu.so
+7f8aabfd7000-7f8aabfe5000 r--p 0003b000 fd:00 16272788                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_expm.cpython-310-x86_64-linux-gnu.so
+7f8aabfe5000-7f8aabfe6000 r--p 00048000 fd:00 16272788                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_expm.cpython-310-x86_64-linux-gnu.so
+7f8aabfe6000-7f8aabfea000 rw-p 00049000 fd:00 16272788                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_expm.cpython-310-x86_64-linux-gnu.so
+7f8aabfea000-7f8aac000000 rw-p 00067000 fd:00 16272788                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_expm.cpython-310-x86_64-linux-gnu.so
+7f8aac000000-7f8aac021000 rw-p 00000000 00:00 0 
+7f8aac021000-7f8ab0000000 ---p 00000000 00:00 0 
+7f8ab0002000-7f8ab0004000 r--p 00000000 fd:00 16420554                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_datetime.cpython-310-x86_64-linux-gnu.so
+7f8ab0004000-7f8ab0009000 r-xp 00002000 fd:00 16420554                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_datetime.cpython-310-x86_64-linux-gnu.so
+7f8ab0009000-7f8ab000b000 r--p 00007000 fd:00 16420554                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_datetime.cpython-310-x86_64-linux-gnu.so
+7f8ab000b000-7f8ab000c000 r--p 00008000 fd:00 16420554                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_datetime.cpython-310-x86_64-linux-gnu.so
+7f8ab000c000-7f8ab000d000 rw-p 00009000 fd:00 16420554                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_datetime.cpython-310-x86_64-linux-gnu.so
+7f8ab000d000-7f8ab0011000 r--p 00000000 fd:00 16272820                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_update.cpython-310-x86_64-linux-gnu.so
+7f8ab0011000-7f8ab004f000 r-xp 00004000 fd:00 16272820                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_update.cpython-310-x86_64-linux-gnu.so
+7f8ab004f000-7f8ab005f000 r--p 00042000 fd:00 16272820                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_update.cpython-310-x86_64-linux-gnu.so
+7f8ab005f000-7f8ab0060000 r--p 00051000 fd:00 16272820                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_update.cpython-310-x86_64-linux-gnu.so
+7f8ab0060000-7f8ab0061000 rw-p 00052000 fd:00 16272820                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_update.cpython-310-x86_64-linux-gnu.so
+7f8ab0061000-7f8ab0062000 rw-p 00000000 00:00 0 
+7f8ab0062000-7f8ab0067000 r--p 00000000 fd:00 16272773                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_sqrtm_triu.cpython-310-x86_64-linux-gnu.so
+7f8ab0067000-7f8ab0095000 r-xp 00005000 fd:00 16272773                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_sqrtm_triu.cpython-310-x86_64-linux-gnu.so
+7f8ab0095000-7f8ab009d000 r--p 00033000 fd:00 16272773                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_sqrtm_triu.cpython-310-x86_64-linux-gnu.so
+7f8ab009d000-7f8ab009e000 r--p 0003a000 fd:00 16272773                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_sqrtm_triu.cpython-310-x86_64-linux-gnu.so
+7f8ab009e000-7f8ab00a0000 rw-p 0003b000 fd:00 16272773                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_matfuncs_sqrtm_triu.cpython-310-x86_64-linux-gnu.so
+7f8ab00a0000-7f8ab00a1000 rw-p 00000000 00:00 0 
+7f8ab00a1000-7f8ab00a6000 r--p 00000000 fd:00 16272794                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_lu_cython.cpython-310-x86_64-linux-gnu.so
+7f8ab00a6000-7f8ab00d2000 r-xp 00005000 fd:00 16272794                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_lu_cython.cpython-310-x86_64-linux-gnu.so
+7f8ab00d2000-7f8ab00da000 r--p 00031000 fd:00 16272794                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_lu_cython.cpython-310-x86_64-linux-gnu.so
+7f8ab00da000-7f8ab00db000 r--p 00038000 fd:00 16272794                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_lu_cython.cpython-310-x86_64-linux-gnu.so
+7f8ab00db000-7f8ab00dd000 rw-p 00039000 fd:00 16272794                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_decomp_lu_cython.cpython-310-x86_64-linux-gnu.so
+7f8ab00dd000-7f8ab00de000 rw-p 00000000 00:00 0 
+7f8ab00de000-7f8ab00e3000 r--p 00000000 fd:00 16272776                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_solve_toeplitz.cpython-310-x86_64-linux-gnu.so
+7f8ab00e3000-7f8ab0114000 r-xp 00005000 fd:00 16272776                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_solve_toeplitz.cpython-310-x86_64-linux-gnu.so
+7f8ab0114000-7f8ab011c000 r--p 00036000 fd:00 16272776                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_solve_toeplitz.cpython-310-x86_64-linux-gnu.so
+7f8ab011c000-7f8ab011d000 ---p 0003e000 fd:00 16272776                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_solve_toeplitz.cpython-310-x86_64-linux-gnu.so
+7f8ab011d000-7f8ab011e000 r--p 0003e000 fd:00 16272776                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_solve_toeplitz.cpython-310-x86_64-linux-gnu.so
+7f8ab011e000-7f8ab0120000 rw-p 0003f000 fd:00 16272776                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_solve_toeplitz.cpython-310-x86_64-linux-gnu.so
+7f8ab0120000-7f8ab0121000 rw-p 00000000 00:00 0 
+7f8ab0121000-7f8ab013b000 r--p 00000000 fd:00 16272824                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_lapack.cpython-310-x86_64-linux-gnu.so
+7f8ab013b000-7f8ab015a000 r-xp 0001a000 fd:00 16272824                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_lapack.cpython-310-x86_64-linux-gnu.so
+7f8ab015a000-7f8ab01b2000 r--p 00039000 fd:00 16272824                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_lapack.cpython-310-x86_64-linux-gnu.so
+7f8ab01b2000-7f8ab01b3000 ---p 00091000 fd:00 16272824                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_lapack.cpython-310-x86_64-linux-gnu.so
+7f8ab01b3000-7f8ab01b4000 r--p 00091000 fd:00 16272824                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_lapack.cpython-310-x86_64-linux-gnu.so
+7f8ab01b4000-7f8ab01b8000 rw-p 00092000 fd:00 16272824                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_lapack.cpython-310-x86_64-linux-gnu.so
+7f8ab01b8000-7f8ab01ce000 rw-p 000c1000 fd:00 16272824                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/cython_lapack.cpython-310-x86_64-linux-gnu.so
+7f8ab01ce000-7f8ab020b000 r--p 00000000 fd:00 16272826                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_flapack.cpython-310-x86_64-linux-gnu.so
+7f8ab020b000-7f8ab02d8000 r-xp 0003d000 fd:00 16272826                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_flapack.cpython-310-x86_64-linux-gnu.so
+7f8ab02d8000-7f8ab0358000 r--p 0010a000 fd:00 16272826                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_flapack.cpython-310-x86_64-linux-gnu.so
+7f8ab0358000-7f8ab0359000 r--p 00189000 fd:00 16272826                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_flapack.cpython-310-x86_64-linux-gnu.so
+7f8ab0359000-7f8ab03e8000 rw-p 0018a000 fd:00 16272826                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_flapack.cpython-310-x86_64-linux-gnu.so
+7f8ab03e8000-7f8ab0400000 rw-p 00246000 fd:00 16272826                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_flapack.cpython-310-x86_64-linux-gnu.so
+7f8ab0400000-7f8ab0676000 r-xp 00000000 fd:00 16274350                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libgfortran-040039e1-0352e75f.so.5.0.0
+7f8ab0676000-7f8ab0875000 ---p 00276000 fd:00 16274350                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libgfortran-040039e1-0352e75f.so.5.0.0
+7f8ab0875000-7f8ab0876000 r--p 00275000 fd:00 16274350                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libgfortran-040039e1-0352e75f.so.5.0.0
+7f8ab0876000-7f8ab0878000 rw-p 00276000 fd:00 16274350                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libgfortran-040039e1-0352e75f.so.5.0.0
+7f8ab0878000-7f8ab08b1000 rw-p 0027b000 fd:00 16274350                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libgfortran-040039e1-0352e75f.so.5.0.0
+7f8ab08b8000-7f8ab08ba000 r--p 00000000 fd:00 16420555                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_parser.cpython-310-x86_64-linux-gnu.so
+7f8ab08ba000-7f8ab08c0000 r-xp 00002000 fd:00 16420555                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_parser.cpython-310-x86_64-linux-gnu.so
+7f8ab08c0000-7f8ab08c2000 r--p 00008000 fd:00 16420555                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_parser.cpython-310-x86_64-linux-gnu.so
+7f8ab08c2000-7f8ab08c3000 r--p 00009000 fd:00 16420555                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_parser.cpython-310-x86_64-linux-gnu.so
+7f8ab08c3000-7f8ab08c4000 rw-p 0000a000 fd:00 16420555                   /home/brysonbrown/.local/lib/python3.10/site-packages/pandas/_libs/pandas_parser.cpython-310-x86_64-linux-gnu.so
+7f8ab08c4000-7f8ab08c7000 r--p 00000000 fd:00 16272775                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_linalg_pythran.cpython-310-x86_64-linux-gnu.so
+7f8ab08c7000-7f8ab08db000 r-xp 00003000 fd:00 16272775                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_linalg_pythran.cpython-310-x86_64-linux-gnu.so
+7f8ab08db000-7f8ab08df000 r--p 00017000 fd:00 16272775                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_linalg_pythran.cpython-310-x86_64-linux-gnu.so
+7f8ab08df000-7f8ab08e0000 r--p 0001a000 fd:00 16272775                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_linalg_pythran.cpython-310-x86_64-linux-gnu.so
+7f8ab08e0000-7f8ab08e1000 rw-p 0001b000 fd:00 16272775                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_linalg_pythran.cpython-310-x86_64-linux-gnu.so
+7f8ab08e1000-7f8ab08e7000 r--p 00000000 fd:00 16272814                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_cythonized_array_utils.cpython-310-x86_64-linux-gnu.so
+7f8ab08e7000-7f8ab095b000 r-xp 00006000 fd:00 16272814                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_cythonized_array_utils.cpython-310-x86_64-linux-gnu.so
+7f8ab095b000-7f8ab0969000 r--p 0007a000 fd:00 16272814                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_cythonized_array_utils.cpython-310-x86_64-linux-gnu.so
+7f8ab0969000-7f8ab096a000 ---p 00088000 fd:00 16272814                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_cythonized_array_utils.cpython-310-x86_64-linux-gnu.so
+7f8ab096a000-7f8ab096b000 r--p 00088000 fd:00 16272814                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_cythonized_array_utils.cpython-310-x86_64-linux-gnu.so
+7f8ab096b000-7f8ab096e000 rw-p 00089000 fd:00 16272814                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_cythonized_array_utils.cpython-310-x86_64-linux-gnu.so
+7f8ab096e000-7f8ab0a6f000 rw-p 00000000 00:00 0 
+7f8ab0a6f000-7f8ab0b1a000 r--p 00000000 fd:00 16274351                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libscipy_openblas-68440149.so
+7f8ab0b1a000-7f8ab1c2b000 r-xp 000ab000 fd:00 16274351                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libscipy_openblas-68440149.so
+7f8ab1c2b000-7f8ab1dda000 r--p 011bc000 fd:00 16274351                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libscipy_openblas-68440149.so
+7f8ab1dda000-7f8ab1de0000 r--p 0136a000 fd:00 16274351                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libscipy_openblas-68440149.so
+7f8ab1de0000-7f8ab1deb000 rw-p 01370000 fd:00 16274351                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libscipy_openblas-68440149.so
+7f8ab1deb000-7f8ab1df3000 rw-p 00000000 00:00 0 
+7f8ab1df3000-7f8ab1eed000 rw-p 01435000 fd:00 16274351                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy.libs/libscipy_openblas-68440149.so
+7f8ab1eed000-7f8ab1f14000 r--p 00000000 fd:00 16272804                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_fblas.cpython-310-x86_64-linux-gnu.so
+7f8ab1f14000-7f8ab1f5c000 r-xp 00027000 fd:00 16272804                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_fblas.cpython-310-x86_64-linux-gnu.so
+7f8ab1f5c000-7f8ab1f89000 r--p 0006f000 fd:00 16272804                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_fblas.cpython-310-x86_64-linux-gnu.so
+7f8ab1f89000-7f8ab1f8a000 r--p 0009b000 fd:00 16272804                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_fblas.cpython-310-x86_64-linux-gnu.so
+7f8ab1f8a000-7f8ab1fb3000 rw-p 0009c000 fd:00 16272804                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_fblas.cpython-310-x86_64-linux-gnu.so
+7f8ab1fb3000-7f8ab1fcb000 rw-p 000e5000 fd:00 16272804                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/linalg/_fblas.cpython-310-x86_64-linux-gnu.so
+7f8ab1fcb000-7f8ab1fd1000 r--p 00000000 fd:00 16274014                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_csparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab1fd1000-7f8ab2075000 r-xp 00006000 fd:00 16274014                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_csparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2075000-7f8ab2084000 r--p 000aa000 fd:00 16274014                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_csparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2084000-7f8ab2085000 r--p 000b8000 fd:00 16274014                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_csparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2085000-7f8ab2088000 rw-p 000b9000 fd:00 16274014                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_csparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2088000-7f8ab208a000 rw-p 00000000 00:00 0 
+7f8ab208a000-7f8ab208d000 r--p 00000000 fd:00 16273997                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_sparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab208d000-7f8ab2444000 r-xp 00003000 fd:00 16273997                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_sparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2444000-7f8ab2496000 r--p 003ba000 fd:00 16273997                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_sparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2496000-7f8ab2497000 r--p 0040b000 fd:00 16273997                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_sparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2497000-7f8ab2498000 rw-p 0040c000 fd:00 16273997                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/sparse/_sparsetools.cpython-310-x86_64-linux-gnu.so
+7f8ab2498000-7f8ab2598000 rw-p 00000000 00:00 0 
+7f8ab2598000-7f8ab259c000 r--p 00000000 fd:00 16272983                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/_lib/_ccallback_c.cpython-310-x86_64-linux-gnu.so
+7f8ab259c000-7f8ab25aa000 r-xp 00004000 fd:00 16272983                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/_lib/_ccallback_c.cpython-310-x86_64-linux-gnu.so
+7f8ab25aa000-7f8ab25ad000 r--p 00012000 fd:00 16272983                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/_lib/_ccallback_c.cpython-310-x86_64-linux-gnu.so
+7f8ab25ad000-7f8ab25ae000 r--p 00014000 fd:00 16272983                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/_lib/_ccallback_c.cpython-310-x86_64-linux-gnu.so
+7f8ab25ae000-7f8ab25af000 rw-p 00015000 fd:00 16272983                   /home/brysonbrown/.local/lib/python3.10/site-packages/scipy/_lib/_ccallback_c.cpython-310-x86_64-linux-gnu.so
+7f8ab25af000-7f8ab26b0000 rw-p 00000000 00:00 0 
+7f8ab26b0000-7f8ab26b5000 r--p 00000000 fd:00 48249818                   /usr/local/lib/python3.10/dist-packages/h5py/_selector.cpython-310-x86_64-linux-gnu.so
+7f8ab26b5000-7f8ab26d6000 r-xp 00005000 fd:00 48249818                   /usr/local/lib/python3.10/dist-packages/h5py/_selector.cpython-310-x86_64-linux-gnu.so
+7f8ab26d6000-7f8ab26dc000 r--p 00026000 fd:00 48249818                   /usr/local/lib/python3.10/dist-packages/h5py/_selector.cpython-310-x86_64-linux-gnu.so
+7f8ab26dc000-7f8ab26dd000 r--p 0002b000 fd:00 48249818                   /usr/local/lib/python3.10/dist-packages/h5py/_selector.cpython-310-x86_64-linux-gnu.so
+7f8ab26dd000-7f8ab26df000 rw-p 0002c000 fd:00 48249818                   /usr/local/lib/python3.10/dist-packages/h5py/_selector.cpython-310-x86_64-linux-gnu.so
+7f8ab26df000-7f8ab26e0000 rw-p 00000000 00:00 0 
+7f8ab26e0000-7f8ab26e3000 rw-p 00066000 fd:00 48249818                   /usr/local/lib/python3.10/dist-packages/h5py/_selector.cpython-310-x86_64-linux-gnu.so
+7f8ab26e3000-7f8ab26e7000 r--p 00000000 fd:00 48249815                   /usr/local/lib/python3.10/dist-packages/h5py/h5l.cpython-310-x86_64-linux-gnu.so
+7f8ab26e7000-7f8ab26fe000 r-xp 00004000 fd:00 48249815                   /usr/local/lib/python3.10/dist-packages/h5py/h5l.cpython-310-x86_64-linux-gnu.so
+7f8ab26fe000-7f8ab2703000 r--p 0001b000 fd:00 48249815                   /usr/local/lib/python3.10/dist-packages/h5py/h5l.cpython-310-x86_64-linux-gnu.so
+7f8ab2703000-7f8ab2704000 ---p 00020000 fd:00 48249815                   /usr/local/lib/python3.10/dist-packages/h5py/h5l.cpython-310-x86_64-linux-gnu.so
+7f8ab2704000-7f8ab2705000 r--p 00020000 fd:00 48249815                   /usr/local/lib/python3.10/dist-packages/h5py/h5l.cpython-310-x86_64-linux-gnu.so
+7f8ab2705000-7f8ab2707000 rw-p 00021000 fd:00 48249815                   /usr/local/lib/python3.10/dist-packages/h5py/h5l.cpython-310-x86_64-linux-gnu.so
+7f8ab2707000-7f8ab270a000 rw-p 00048000 fd:00 48249815                   /usr/local/lib/python3.10/dist-packages/h5py/h5l.cpython-310-x86_64-linux-gnu.so
+7f8ab270a000-7f8ab270f000 r--p 00000000 fd:00 48249817                   /usr/local/lib/python3.10/dist-packages/h5py/h5o.cpython-310-x86_64-linux-gnu.so
+7f8ab270f000-7f8ab2728000 r-xp 00005000 fd:00 48249817                   /usr/local/lib/python3.10/dist-packages/h5py/h5o.cpython-310-x86_64-linux-gnu.so
+7f8ab2728000-7f8ab272f000 r--p 0001e000 fd:00 48249817                   /usr/local/lib/python3.10/dist-packages/h5py/h5o.cpython-310-x86_64-linux-gnu.so
+7f8ab272f000-7f8ab2730000 r--p 00024000 fd:00 48249817                   /usr/local/lib/python3.10/dist-packages/h5py/h5o.cpython-310-x86_64-linux-gnu.so
+7f8ab2730000-7f8ab2733000 rw-p 00025000 fd:00 48249817                   /usr/local/lib/python3.10/dist-packages/h5py/h5o.cpython-310-x86_64-linux-gnu.so
+7f8ab2733000-7f8ab2736000 rw-p 00051000 fd:00 48249817                   /usr/local/lib/python3.10/dist-packages/h5py/h5o.cpython-310-x86_64-linux-gnu.so
+7f8ab2736000-7f8ab2739000 r--p 00000000 fd:00 48249802                   /usr/local/lib/python3.10/dist-packages/h5py/h5pl.cpython-310-x86_64-linux-gnu.so
+7f8ab2739000-7f8ab2742000 r-xp 00003000 fd:00 48249802                   /usr/local/lib/python3.10/dist-packages/h5py/h5pl.cpython-310-x86_64-linux-gnu.so
+7f8ab2742000-7f8ab2745000 r--p 0000c000 fd:00 48249802                   /usr/local/lib/python3.10/dist-packages/h5py/h5pl.cpython-310-x86_64-linux-gnu.so
+7f8ab2745000-7f8ab2746000 r--p 0000e000 fd:00 48249802                   /usr/local/lib/python3.10/dist-packages/h5py/h5pl.cpython-310-x86_64-linux-gnu.so
+7f8ab2746000-7f8ab2747000 rw-p 0000f000 fd:00 48249802                   /usr/local/lib/python3.10/dist-packages/h5py/h5pl.cpython-310-x86_64-linux-gnu.so
+7f8ab2747000-7f8ab274a000 rw-p 00021000 fd:00 48249802                   /usr/local/lib/python3.10/dist-packages/h5py/h5pl.cpython-310-x86_64-linux-gnu.so
+7f8ab274a000-7f8ab274e000 r--p 00000000 fd:00 48249798                   /usr/local/lib/python3.10/dist-packages/h5py/h5fd.cpython-310-x86_64-linux-gnu.so
+7f8ab274e000-7f8ab2774000 r-xp 00004000 fd:00 48249798                   /usr/local/lib/python3.10/dist-packages/h5py/h5fd.cpython-310-x86_64-linux-gnu.so
+7f8ab2774000-7f8ab277b000 r--p 0002a000 fd:00 48249798                   /usr/local/lib/python3.10/dist-packages/h5py/h5fd.cpython-310-x86_64-linux-gnu.so
+7f8ab277b000-7f8ab277c000 r--p 00030000 fd:00 48249798                   /usr/local/lib/python3.10/dist-packages/h5py/h5fd.cpython-310-x86_64-linux-gnu.so
+7f8ab277c000-7f8ab277e000 rw-p 00031000 fd:00 48249798                   /usr/local/lib/python3.10/dist-packages/h5py/h5fd.cpython-310-x86_64-linux-gnu.so
+7f8ab277e000-7f8ab2781000 rw-p 0006b000 fd:00 48249798                   /usr/local/lib/python3.10/dist-packages/h5py/h5fd.cpython-310-x86_64-linux-gnu.so
+7f8ab2781000-7f8ab2784000 r--p 00000000 fd:00 48249796                   /usr/local/lib/python3.10/dist-packages/h5py/h5i.cpython-310-x86_64-linux-gnu.so
+7f8ab2784000-7f8ab2790000 r-xp 00003000 fd:00 48249796                   /usr/local/lib/python3.10/dist-packages/h5py/h5i.cpython-310-x86_64-linux-gnu.so
+7f8ab2790000-7f8ab2793000 r--p 0000f000 fd:00 48249796                   /usr/local/lib/python3.10/dist-packages/h5py/h5i.cpython-310-x86_64-linux-gnu.so
+7f8ab2793000-7f8ab2794000 r--p 00011000 fd:00 48249796                   /usr/local/lib/python3.10/dist-packages/h5py/h5i.cpython-310-x86_64-linux-gnu.so
+7f8ab2794000-7f8ab2795000 rw-p 00012
