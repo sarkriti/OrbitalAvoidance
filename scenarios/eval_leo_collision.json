@@ -1,0 +1,53 @@
+{
+  "name": "LEO High-Collision Test",
+  "satellites": [
+    {
+      "name": "primary",
+      "mass_kg": 1200,
+      "drag_area_m2": 12,
+      "drag_coefficient": 2.2,
+      "drag_coefficient_uncertainty": 0.15,
+      "radiation_area_m2": 12,
+      "radiation_coefficient": 1.8,
+      "is_controllable": true,
+      "max_thrust_n": 5.0,
+      "fuel_capacity_kg": 150,
+      "collision_radius_m": 5.0,
+      "attitude_dependent_drag": true,
+      "maneuver_efficiency": 0.85,
+      "delta_v_budget_ms": 200.0
+    }
+  ],
+  "debris": [
+    { "name": "debris1", "collision_radius_m": 1.0 },
+    { "name": "debris2", "collision_radius_m": 1.0 },
+    { "name": "debris3", "collision_radius_m": 1.0 },
+    { "name": "debris4", "collision_radius_m": 1.0 },
+    { "name": "debris5", "collision_radius_m": 1.0 },
+    { "name": "debris6", "collision_radius_m": 1.0 },
+    { "name": "debris7", "collision_radius_m": 1.0 },
+    { "name": "debris8", "collision_radius_m": 1.0 },
+    { "name": "debris9", "collision_radius_m": 1.0 },
+    { "name": "debris10", "collision_radius_m": 1.0 }
+  ],
+  "physics": {
+    "include_drag": true,
+    "include_solar_radiation": true,
+    "include_j2_perturbation": true,
+    "time_step_seconds": 10
+  },
+  "simulation": {
+    "duration_seconds": 3600,
+    "max_steps_per_episode": 1000
+  },
+  "observations": {
+    "include_relative_positions": true,
+    "include_relative_velocities": true,
+    "include_fuel_levels": true,
+    "include_time_to_collision": true,
+    "max_tracked_objects": 10,
+    "observation_radius_km": 50.0,
+    "observation_frequency_hz": 1.0
+  },
+  "random_seed": 42
+}

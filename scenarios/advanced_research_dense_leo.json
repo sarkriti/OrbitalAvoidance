@@ -1,6 +1,8 @@
 {
   "scenario_name": "Advanced_Dense_LEO",
-  "description": "High-density debris environment for advanced collision avoidance research with realistic dynamics, dense debris shells, and swarm field clustering.",
+  "description": "High-density debris environment for advanced collision avoidance research.",
+  "scenario_file": "configs/scenarios/Advanced_Dense_LEO.json",
+
   "satellites": [
     {
       "name": "ResearchSat",
@@ -27,6 +29,7 @@
       "delta_v_budget_ms": 100.0
     }
   ],
+
   "debris_fields": [
     {
       "name": "dense_shell",
@@ -68,7 +71,7 @@
       }
     }
   ],
-  "static_debris": [],
+
   "physics": {
     "propagator_type": "orekit_numerical",
     "integrator": {
@@ -110,6 +113,7 @@
     "include_j2_perturbation": true,
     "include_higher_order_gravity": true
   },
+
   "collision_detection": {
     "method": "probabilistic_enhanced",
     "hard_threshold_km": 0.001,
@@ -119,22 +123,22 @@
     "conjunction_screening_km": 10.0,
     "time_to_collision_threshold_hours": 6.0
   },
-  "rewards": {
+
+  "reward": {
     "reward_type": "multi_objective_balanced",
     "collision_penalty": -1000.0,
     "fuel_cost_weight": 0.2,
     "safety_distance_km": 0.05,
     "mission_success_reward": 200.0,
-    "per_step": {
-      "step_penalty": -0.05,
-      "safe_flight_bonus": 0.01
-    },
-    "multi_objective_weights": {
+    "per_step_penalty": -0.05,
+    "per_step_bonus": 0.01,
+    "weights": {
       "safety": 0.7,
       "fuel_efficiency": 0.15,
       "mission_completion": 0.15
     }
   },
+
   "observations": {
     "include_relative_positions": true,
     "include_relative_velocities": true,
@@ -146,6 +150,7 @@
     "time_horizon_hours": 2.0,
     "observation_frequency_hz": 1.0
   },
+
   "randomization": {
     "enable_episode_randomization": true,
     "randomize_initial_conditions": true,
@@ -160,6 +165,7 @@
     },
     "seed_strategy": "fixed_for_debug"
   },
+
   "training_optimization": {
     "enable_parallel_environments": true,
     "num_parallel_envs": 8,
@@ -169,9 +175,11 @@
       "preferred_device": "auto"
     }
   },
+
   "advanced_features": {
     "enable_conjunction_analysis": true,
     "enable_uncertainty_propagation": true
   },
+
   "random_seed": 42
 }

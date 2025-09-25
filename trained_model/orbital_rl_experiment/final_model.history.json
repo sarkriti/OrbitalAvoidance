@@ -1,0 +1,8 @@
+[
+  {
+    "algorithm": "PPO",
+    "total_timesteps": 100000,
+    "training_time_seconds": 322.91,
+    "final_mean_reward": -196.64713236999995
+  }
+]

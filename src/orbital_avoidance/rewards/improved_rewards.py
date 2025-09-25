@@ -17,7 +17,7 @@ def _improved_reward_config(env) -> Dict[str, Any]:
     return {
         "collision_penalty": -20.0,        # Scaled down from -100
         "near_miss_distance_km": 50.0,     # Within 50 km = risky
-        "min_safe_distance_km": 0.05,      # 50 m collision zone
+        "min_safe_distance_km": 5.0,      # 5 km collision zone
 
         "step_penalty": -0.01,             # Small negative each step
         "fuel_penalty": -0.1,              # Scales with thrust per step

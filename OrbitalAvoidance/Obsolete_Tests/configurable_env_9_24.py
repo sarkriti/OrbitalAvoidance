@@ -48,14 +48,8 @@ class ConfigurableOrbitalEnvironment(gym.Env):
                  config: Optional[SimulationConfig] = None,
                  render_mode: Optional[str] = None):
         """
-        Initialize configurable environment.
+        Initialize configurable environment."""
         
-        Args:
-            config_file: Path to JSON/YAML configuration file
-            """Backward compatibility wrapper for configurable orbital environment.
-
-            The implementation moved to `orbital_avoidance.envs.configurable_env`.
-            """
             import warnings
             warnings.warn(
                 "Importing 'configurable_env' from the old location is deprecated. Use 'from orbital_avoidance.envs import configurable_env' instead.",

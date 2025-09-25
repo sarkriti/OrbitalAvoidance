@@ -1,0 +1,204 @@
+{
+  "algorithm": "ppo",
+  "environment": {
+    "scenario_file": "leo_debris_avoidance.json",
+    "max_debris_tracked": 10,
+    "collision_distance_km": 5.0,
+    "near_miss_distance_km": 50.0,
+    "episode_horizon": 0,
+    "render_mode": null
+  },
+  "training": {
+    "total_timesteps": 100000,
+    "checkpoint_freq": 10000,
+    "eval_freq": 5000,
+    "save_best_only": true
+  },
+  "output": {
+    "log_dir": "./logs",
+    "save_dir": "./trained_model",
+    "experiment_name": "orbital_rl_experiment"
+  },
+  "reward_function": "balanced",
+  "ppo": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "n_epochs": 10,
+    "clip_range": 0.2,
+    "gae_lambda": 0.95,
+    "gamma": 0.99
+  },
+  "satellites": [
+    {
+      "name": "MainSatellite",
+      "orbit": {
+        "altitude_km": 400,
+        "inclination_deg": 51.6,
+        "eccentricity": 0.001,
+        "raan_deg": 0,
+        "arg_periapsis_deg": 0,
+        "mean_anomaly_deg": 0,
+        "epoch_mjd": 59945.0
+      },
+      "mass_kg": 1100,
+      "drag_area_m2": 10,
+      "drag_coefficient": 2.2,
+      "radiation_area_m2": 10,
+      "radiation_coefficient": 1.8,
+      "is_controllable": true,
+      "max_thrust_n": 2.0,
+      "fuel_capacity_kg": 120,
+      "collision_radius_m": 25.0,
+      "attitude_dependent_drag": false,
+      "maneuver_efficiency": 0.9,
+      "delta_v_budget_ms": 150.0
+    }
+  ],
+  "debris_fields": [
+    {
+      "name": "primary_leo_cloud",
+      "num_objects": 20,
+      "altitude_range_km": [
+        395,
+        405
+      ],
+      "inclination_range_deg": [
+        50,
+        53
+      ],
+      "eccentricity_range": [
+        0.0,
+        0.02
+      ],
+      "distribution_type": "uniform",
+      "dynamics": {
+        "enable_dynamics": false
+      }
+    },
+    {
+      "name": "small_debris_swarm",
+      "num_objects": 5,
+      "altitude_range_km": [
+        398,
+        402
+      ],
+      "inclination_range_deg": [
+        50,
+        52
+      ],
+      "eccentricity_range": [
+        0.0,
+        0.01
+      ],
+      "distribution_type": "swarm",
+      "swarm_center_altitude_km": 400,
+      "swarm_radius_km": 5,
+      "dynamics": {
+        "enable_dynamics": false
+      }
+    }
+  ],
+  "static_debris": [
+    {
+      "name": "StaticDebris_A",
+      "orbit": {
+        "altitude_km": 402,
+        "inclination_deg": 51.6,
+        "eccentricity": 0.001,
+        "raan_deg": 5,
+        "arg_periapsis_deg": 30,
+        "mean_anomaly_deg": 200
+      },
+      "mass_kg": 50,
+      "drag_area_m2": 1,
+      "is_controllable": false,
+      "max_thrust_n": 0,
+      "fuel_capacity_kg": 0,
+      "collision_radius_m": 2.0
+    }
+  ],
+  "physics": {
+    "propagator_type": "orekit_numerical",
+    "integrator": {
+      "type": "dormand_prince_853",
+      "atol": 1e-10,
+      "rtol": 1e-10,
+      "adaptive_step": true,
+      "min_step_seconds": 0.1,
+      "max_step_seconds": 30
+    },
+    "gravity_model": {
+      "degree": 8,
+      "order": 8,
+      "model": "egm96"
+    },
+    "atmosphere_model": {
+      "type": "nrlmsise00",
+      "solar_activity": {
+        "f107": 150.0,
+        "f107_avg": 145.0,
+        "kp": 3.0
+      }
+    },
+    "solar_radiation_model": {
+      "type": "srp_with_eclipse",
+      "solar_flux_wm2": 1361.0,
+      "earth_shadow": true
+    },
+    "third_body_perturbations": {
+      "include_sun": false,
+      "include_moon": false
+    },
+    "time_step_seconds": 10,
+    "simulation_duration_seconds": 1800,
+    "include_drag": false,
+    "include_solar_radiation": false,
+    "include_j2_perturbation": false,
+    "include_higher_order_gravity": false
+  },
+  "collision_detection": {
+    "method": "probabilistic_enhanced",
+    "hard_threshold_km": 5.0,
+    "collision_threshold_km": 0.01,
+    "probability_threshold": 1e-06,
+    "covariance_propagation": false,
+    "conjunction_screening_km": 5.0,
+    "time_to_collision_threshold_hours": 2.0
+  },
+  "observations": {
+    "include_relative_positions": true,
+    "include_relative_velocities": true,
+    "include_fuel_levels": true,
+    "max_tracked_objects": 10,
+    "observation_radius_km": 50.0,
+    "time_horizon_hours": 0.5,
+    "observation_frequency_hz": 1.0
+  },
+  "randomization": {
+    "enable_episode_randomization": true,
+    "randomize_initial_conditions": true,
+    "randomize_debris_positions": true,
+    "randomize_debris_velocities": true,
+    "randomize_satellite_state": true,
+    "randomization_ranges": {
+      "altitude_variation_km": 2.0,
+      "inclination_variation_deg": 0.5,
+      "raan_variation_deg": 15.0,
+      "mean_anomaly_variation_deg": 360.0
+    },
+    "seed_strategy": "fixed_for_debug"
+  },
+  "training_optimization": {
+    "enable_parallel_environments": true,
+    "num_parallel_envs": 4,
+    "gpu_acceleration": {
+      "enable_gpu_physics": false
+    }
+  },
+  "advanced_features": {
+    "enable_conjunction_analysis": false,
+    "enable_uncertainty_propagation": false
+  },
+  "random_seed": 42
+}
