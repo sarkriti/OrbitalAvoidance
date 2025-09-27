@@ -1,3 +1,4 @@
-rollout/ep_len_mean,time/time_elapsed,time/iterations,time/total_timesteps,time/fps,rollout/ep_rew_mean,train/approx_kl,train/entropy_loss,train/policy_gradient_loss,train/n_updates,train/explained_variance,train/clip_range,train/learning_rate,train/clip_fraction,train/loss,train/std,train/value_loss
-200.0,1,1,2048,1975,-240.86398709999997,,,,,,,,,,,
-200.0,6,2,4096,591,-239.73318019999996,0.009743844,-4.201949183642864,-0.013836027028446551,10,0.0017067193984985352,0.2,0.0003,0.077392578125,5.303657531738281,0.9691629409790039,46.80258165821433
+rollout/ep_rew_mean,time/total_timesteps,time/time_elapsed,time/iterations,time/fps,rollout/ep_len_mean,train/entropy_loss,train/loss,train/explained_variance,train/learning_rate,train/clip_fraction,train/std,train/n_updates,train/policy_gradient_loss,train/clip_range,train/value_loss,train/approx_kl
+-240.95912169999997,2048,1,1,1974,200.0,,,,,,,,,,,
+-241.55345000000003,4096,3,2,1147,200.0,-4.248590071996053,42.301029205322266,0.00021141767501831055,0.0003,0.0,0.9951503276824951,6,-0.003539751759187008,0.2,306.66976467768353,0.0006913524
+-241.04256273333334,6144,5,3,1181,200.0,-4.2357399463653564,63.59970474243164,0.4019666314125061,0.0003,0.0,0.9895927906036377,12,-0.0011689036085347955,0.2,225.35767300923666,0.00017964822

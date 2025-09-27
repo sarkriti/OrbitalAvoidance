@@ -8,6 +8,55 @@
     "episode_horizon": 0,
     "render_mode": null
   },
+  "stochasticity": {
+    "enabled": true,
+    "observation_noise": {
+      "enabled": true,
+      "type": "gaussian",
+      "std_dev": 0.001,
+      "bias": 0.0,
+      "scaling_factors": {
+        "position": 1.0,
+        "velocity": 0.5,
+        "fuel": 0.01,
+        "debris_relative": 2.0
+      }
+    },
+    "dynamics_noise": {
+      "enabled": true,
+      "type": "gaussian",
+      "std_dev": 0.01,
+      "scaling_factors": {
+        "position": 1.0,
+        "velocity": 0.1
+      }
+    },
+    "control_noise": {
+      "enabled": true,
+      "type": "gaussian",
+      "std_dev": 0.05,
+      "multiplicative": true
+    },
+    "initial_state_noise": {
+      "enabled": true,
+      "type": "gaussian", 
+      "std_dev": 0.1,
+      "scaling_factors": {
+        "position": 1.0,
+        "velocity": 0.01
+      }
+    },
+    "environmental": {
+      "atmospheric_density": {
+        "enabled": true,
+        "uncertainty_fraction": 0.15
+      },
+      "solar_flux": {
+        "enabled": true,
+        "uncertainty_fraction": 0.1
+      }
+    }
+  },
   "training": {
     "total_timesteps": 100000,
     "checkpoint_freq": 10000,

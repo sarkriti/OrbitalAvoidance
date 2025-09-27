@@ -10,7 +10,7 @@ from gymnasium import spaces
 from orbital_avoidance.envs.configurable_env import ConfigurableOrbitalEnvironment
 from orbital_avoidance.config.config_system import SimulationConfig
 from orbital_avoidance.physics.orekit_physics import OrbitElements
-
+from orbital_avoidance.stochastic.stochastic_noise import StochasticNoiseManager
 logger = logging.getLogger(__name__)
 
 
@@ -97,6 +97,9 @@ class RLOrbitalEnvironment(gym.Env):
         self.max_episode_steps = self.config.environment.get('episode_horizon', 0)
         if self.max_episode_steps <= 0:
             self.max_episode_steps = int(self.config.physics.simulation_duration_seconds / self.config.physics.time_step_seconds)
+        
+        stochasticity_config = config.get('stochasticity', {'enabled': False})
+        self.noise_manager = StochasticNoiseManager(stochasticity_config)
 
     def _default_reward_config(self) -> Dict:
         return {
@@ -128,7 +131,29 @@ class RLOrbitalEnvironment(gym.Env):
         base_obs, _ = self._base_env.reset()
         sat_dict = self._base_env.satellites[self.main_satellite_name]
         self.current_satellite_state = StateWrapper(sat_dict)
+        
+        # Apply initial state noise
+        if self.noise_manager.enabled:
+            noisy_pos, noisy_vel = self.noise_manager.apply_initial_state_noise(
+                self.current_satellite_state.position_km.copy(),
+                self.current_satellite_state.velocity_km_s.copy()
+            )
+            self.current_satellite_state.position_km = noisy_pos
+            self.current_satellite_state.velocity_km_s = noisy_vel
+            # Update the base environment state if possible
+            # (This depends on your ConfigurableOrbitalEnvironment implementation)
+
         self.current_debris_states = [StateWrapper(d) for d in self._base_env.debris_objects.values()]
+        
+        # Apply noise to debris initial states too
+        if self.noise_manager.enabled:
+            for debris_state in self.current_debris_states:
+                noisy_pos, noisy_vel = self.noise_manager.apply_initial_state_noise(
+                    debris_state.position_km.copy(),
+                    debris_state.velocity_km_s.copy()
+                )
+                debris_state.position_km = noisy_pos
+                debris_state.velocity_km_s = noisy_vel
 
         self.step_count = 0
         self.collision_free_steps = 0
@@ -136,31 +161,54 @@ class RLOrbitalEnvironment(gym.Env):
 
         return self._get_observation(), self._get_info()
 
+    # Modify the step method to add control and dynamics noise:
     def step(self, action: np.ndarray):
         action = np.clip(action, -1.0, 1.0)
-        # Pass normalized action to base env; delta-v is applied internally
-        base_obs, reward_dummy, terminated_dummy, truncated_dummy, info_dummy = self._base_env.step(action)
+        
+        # Apply control noise to action
+        noisy_action = self.noise_manager.apply_control_noise(action.copy())
+        noisy_action = np.clip(noisy_action, -1.0, 1.0)  # Re-clip after noise
+        
+        # Pass noisy action to base env
+        base_obs, reward_dummy, terminated_dummy, truncated_dummy, info_dummy = self._base_env.step(noisy_action)
 
-        # Update state wrappers
+        # Update state wrappers and apply dynamics noise
         sat_dict = self._base_env.satellites[self.main_satellite_name]
         self.current_satellite_state.update_from_dict(sat_dict)
+        
+        if self.noise_manager.enabled:
+            noisy_pos, noisy_vel = self.noise_manager.apply_dynamics_noise(
+                self.current_satellite_state.position_km.copy(),
+                self.current_satellite_state.velocity_km_s.copy()
+            )
+            self.current_satellite_state.position_km = noisy_pos
+            self.current_satellite_state.velocity_km_s = noisy_vel
+
         for i, debris_dict in enumerate(self._base_env.debris_objects.values()):
             if i < len(self.current_debris_states):
                 self.current_debris_states[i].update_from_dict(debris_dict)
+                if self.noise_manager.enabled:
+                    noisy_pos, noisy_vel = self.noise_manager.apply_dynamics_noise(
+                        self.current_debris_states[i].position_km.copy(),
+                        self.current_debris_states[i].velocity_km_s.copy()
+                    )
+                    self.current_debris_states[i].position_km = noisy_pos
+                    self.current_debris_states[i].velocity_km_s = noisy_vel
 
-        reward = self.reward_function(action)
+        reward = self.reward_function(action)  # Use original action for reward
 
-        # Terminate if collision occurs
         terminated = self._check_collision()
-
-        # Truncate if max steps reached
         truncated = self.step_count >= self.max_episode_steps
 
         self.step_count += 1
         if not terminated:
             self.collision_free_steps += 1
 
-        return self._get_observation(), reward, terminated, truncated, self._get_info()
+        # Apply observation noise to the returned observation
+        observation = self._get_observation()
+        noisy_observation = self.noise_manager.apply_observation_noise(observation)
+
+        return noisy_observation, reward, terminated, truncated, self._get_info()
 
     def _calculate_reference_orbit_from_state(self) -> OrbitElements:
         pos = self.current_satellite_state.position_km

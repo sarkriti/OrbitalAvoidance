@@ -15,7 +15,8 @@ from __future__ import annotations
 # Core environment imports (required)
 # ---------------------------------------------------------
 from .envs.configurable_env import RLOrbitalEnvironment, create_rl_environment
-
+# Add this line to your existing __init__.py
+from .stochastic import StochasticNoiseManager
 # ---------------------------------------------------------
 # Algorithm and training imports (optional, fail loudly if missing)
 # ---------------------------------------------------------
@@ -80,4 +81,5 @@ __all__ = [
     "ConfigurationLoader",
     "ImprovedRewardFunction",
     "get_reward_config",
+    "StochasticNoiseManager",
 ]

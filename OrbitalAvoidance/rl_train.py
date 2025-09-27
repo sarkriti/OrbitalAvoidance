@@ -248,7 +248,11 @@ def main():
     parser.add_argument('--gae-lambda', type=float, default=0.95)
     parser.add_argument('--gamma', type=float, default=0.99)
 
-    parser.add_argument('--max-debris', type=int, default=10)
+    # ADD ONLY THESE TWO:
+    parser.add_argument('--checkpoint-freq', type=int, default=10000)
+    parser.add_argument('--eval-freq', type=int, default=5000)
+
+    parser.add_argument('--max-debris', type=int, default=10)  # This already exists
     parser.add_argument('--log-dir', default='./logs')
     parser.add_argument('--save-dir', default='./models')
     parser.add_argument('--experiment-name', default='orbital_rl_experiment')
