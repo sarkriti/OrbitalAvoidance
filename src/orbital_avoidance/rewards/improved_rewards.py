@@ -5,6 +5,8 @@ Now includes:
 - Near-miss penalty (<50 km zone)
 - Per-step thrust cost instead of cumulative fuel usage
 - Balanced bonuses for station-keeping and safe flight
+
+ALL UNITS IN KILOMETERS FOR CONSISTENCY
 """
 
 from __future__ import annotations
@@ -16,8 +18,8 @@ def _improved_reward_config(env) -> Dict[str, Any]:
     """Default config values for improved reward calculation."""
     return {
         "collision_penalty": -20.0,        # Scaled down from -100
-        "near_miss_distance_km": 50.0,     # Within 50 km = risky
-        "min_safe_distance_km": 5.0,      # 5 km collision zone
+        "near_miss_distance_km": 0.050,    # Within 50 km = risky (50m = 0.050km)
+        "min_safe_distance_km": 0.005,     # 5 km collision zone (5m = 0.005km)
 
         "step_penalty": -0.01,             # Small negative each step
         "fuel_penalty": -0.1,              # Scales with thrust per step
@@ -69,11 +71,11 @@ def create_improved_reward_function(env) -> Callable[[Any], float]:
         if not collisions:
             total_reward += cfg["safe_flight_bonus"]
 
-        # 5. Proximity penalties/bonuses
+        # 5. Proximity penalties/bonuses - FIXED: Use proper position access and km units
         if sat is not None and debris:
-            sat_pos = np.array(sat["position"])
-            min_dist = min(np.linalg.norm(np.array(d["position"]) - sat_pos)
-                           for d in debris)
+            # Use proper StateWrapper position access
+            sat_pos = sat.position_km  # StateWrapper has position_km attribute
+            min_dist = min(np.linalg.norm(d.position_km - sat_pos) for d in debris)
 
             if min_dist < cfg["min_safe_distance_km"]:
                 # Direct collision zone (already penalized above)
@@ -93,7 +95,7 @@ def create_improved_reward_function(env) -> Callable[[Any], float]:
         # 6. Station keeping bonus (stay near reference orbit SMA)
         if sat is not None and env.reference_orbit is not None:
             ref_sma = env.reference_orbit.semi_major_axis_km
-            cur_sma = np.linalg.norm(sat["position"])
+            cur_sma = np.linalg.norm(sat.position_km)  # Current distance from Earth center
             if abs(cur_sma - ref_sma) < cfg["target_orbit_tolerance_km"]:
                 total_reward += cfg["station_keeping_bonus"]
 

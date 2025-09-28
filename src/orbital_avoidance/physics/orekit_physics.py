@@ -271,15 +271,28 @@ class OrekitOrbitPropagator:
 			raise KeyError(key)
 		entry = self._persistent[key]
 		pv = entry['state'].getPVCoordinates()
-		from org.orekit.utils import PVCoordinates
+		
+		# Create new velocity vector
 		new_vel = Vector3D(
 			pv.getVelocity().getX() + delta_v_km_s[0]*1000.0,
 			pv.getVelocity().getY() + delta_v_km_s[1]*1000.0,
 			pv.getVelocity().getZ() + delta_v_km_s[2]*1000.0,
 		)
+		
+		# Create new PVCoordinates
 		new_pv = PVCoordinates(pv.getPosition(), new_vel)
-		from org.orekit.propagation import SpacecraftState
-		entry['state'] = SpacecraftState(new_pv, entry['state'].getAttitude(), entry['state'].getMass())
+		
+		# Create new SpacecraftState using the simpler constructor
+		# Option 1: Create from orbit (recommended)
+		current_date = entry['state'].getDate()
+		current_frame = entry['state'].getFrame()
+		
+		# Convert PV to CartesianOrbit then to KeplerianOrbit
+		cart_orbit = CartesianOrbit(new_pv, current_frame, current_date, Constants.WGS84_EARTH_MU)
+		kep_orbit = KeplerianOrbit(cart_orbit)
+		
+		# Create new state with mass
+		entry['state'] = SpacecraftState(kep_orbit, entry['state'].getMass())
 
 	def cartesian_to_orbit_elements(self, position_km: np.ndarray, velocity_km_s: np.ndarray, epoch_mjd: float = 59945.0) -> OrbitElements:
 		pos_m = position_km * 1000.0; vel_ms = velocity_km_s * 1000.0

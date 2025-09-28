@@ -14,9 +14,11 @@ from __future__ import annotations
 # ---------------------------------------------------------
 # Core environment imports (required)
 # ---------------------------------------------------------
-from .envs.configurable_env import RLOrbitalEnvironment, create_rl_environment
+from .envs.rl_training_env import RLOrbitalEnvironment, create_rl_environment
 # Add this line to your existing __init__.py
 from .stochastic import StochasticNoiseManager
+from .envs.configurable_env import ConfigurableOrbitalEnvironment
+
 # ---------------------------------------------------------
 # Algorithm and training imports (optional, fail loudly if missing)
 # ---------------------------------------------------------

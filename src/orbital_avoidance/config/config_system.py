@@ -2,6 +2,8 @@
 
 Original: OrbitalAvoidance/config_system.py
 Now under orbital_avoidance.config.config_system
+
+ALL UNITS IN KILOMETERS FOR CONSISTENCY
 """
 
 from __future__ import annotations
@@ -63,7 +65,11 @@ class SpacecraftConfig:
 	is_controllable: bool = True
 	max_thrust_n: float = 1.0
 	fuel_capacity_kg: float = 100.0
-	collision_radius_m: float = 10.0
+	
+	# FIXED: All collision/near-miss radii now in km with explicit units
+	collision_radius_km: float = 0.001  # Default 1m = 0.001km
+	near_miss_radius_km: float = 0.050  # Default 50m = 0.050km
+	
 	drag_coefficient_uncertainty: Optional[float] = None
 	attitude_dependent_drag: bool = False
 	maneuver_efficiency: float = 1.0
@@ -82,11 +88,12 @@ class SpacecraftConfig:
 			self.moment_of_inertia_kgm2 = self.mass_kg * 0.5
 
 	def to_spacecraft_properties(self) -> SpacecraftProperties:
+		# FIXED: Convert areas from m² to km²
 		return SpacecraftProperties(
 			mass_kg=self.mass_kg,
-			drag_area_m2=self.drag_area_m2,
+			drag_area_km2=self.drag_area_m2 / 1e6,  # Convert m² to km²
 			drag_coefficient=self.drag_coefficient,
-			radiation_area_m2=self.radiation_area_m2,
+			radiation_area_km2=self.radiation_area_m2 / 1e6,  # Convert m² to km²
 			radiation_coefficient=self.radiation_coefficient
 		)
 
@@ -98,7 +105,10 @@ class DebrisFieldConfig:
 	inclination_range_deg: List[float] = field(default_factory=lambda: [0, 180])
 	eccentricity_range: List[float] = field(default_factory=lambda: [0, 0.1])
 	mass_range_kg: List[float] = field(default_factory=lambda: [1, 1000])
-	size_range_m: List[float] = field(default_factory=lambda: [0.1, 10])
+	
+	# FIXED: Size range now in km
+	size_range_km: List[float] = field(default_factory=lambda: [0.0001, 0.01])  # 0.1m to 10m in km
+	
 	distribution_type: str = "uniform"
 	name: Optional[str] = None
 	cluster_centers: int = 1
@@ -192,6 +202,7 @@ class SimulationConfig:
 	rewards: RewardConfig = field(default_factory=RewardConfig)
 	observations: ObservationConfig = field(default_factory=ObservationConfig)
 	random_seed: Optional[int] = None
+	episode_horizon: Optional[int] = None 
 
 
 class ConfigurationLoader:
@@ -219,10 +230,34 @@ class ConfigurationLoader:
 			sat_copy = sat.copy(); sat_copy['orbit'] = orbit
 			if 'thrust_capacity_n' in sat_copy:
 				sat_copy['max_thrust_n'] = sat_copy.pop('thrust_capacity_n')
+			
+			# FIXED: Handle collision radius units - convert from meters to km if needed
+			if 'collision_radius' in sat_copy:
+				collision_radius_val = sat_copy.pop('collision_radius')
+				# If value > 1, assume it's in meters and convert to km
+				if collision_radius_val > 1:
+					sat_copy['collision_radius_km'] = collision_radius_val / 1000.0
+				else:
+					sat_copy['collision_radius_km'] = collision_radius_val
+			
+			# FIXED: Handle near-miss radius units - convert from meters to km if needed
+			if 'near_miss_radius' in sat_copy:
+				near_miss_radius_val = sat_copy.pop('near_miss_radius')
+				# If value > 1, assume it's in meters and convert to km
+				if near_miss_radius_val > 1:
+					sat_copy['near_miss_radius_km'] = near_miss_radius_val / 1000.0
+				else:
+					sat_copy['near_miss_radius_km'] = near_miss_radius_val
+			
 			satellites.append(SpacecraftConfig(**ConfigurationLoader._filter_supported_params(sat_copy, SpacecraftConfig)))
 
 		debris_fields = []
 		for field in data.get('debris_fields', []):
+			# FIXED: Handle size_range_m -> size_range_km conversion
+			if 'size_range_m' in field:
+				size_range_m = field.pop('size_range_m')
+				field['size_range_km'] = [s / 1000.0 for s in size_range_m]
+			
 			debris_fields.append(DebrisFieldConfig(**ConfigurationLoader._filter_supported_params(field, DebrisFieldConfig)))
 
 		static_debris = []
@@ -238,6 +273,15 @@ class ConfigurationLoader:
 			debris_copy = debris.copy(); debris_copy['orbit'] = orbit
 			if 'thrust_capacity_n' in debris_copy:
 				debris_copy['max_thrust_n'] = debris_copy.pop('thrust_capacity_n')
+			
+			# FIXED: Handle collision radius for static debris
+			if 'collision_radius' in debris_copy:
+				collision_radius_val = debris_copy.pop('collision_radius')
+				if collision_radius_val > 1:
+					debris_copy['collision_radius_km'] = collision_radius_val / 1000.0
+				else:
+					debris_copy['collision_radius_km'] = collision_radius_val
+			
 			debris_copy.pop('size_m', None)
 			static_debris.append(SpacecraftConfig(**ConfigurationLoader._filter_supported_params(debris_copy, SpacecraftConfig)))
 
@@ -304,13 +348,15 @@ class DebrisGenerator:
 			ma = np.random.uniform(0, 360)
 			orbit = OrbitConfig(altitude_km=altitude, inclination_deg=inclination, eccentricity=eccentricity, raan_deg=raan, arg_periapsis_deg=argp, mean_anomaly_deg=ma)
 			mass = np.random.uniform(*field_config.mass_range_kg)
-			size = np.random.uniform(*field_config.size_range_m)
+			size_km = np.random.uniform(*field_config.size_range_km)
+			
+			# FIXED: Use km units consistently
 			debris = SpacecraftConfig(
 				name=f"Debris_{i}",
 				orbit=orbit,
 				mass_kg=mass,
-				drag_area_m2=size,
-				collision_radius_m=size/2,
+				drag_area_m2=size_km * 1e6,  # Convert km² back to m² for drag area
+				collision_radius_km=size_km/2,  # Half of size as collision radius
 				is_controllable=False,
 				max_thrust_n=0.0,
 				fuel_capacity_kg=0.0
@@ -326,14 +372,16 @@ def create_default_leo_scenario() -> SimulationConfig:
 		mass_kg=1000,
 		is_controllable=True,
 		max_thrust_n=1.0,
-		fuel_capacity_kg=100
+		fuel_capacity_kg=100,
+		collision_radius_km=0.001,  # 1m = 0.001km
+		near_miss_radius_km=0.050   # 50m = 0.050km
 	)
 	debris_field = DebrisFieldConfig(
 		num_objects=50,
 		altitude_range_km=[380, 420],
 		inclination_range_deg=[45, 60],
 		mass_range_kg=[1, 100],
-		size_range_m=[0.1, 2.0]
+		size_range_km=[0.0001, 0.002]  # 0.1m to 2m in km
 	)
 	return SimulationConfig(
 		scenario_name="LEO_Debris_Avoidance",

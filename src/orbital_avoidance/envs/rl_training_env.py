@@ -21,8 +21,10 @@ class StateWrapper:
         self.velocity_km_s = np.array(state_dict['velocity'], dtype=np.float64)
         self.fuel_remaining_kg = state_dict.get('fuel_remaining', 0.0)
         self.mass_kg = state_dict.get('config').mass_kg if 'config' in state_dict else 1000.0
-        self.collision_radius = getattr(state_dict.get('config', None), 'collision_radius_km', 0.005)
-        self.near_miss_radius = getattr(state_dict.get('config', None), 'near_miss_radius_km', 0.025)
+        
+        # FIXED: Use collision_radius_km consistently
+        self.collision_radius = getattr(state_dict.get('config', None), 'collision_radius_km', 0.001)  # Default 1m = 0.001km
+        self.near_miss_radius = getattr(state_dict.get('config', None), 'near_miss_radius_km', 0.005)  # Default 5m = 0.005km
         self._dict = state_dict
 
     def update_from_dict(self, d):
@@ -30,8 +32,10 @@ class StateWrapper:
         self.velocity_km_s = np.array(d['velocity'], dtype=np.float64)
         self.fuel_remaining_kg = d.get('fuel_remaining', 0.0)
         self.mass_kg = d.get('config').mass_kg if 'config' in d else 1000.0
-        self.collision_radius = getattr(d.get('config', None), 'collision_radius_km', 0.005)
-        self.near_miss_radius = getattr(d.get('config', None), 'near_miss_radius_km', 0.025)
+        
+        # FIXED: Use collision_radius_km consistently
+        self.collision_radius = getattr(d.get('config', None), 'collision_radius_km', 0.001)
+        self.near_miss_radius = getattr(d.get('config', None), 'near_miss_radius_km', 0.005)
         self._dict = d
 
     def __getitem__(self, k):
@@ -82,7 +86,7 @@ class RLOrbitalEnvironment(gym.Env):
 
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(3,), dtype=np.float32)
         # obs: pos(3)+vel(3)+fuel+time + debris*10 (includes normalized near-miss)
-        obs_size = 6 + 2 + (self.max_debris_tracked * 10)
+        obs_size = 6 + 2 + (self.max_debris_tracked * 8)
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(obs_size,), dtype=np.float32)
 
         self.reference_orbit = self._get_reference_orbit()
@@ -94,19 +98,23 @@ class RLOrbitalEnvironment(gym.Env):
         self.current_debris_states: List[StateWrapper] = []
 
         # Determine maximum episode steps based on config
-        self.max_episode_steps = self.config.environment.get('episode_horizon', 0)
-        if self.max_episode_steps <= 0:
+       # Determine maximum episode steps
+        if self.config.episode_horizon is not None:
+            self.max_episode_steps = self.config.episode_horizon
+        else:
             self.max_episode_steps = int(self.config.physics.simulation_duration_seconds / self.config.physics.time_step_seconds)
-        
-        stochasticity_config = config.get('stochasticity', {'enabled': False})
+                
+        stochasticity_config = getattr(self.config, 'stochasticity', {'enabled': False})
         self.noise_manager = StochasticNoiseManager(stochasticity_config)
+
 
     def _default_reward_config(self) -> Dict:
         return {
             'weights': {'collision': 4.0, 'fuel': 1.0, 'orbit': 2.0, 'mission': 1.0},
             'collision': {'safety_margin_multiplier': 1.0, 'lookahead_seconds': 7200, 'danger_threshold': 0.1},
             'fuel': {'critical_ratio': 0.3, 'low_ratio': 0.6, 'precision_threshold': 0.1},
-            'orbit': {'tolerances': {'semi_major_axis_m': 100.0, 'eccentricity': 0.01,
+            # FIXED: Orbit tolerances now in km units
+            'orbit': {'tolerances': {'semi_major_axis_km': 0.1, 'eccentricity': 0.01,
                                      'inclination_rad': 0.01, 'raan_rad': 0.01}},
             'mission': {'milestone_interval': 100, 'completion_threshold': 0.8, 'midpoint_threshold': 0.5}
         }
@@ -231,10 +239,15 @@ class RLOrbitalEnvironment(gym.Env):
             rel_pos = debris.position_km - sat_pos
             rel_vel = debris.velocity_km_s - sat_vel
             miss_distance, ttc = self._calculate_collision_metrics(sat_pos, sat_vel, debris.position_km, debris.velocity_km_s)
-            normalized_miss = miss_distance / (self.main_satellite.near_miss_radius + debris.near_miss_radius)
-            obs.extend([*rel_pos, *rel_vel, miss_distance, normalized_miss, ttc])
+            
+            # FIXED: Use km units consistently - no conversion from meters
+            sat_near_miss_km = getattr(self.main_satellite, 'near_miss_radius_km', 0.050)  # 50m default = 0.050km
+            debris_near_miss_km = getattr(debris, 'near_miss_radius', 0.010)  # 10m default = 0.010km
+            normalized_miss = miss_distance / (sat_near_miss_km + debris_near_miss_km)
+            
+            obs.extend([*rel_pos, *rel_vel, miss_distance, ttc])
         for _ in range(len(closest), self.max_debris_tracked):
-            obs.extend([0.0] * 10)
+            obs.extend([0.0] * 8)  # FIXED: 8 values per debris (rel_pos(3) + rel_vel(3) + miss_distance + ttc)
 
         return np.array(obs, dtype=np.float32)
 
@@ -245,6 +258,7 @@ class RLOrbitalEnvironment(gym.Env):
         return [d for _, d in debris_with_dist[:max_count]]
 
     def _calculate_collision_metrics(self, sat_pos, sat_vel, debris_pos, debris_vel):
+        """Calculate collision metrics - all inputs/outputs in km and km/s."""
         rel_pos = debris_pos - sat_pos
         rel_vel = debris_vel - sat_vel
         if np.dot(rel_pos, rel_vel) > 0:
@@ -257,10 +271,15 @@ class RLOrbitalEnvironment(gym.Env):
         return miss_distance, t
 
     def _check_collision(self) -> bool:
+        """Check collision using km units consistently."""
         sat_pos = self.current_satellite_state.position_km
+        sat_collision_radius_km = getattr(self.main_satellite, 'collision_radius_km', 0.001)  # 1m default = 0.001km
+        
         for debris in self.current_debris_states:
             distance = np.linalg.norm(debris.position_km - sat_pos)
-            if distance < (self.main_satellite.collision_radius + debris.collision_radius):
+            debris_collision_radius_km = getattr(debris, 'collision_radius', 0.001)  # 1m default = 0.001km
+            
+            if distance < (sat_collision_radius_km + debris_collision_radius_km):
                 return True
         return False
 
