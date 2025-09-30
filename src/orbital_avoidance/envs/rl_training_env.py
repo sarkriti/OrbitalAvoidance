@@ -231,11 +231,13 @@ class RLOrbitalEnvironment(gym.Env):
         # Calculate reward using TRUE collision detection from base environment
         reward = self.reward_function(action, info_base)
 
+        # Increment step count FIRST
+        self.step_count += 1
+        
         # Use TRUE collision detection from base environment for termination
         terminated = info_base.get('collisions', False)
-        truncated = self.step_count >= self.max_episode_steps
-
-        self.step_count += 1
+        truncated = self.step_count >= self.max_episode_steps  # Now checks AFTER increment
+        
         if not terminated:
             self.collision_free_steps += 1
 
@@ -244,7 +246,14 @@ class RLOrbitalEnvironment(gym.Env):
         
         # Apply additional observation noise if configured
         noisy_observation = self.noise_manager.apply_observation_noise(observation)
-
+        
+        #if self.step_count % 100 == 0 or terminated or truncated:
+            #logger.info(f"=== ENV STEP DEBUG ===")
+            #logger.info(f"step_count={self.step_count}, max_steps={self.max_episode_steps}")
+            #logger.info(f"terminated={terminated}, truncated={truncated}")
+            #logger.info(f"reward={reward}")
+            #logger.info(f"=====================")
+            
         return noisy_observation, reward, terminated, truncated, self._get_info()
 
     def _calculate_reference_orbit_from_state(self) -> OrbitElements:
@@ -330,8 +339,20 @@ class RLOrbitalEnvironment(gym.Env):
             self._base_env.close()
 
 
-def create_rl_environment(config_file: str = "scenarios/leo_debris_avoidance.json", **kwargs) -> RLOrbitalEnvironment:
-    return RLOrbitalEnvironment(config_file=config_file, **kwargs)
+def create_rl_environment(
+    config_file: str = "scenarios/leo_debris_avoidance.json",
+    episode_horizon: Optional[int] = None,
+    **kwargs
+) -> RLOrbitalEnvironment:
+    """Create RL environment with optional episode horizon override."""
+    env = RLOrbitalEnvironment(config_file=config_file, **kwargs)
+    
+    # Override episode horizon if provided
+    if episode_horizon is not None:
+        env.max_episode_steps = episode_horizon
+        logger.info(f"Overriding episode horizon to {episode_horizon} steps")
+    
+    return env
 
 
 __all__ = ['RLOrbitalEnvironment', 'create_rl_environment']

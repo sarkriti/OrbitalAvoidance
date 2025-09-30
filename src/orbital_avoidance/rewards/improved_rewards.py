@@ -145,7 +145,13 @@ def create_ppo_optimized_reward_function(env) -> Callable[[Any, Dict], float]:
         Returns:
             Scalar reward value
         """
-        
+        # if info.get('step', 0) % 100 == 0:  # Log every 100 steps
+        #     logger.info(f"=== REWARD DEBUG at step {info.get('step', 0)} ===")
+        #     logger.info(f"survival_bonus={survival_bonus}")
+        #     logger.info(f"collision_penalty={collision_penalty}")
+        #     logger.info(f"min_distance={info.get('min_debris_distance_km', float('inf'))}")
+        #     logger.info(f"collisions={info.get('collisions', False)}")
+
         # Start with survival bonus (helps with early learning)
         total_reward = survival_bonus
         

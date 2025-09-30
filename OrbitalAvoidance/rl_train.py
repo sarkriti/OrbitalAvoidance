@@ -24,6 +24,7 @@ from typing import Dict, Any, Optional
 import logging
 import gymnasium as gym
 import numpy as np
+from gymnasium.wrappers import RecordEpisodeStatistics
 
 # Ensure src directory is on path for modern package imports
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -99,29 +100,119 @@ class EpisodeStatsCallback(BaseCallback):
         self.episode_lengths = []
         self.episode_count = 0
         self.print_freq = print_freq
+        
+        # Track cumulative rewards per environment
+        self.cumulative_rewards = None
+        self.episode_starts = None
+    
+    def _on_training_start(self) -> None:
+        """Initialize tracking arrays based on number of environments."""
+        n_envs = self.training_env.num_envs
+        self.cumulative_rewards = np.zeros(n_envs)
+        self.episode_starts = np.zeros(n_envs)
+        logger.info(f"EpisodeStatsCallback initialized for {n_envs} environment(s)")
     
     def _on_step(self) -> bool:
         """Called after each environment step."""
-        # Check if episode finished
-        if self.locals.get('dones') is not None:
-            for i, done in enumerate(self.locals['dones']):
+        
+        # ALWAYS print what we're seeing to debug
+        #print(f"\n=== CALLBACK STEP {self.num_timesteps} ===")
+        #print(f"Keys in locals: {list(self.locals.keys())}")
+        
+        # Get rewards for this step
+        rewards = self.locals.get('rewards', [])
+        if not isinstance(rewards, (list, np.ndarray)):
+            rewards = [rewards]
+        #print(f"Rewards: {rewards}")
+        
+        # Accumulate rewards
+        if self.cumulative_rewards is not None:
+            self.cumulative_rewards += rewards
+        
+        # Check for episode endings - try multiple possible keys
+        dones = None
+        for key in ['dones', 'done', 'terminateds', 'truncateds']:
+            if key in self.locals:
+                #print(f"Found key '{key}': {self.locals[key]}")
+                if self.locals[key] is not None:
+                    dones = self.locals[key]
+                    #print(f"Using '{key}' as dones: {dones}")
+                    break
+        
+        # Check infos for episode endings
+        infos = self.locals.get('infos', [])
+        #print(f"Infos: {infos}")
+        
+        # If still None, try to construct from infos
+        if dones is None and infos:
+            # Check if any info has 'terminal_observation' or 'episode' key
+            dones = []
+            for info in infos:
+                has_terminal = 'terminal_observation' in info or '_terminal_observation' in info
+                has_episode = 'episode' in info
+                done = has_terminal or has_episode
+                dones.append(done)
                 if done:
-                    # Extract episode stats from info dict
-                    infos = self.locals.get('infos', [])
-                    if i < len(infos) and 'episode' in infos[i]:
-                        ep_info = infos[i]['episode']
-                        ep_reward = ep_info['r']
-                        ep_length = ep_info['l']
+                    print(f"Detected done from info: terminal={has_terminal}, episode={has_episode}")
+        
+        #print(f"Final dones value: {dones}")
+        #print("=" * 50 + "\n")
+        
+        if dones is not None:
+            # Ensure dones is iterable
+            if not isinstance(dones, (list, tuple, np.ndarray)):
+                dones = [dones]
+            
+            infos = self.locals.get('infos', [])
+            
+            for i, done in enumerate(dones):
+                if done:
+                    print(f"\n=== EPISODE END DETECTED (env {i}) ===")
+                    print(f"Done: {done}")
+                    print(f"Cumulative reward: {self.cumulative_rewards[i] if self.cumulative_rewards is not None else 'N/A'}")
+                    
+                    # Try to get episode info from info dict
+                    ep_reward = None
+                    ep_length = None
+                    
+                    if i < len(infos):
+                        info = infos[i]
+                        print(f"Info keys: {info.keys()}")
                         
-                        self.episode_rewards.append(ep_reward)
-                        self.episode_lengths.append(ep_length)
+                        # Check for episode info (from Monitor wrapper)
+                        if 'episode' in info:
+                            ep_info = info['episode']
+                            ep_reward = ep_info.get('r')
+                            ep_length = ep_info.get('l')
+                            print(f"Found 'episode' key: reward={ep_reward}, length={ep_length}")
+                        
+                        # Fallback: use our tracked cumulative reward
+                        if ep_reward is None and self.cumulative_rewards is not None:
+                            ep_reward = self.cumulative_rewards[i]
+                            ep_length = self.num_timesteps - self.episode_starts[i]
+                            print(f"Using tracked cumulative: reward={ep_reward}, length={ep_length}")
+                    
+                    print("=" * 50 + "\n")
+                    
+                    # If we got episode stats, log them
+                    if ep_reward is not None:
+                        self.episode_rewards.append(float(ep_reward))
+                        self.episode_lengths.append(int(ep_length) if ep_length else 0)
                         self.episode_count += 1
                         
-                        # Log to TensorBoard (always)
-                        self.logger.record('rollout/ep_rew_mean', np.mean(self.episode_rewards[-100:]))
-                        self.logger.record('rollout/ep_len_mean', np.mean(self.episode_lengths[-100:]))
+                        # Reset tracking for this environment
+                        if self.cumulative_rewards is not None:
+                            self.cumulative_rewards[i] = 0
+                            self.episode_starts[i] = self.num_timesteps
                         
-                        # Only print to console periodically
+                        # Log to TensorBoard
+                        if len(self.episode_rewards) > 0:
+                            self.logger.record('rollout/ep_rew_mean', np.mean(self.episode_rewards[-100:]))
+                            self.logger.record('rollout/ep_len_mean', np.mean(self.episode_lengths[-100:]))
+                            self.logger.record('rollout/ep_rew_recent', ep_reward)
+                            self.logger.record('rollout/ep_len_recent', ep_length if ep_length else 0)
+                        
+                        # Print to console periodically
                         if self.verbose > 0 and self.episode_count % self.print_freq == 0:
                             recent_rewards = self.episode_rewards[-self.print_freq:]
                             recent_lengths = self.episode_lengths[-self.print_freq:]
@@ -268,24 +359,18 @@ def create_training_config(args) -> Dict[str, Any]:
 # Environment setup
 # -------------------------------------------------------------
 def setup_environment(config: Dict[str, Any]) -> gym.Env:
-    """
-    Setup RL environment with reward normalization.
-    
-    Critical: Uses VecNormalize for reward scaling (Van Hasselt et al. 2018).
-    """
+    """Setup RL environment with reward normalization."""
     scenario_path = resolve_config_path(config['environment']['scenario_file'], kind='scenario')
     
     def make_env():
         env = create_rl_environment(
             config_file=scenario_path,
+            episode_horizon=config['environment'].get('episode_horizon'),
             max_debris_tracked=config['environment'].get('max_debris_tracked', 10),
             render_mode=config['environment'].get('render_mode'),
         )
         
-        # Wrap with Monitor to track episode statistics
-        env = Monitor(env)
-        
-        # TimeLimit wrapper if specified
+        # Apply TimeLimit FIRST if specified
         horizon = config['environment'].get('episode_horizon', 0)
         if horizon > 0:
             try:
@@ -295,41 +380,43 @@ def setup_environment(config: Dict[str, Any]) -> gym.Env:
             except Exception as e:
                 logger.warning(f"Failed to apply TimeLimit: {e}")
         
+        # IMPORTANT: Use Monitor from stable-baselines3, NOT RecordEpisodeStatistics from gymnasium
+        # Monitor must be applied BEFORE vectorization
+        env = Monitor(env)
+        logger.info(f"Applied Monitor wrapper (SB3): {type(env).__name__}")
+        
         return env
     
-    # Create base environment (single env, no parallelization due to Orekit/Java issues)
+    # Check if stable-baselines3 is available
     if not VEC_ENV_AVAILABLE:
         logger.error("stable-baselines3 not available - cannot create training environment")
         raise ImportError("Install stable-baselines3 for training")
     
+    # Create vectorized env (only once!)
     env = DummyVecEnv([make_env])
     logger.info("Created single environment (parallel training not available due to Java/Python integration)")
     
-    # CRITICAL: Apply reward normalization
-    # This is essential for PPO stability with large penalty ranges (-50 to +31)
-    # See: Van Hasselt et al. (2018) "Deep RL that Matters"
+    # Apply reward normalization
     gamma = config.get('ppo', {}).get('gamma', 0.999)
     env = VecNormalize(
         env,
         training=True,
-        norm_obs=False,        # Don't normalize - we have intentional noise
-        norm_reward=True,      # DO normalize rewards - critical for stability
+        norm_obs=False,
+        norm_reward=False,  # Set to True if you want normalization
         clip_obs=10.0,
-        clip_reward=10.0,      # Clip to ±10 std devs
+        clip_reward=10.0,
         gamma=gamma,
         epsilon=1e-8
     )
     
     logger.info("="*60)
-    logger.info("REWARD NORMALIZATION ENABLED")
-    logger.info(f"  - norm_obs: False (preserving stochastic noise)")
-    logger.info(f"  - norm_reward: True (essential for PPO stability)")
-    logger.info(f"  - clip_reward: ±10.0 std devs")
+    logger.info("REWARD NORMALIZATION: " + ("ENABLED" if False else "DISABLED"))
+    logger.info(f"  - norm_obs: False")
+    logger.info(f"  - norm_reward: False")
     logger.info(f"  - gamma: {gamma}")
     logger.info("="*60)
     
     return env
-
 # -------------------------------------------------------------
 # Algorithm setup
 # -------------------------------------------------------------
@@ -395,14 +482,17 @@ def train_agent(config: Dict[str, Any]):
     logger.info(f"  Checkpoint frequency: {training_cfg['checkpoint_freq']:,}")
     logger.info(f"  Evaluation frequency: {training_cfg['eval_freq']:,}")
     logger.info(f"  Algorithm: {config['algorithm'].upper()}")
+    logger.info(f"  Custom callbacks: {len(callbacks)}")
     logger.info("="*60)
     
+    # Pass callbacks to the training manager!
     training_info = training_manager.train(
         total_timesteps=training_cfg['total_timesteps'],
         checkpoint_freq=training_cfg['checkpoint_freq'],
         eval_freq=training_cfg['eval_freq'],
         reward_threshold=training_cfg.get('reward_threshold'),
-        save_best_only=training_cfg.get('save_best_only', True)
+        save_best_only=training_cfg.get('save_best_only', True),
+        callbacks=callbacks  # <-- THIS IS THE KEY CHANGE!
     )
     
     # Save final config and normalization stats

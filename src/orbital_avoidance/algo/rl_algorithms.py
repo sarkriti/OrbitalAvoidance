@@ -232,8 +232,15 @@ class TrainingManager:
                         checkpoint_freq: int,
                         eval_freq: int,
                         reward_threshold: Optional[float],
-                        save_best_only: bool) -> CallbackList:
+                        save_best_only: bool,
+                        additional_callbacks: Optional[List[BaseCallback]] = None) -> CallbackList:
+        """Setup callbacks including any additional custom callbacks."""
         callbacks = []
+        
+        # Add any custom callbacks first
+        if additional_callbacks:
+            callbacks.extend(additional_callbacks)
+            logger.info(f"Added {len(additional_callbacks)} custom callback(s)")
 
         # Checkpoint callback to save model periodically
         if not save_best_only:
@@ -269,19 +276,32 @@ class TrainingManager:
               checkpoint_freq: int = 10000,
               eval_freq: int = 5000,
               reward_threshold: Optional[float] = None,
-              save_best_only: bool = True) -> Dict[str, Any]:
+              save_best_only: bool = True,
+              callbacks: Optional[List[BaseCallback]] = None) -> Dict[str, Any]:
         """
         Main training function.
-        Note: The environment should be wrapped with `stable_baselines3.common.monitor.Monitor`
-        for proper logging of episode rewards and lengths.
+        
+        Args:
+            total_timesteps: Total training steps
+            checkpoint_freq: Frequency to save checkpoints
+            eval_freq: Frequency to evaluate
+            reward_threshold: Stop training when this reward is reached
+            save_best_only: Only save best model
+            callbacks: Additional custom callbacks to include
         """
         # Set up the logger for SB3 (stdout, csv, tensorboard)
         if self.algorithm.model is None:
             self.algorithm.create_model()
         self.algorithm.model.set_logger(configure(str(self.log_dir), ["stdout", "csv", "tensorboard"]))
 
-        callbacks = self.setup_callbacks(checkpoint_freq, eval_freq, reward_threshold, save_best_only)
-        info = self.algorithm.train(total_timesteps=total_timesteps, callback=callbacks)
+        all_callbacks = self.setup_callbacks(
+            checkpoint_freq, 
+            eval_freq, 
+            reward_threshold, 
+            save_best_only,
+            additional_callbacks=callbacks
+        )
+        info = self.algorithm.train(total_timesteps=total_timesteps, callback=all_callbacks)
 
         # Always save the final model for completeness
         final_model_path = self.save_dir / "final_model"

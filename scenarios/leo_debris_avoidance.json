@@ -5,9 +5,9 @@
     "max_debris_tracked": 20,
     "collision_distance_km": 0.005,
     "near_miss_distance_km": 0.050,
-    "episode_horizon": 1500,
+    "episode_horizon": 1000,
     "render_mode": null
-  },
+  }, 
   "stochasticity": {
     "enabled": true,
     "observation_noise": {
@@ -133,7 +133,7 @@
       "is_controllable": true,
       "max_thrust_n": 2.5,
       "fuel_capacity_kg": 150,
-      "collision_radius_km": 0.001,
+      "collision_radius_km": 0.010,
       "near_miss_radius_km": 0.050,
       "attitude_dependent_drag": false,
       "maneuver_efficiency": 0.85,
@@ -143,11 +143,11 @@
   "debris_fields": [
     {
       "name": "primary_leo_cloud",
-      "num_objects": 30,
-      "altitude_range_km": [395, 405],
-      "inclination_range_deg": [49, 54],
+      "num_objects": 50,
+      "altitude_range_km": [398, 402],
+      "inclination_range_deg": [51, 52],
       "eccentricity_range": [0.0, 0.025],
-      "raan_range_deg": [0, 360],
+      "raan_range_deg": [0, 90],
       "arg_periapsis_range_deg": [0, 360],
       "mean_anomaly_range_deg": [0, 360],
       "mass_range_kg": [5, 150],
@@ -160,7 +160,7 @@
       "num_objects": 20,
       "altitude_range_km": [396, 404],
       "inclination_range_deg": [46, 50],
-      "eccentricity_range": [0.005, 0.03],
+      "eccentricity_range": [0.00, 0.03],
       "raan_range_deg": [60, 300],
       "arg_periapsis_range_deg": [0, 360],
       "mean_anomaly_range_deg": [0, 360],
@@ -261,7 +261,7 @@
   },
   "collision_detection": {
     "method": "spherical_with_prediction",
-    "collision_threshold_km": 0.002,
+    "collision_threshold_km": 1, 
     "conjunction_screening_km": 0.075,
     "prediction_horizon_seconds": 300
   },
@@ -281,14 +281,14 @@
     "collision_penalty": -50.0,
     "mission_success_reward": 10.0,
     "fuel_cost_weight": 0.01,
-    "survival_bonus": 0.005,
+    "survival_bonus": 0.01,
     "proximity_penalties": {
-      "critical_distance_km": 0.008,
-      "warning_distance_km": 0.025,
-      "safe_distance_km": 0.075,
+      "critical_distance_km": 1,
+      "warning_distance_km": 10,
+      "safe_distance_km": 50,
       "critical_penalty": -10.0,
       "warning_penalty": -1.0,
-      "safe_bonus": 0.01
+      "safe_bonus": 0.005
     }
   },
   "control": {
