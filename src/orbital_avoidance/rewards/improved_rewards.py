@@ -98,8 +98,7 @@ def create_ppo_optimized_reward_function(env) -> Callable[[Any, Dict], float]:
     # Per-step costs (should sum to reasonable values over episode)
     fuel_cost_weight = float(safe_reward_get(rewards_cfg, 'fuel_cost_weight', 0.01))
     survival_bonus = float(safe_reward_get(rewards_cfg, 'survival_bonus', 0.0))
-    time_penalty = float(safe_reward_get(rewards_cfg, 'time_penalty', 0.001))  # Configurable now
-    
+
     # Proximity penalties - get from config or scale from collision penalty
     proximity_cfg = safe_reward_get(rewards_cfg, 'proximity_penalties', {})
     
@@ -123,82 +122,69 @@ def create_ppo_optimized_reward_function(env) -> Callable[[Any, Dict], float]:
     logger.info(f"Mission success reward: {mission_success_reward:.2f}")
     logger.info(f"Survival bonus per step: {survival_bonus:.4f}")
     logger.info(f"Fuel cost weight: {fuel_cost_weight:.4f}")
-    logger.info(f"Time penalty per step: {time_penalty:.4f}")
     
     # Calculate expected reward range
-    max_episode_reward = mission_success_reward + (survival_bonus + safe_bonus - time_penalty) * 1500
+    max_episode_reward = mission_success_reward + (survival_bonus + safe_bonus) * 1500
     logger.info(f"Expected episode reward range: [{collision_penalty:.1f} to {max_episode_reward:.1f}]")
     logger.info("=" * 50)
     
     def reward_fn(action: Optional[np.ndarray], info: Dict[str, Any]) -> float:
         """
-        Calculate PPO-optimized reward for current step.
-        
-        Args:
-            action: Control action (can be None)
-            info: Dictionary containing:
-                - collisions: bool, whether collision occurred
-                - min_debris_distance_km: float, minimum distance to debris
-                - truncated: bool, whether episode hit time limit
-                - success: bool, whether episode completed successfully
-                
-        Returns:
-            Scalar reward value
+        PPO-optimized reward function with configurable penalties/bonuses.
+        All values are pulled from env.config_dict['rewards'].
         """
-        # if info.get('step', 0) % 100 == 0:  # Log every 100 steps
-        #     logger.info(f"=== REWARD DEBUG at step {info.get('step', 0)} ===")
-        #     logger.info(f"survival_bonus={survival_bonus}")
-        #     logger.info(f"collision_penalty={collision_penalty}")
-        #     logger.info(f"min_distance={info.get('min_debris_distance_km', float('inf'))}")
-        #     logger.info(f"collisions={info.get('collisions', False)}")
 
-        # Start with survival bonus (helps with early learning)
-        total_reward = survival_bonus
-        
-        # 1. TERMINAL COLLISION PENALTY - Episode ending event
-        if info.get('collisions', False):
+        total_reward = survival_bonus  # from config
+
+        # --- 1. COLLISION PENALTY ---
+        if info.get("collisions", False):
             return float(collision_penalty)
-        
-        # 2. PROXIMITY PENALTIES - Based on closest approach to debris
-        min_distance = info.get('min_debris_distance_km', float('inf'))
-        
+
+        # --- 2. SAFETY PENALTIES / BONUSES ---
+        min_distance = info.get("min_debris_distance_km", float("inf"))
+
+        unsafe_step = False
         if min_distance < critical_distance_km:
-            # Critical zone - very dangerous, large per-step penalty
             total_reward += critical_penalty
-            
+            unsafe_step = True
+
         elif min_distance < warning_distance_km:
-            # Warning zone - scaled penalty based on distance
-            # Closer to critical = more penalty
+            # Scale warning penalty smoothly
             scale = (warning_distance_km - min_distance) / (warning_distance_km - critical_distance_km)
-            total_reward += warning_penalty * (0.1 + 0.9 * scale)  # Min 10% of warning penalty
-            
+            total_reward += warning_penalty * (0.1 + 0.9 * scale)
+            unsafe_step = True
+
         elif min_distance < safe_distance_km:
-            # Transitional zone - very small penalty
+            # Transitional zone penalty
             scale = (safe_distance_km - min_distance) / (safe_distance_km - warning_distance_km)
             total_reward -= warning_penalty * 0.1 * scale
-            
+
         else:
-            # Safe zone - small bonus for maintaining safe distance
+            # Safe zone bonus
             total_reward += safe_bonus
-        
-        # 3. FUEL USAGE PENALTY - Proportional to thrust magnitude
+
+        # Mark unsafe episode if triggered this step
+        if unsafe_step:
+            env.unsafe_episode = True
+            info["unsafe_episode"] = env.unsafe_episode
+
+
+        # --- 3. FUEL USAGE PENALTY ---
         if action is not None:
             thrust_mag = float(np.linalg.norm(action))
             total_reward -= fuel_cost_weight * thrust_mag
-        
-        # 4. TIME PENALTY - Encourage efficiency (very small)
-        total_reward -= time_penalty
-        
-        # 5. MISSION SUCCESS BONUS - Only if episode completes successfully
-        if info.get('success', False):
-            total_reward += mission_success_reward
-        elif info.get('truncated', False) and not info.get('collisions', False):
-            # Also give success bonus if episode completes without collision
-            total_reward += mission_success_reward
-        
+
+
+        # --- 5. MISSION SUCCESS BONUS ---
+        if info.get("success", False):
+            if not info.get("unsafe_episode", False):
+                total_reward += mission_success_reward
+        elif info.get("truncated", False) and not info.get("collisions", False):
+            if not info.get("unsafe_episode", False):
+                total_reward += mission_success_reward
+
         return float(total_reward)
-    
-    return reward_fn
+    return reward_fn 
 
 
 # Legacy function name for backward compatibility

@@ -55,11 +55,13 @@ class RLOrbitalEnvironment(gym.Env):
     """Gym wrapper around ConfigurableOrbitalEnvironment with improved rewards."""
 
     def __init__(self,
-                 config_file: Optional[str] = None,
-                 config: Optional[SimulationConfig] = None,
-                 max_debris_tracked: int = 10,
-                 reward_config: Optional[Dict] = None,
-                 render_mode: Optional[str] = None):
+        config_file: Optional[str] = None,
+        config: Optional[SimulationConfig] = None,
+        max_debris_tracked: int = 10,
+        reward_config: Optional[Dict] = None,
+        render_mode: Optional[str] = None):
+        self.unsafe_episode = False
+
         super().__init__()
         if config is not None:
             self.config = config
@@ -176,6 +178,7 @@ class RLOrbitalEnvironment(gym.Env):
         self.step_count = 0
         self.collision_free_steps = 0
         self.reference_orbit = self._calculate_reference_orbit_from_state()
+        self.unsafe_episode = False
 
         return self._get_observation(), self._get_info()
 
@@ -327,6 +330,7 @@ class RLOrbitalEnvironment(gym.Env):
             'step_count': self.step_count,
             'fuel_remaining_kg': self.true_satellite_state.fuel_remaining_kg,
             'fuel_remaining_percent': self.true_satellite_state.fuel_remaining_kg / self.initial_fuel * 100,
+            'unsafe_episode': self.unsafe_episode,
             'collision_free_steps': self.collision_free_steps
         }
 

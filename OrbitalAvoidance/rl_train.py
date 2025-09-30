@@ -115,15 +115,10 @@ class EpisodeStatsCallback(BaseCallback):
     def _on_step(self) -> bool:
         """Called after each environment step."""
         
-        # ALWAYS print what we're seeing to debug
-        #print(f"\n=== CALLBACK STEP {self.num_timesteps} ===")
-        #print(f"Keys in locals: {list(self.locals.keys())}")
-        
         # Get rewards for this step
         rewards = self.locals.get('rewards', [])
         if not isinstance(rewards, (list, np.ndarray)):
             rewards = [rewards]
-        #print(f"Rewards: {rewards}")
         
         # Accumulate rewards
         if self.cumulative_rewards is not None:
@@ -133,33 +128,23 @@ class EpisodeStatsCallback(BaseCallback):
         dones = None
         for key in ['dones', 'done', 'terminateds', 'truncateds']:
             if key in self.locals:
-                #print(f"Found key '{key}': {self.locals[key]}")
                 if self.locals[key] is not None:
                     dones = self.locals[key]
-                    #print(f"Using '{key}' as dones: {dones}")
                     break
         
         # Check infos for episode endings
         infos = self.locals.get('infos', [])
-        #print(f"Infos: {infos}")
         
         # If still None, try to construct from infos
         if dones is None and infos:
-            # Check if any info has 'terminal_observation' or 'episode' key
             dones = []
             for info in infos:
                 has_terminal = 'terminal_observation' in info or '_terminal_observation' in info
                 has_episode = 'episode' in info
                 done = has_terminal or has_episode
                 dones.append(done)
-                if done:
-                    print(f"Detected done from info: terminal={has_terminal}, episode={has_episode}")
-        
-        #print(f"Final dones value: {dones}")
-        #print("=" * 50 + "\n")
         
         if dones is not None:
-            # Ensure dones is iterable
             if not isinstance(dones, (list, tuple, np.ndarray)):
                 dones = [dones]
             
@@ -167,34 +152,24 @@ class EpisodeStatsCallback(BaseCallback):
             
             for i, done in enumerate(dones):
                 if done:
-                    print(f"\n=== EPISODE END DETECTED (env {i}) ===")
-                    print(f"Done: {done}")
-                    print(f"Cumulative reward: {self.cumulative_rewards[i] if self.cumulative_rewards is not None else 'N/A'}")
-                    
-                    # Try to get episode info from info dict
+                    # Episode end detected
                     ep_reward = None
                     ep_length = None
                     
                     if i < len(infos):
                         info = infos[i]
-                        print(f"Info keys: {info.keys()}")
                         
                         # Check for episode info (from Monitor wrapper)
                         if 'episode' in info:
                             ep_info = info['episode']
                             ep_reward = ep_info.get('r')
                             ep_length = ep_info.get('l')
-                            print(f"Found 'episode' key: reward={ep_reward}, length={ep_length}")
                         
                         # Fallback: use our tracked cumulative reward
                         if ep_reward is None and self.cumulative_rewards is not None:
                             ep_reward = self.cumulative_rewards[i]
                             ep_length = self.num_timesteps - self.episode_starts[i]
-                            print(f"Using tracked cumulative: reward={ep_reward}, length={ep_length}")
                     
-                    print("=" * 50 + "\n")
-                    
-                    # If we got episode stats, log them
                     if ep_reward is not None:
                         self.episode_rewards.append(float(ep_reward))
                         self.episode_lengths.append(int(ep_length) if ep_length else 0)
@@ -207,12 +182,17 @@ class EpisodeStatsCallback(BaseCallback):
                         
                         # Log to TensorBoard
                         if len(self.episode_rewards) > 0:
-                            self.logger.record('rollout/ep_rew_mean', np.mean(self.episode_rewards[-100:]))
-                            self.logger.record('rollout/ep_len_mean', np.mean(self.episode_lengths[-100:]))
+                            mean_rew = np.mean(self.episode_rewards[-100:])
+                            mean_len = np.mean(self.episode_lengths[-100:])
+                            self.logger.record('rollout/ep_rew_mean', mean_rew)
+                            self.logger.record('rollout/ep_len_mean', mean_len)
                             self.logger.record('rollout/ep_rew_recent', ep_reward)
                             self.logger.record('rollout/ep_len_recent', ep_length if ep_length else 0)
+                            
+                            # 🔥 Print means to console every episode
+                            print(f"[Episode {self.episode_count}] ep_rew_mean={mean_rew:.2f}, ep_len_mean={mean_len:.1f}")
                         
-                        # Print to console periodically
+                        # Print to console periodically (using print_freq)
                         if self.verbose > 0 and self.episode_count % self.print_freq == 0:
                             recent_rewards = self.episode_rewards[-self.print_freq:]
                             recent_lengths = self.episode_lengths[-self.print_freq:]
@@ -223,6 +203,7 @@ class EpisodeStatsCallback(BaseCallback):
                             )
         
         return True
+
 
 # -------------------------------------------------------------
 # Curriculum Learning Callback

@@ -204,7 +204,7 @@ class ConfigurableOrbitalEnvironment:
         self.time_step = self.physics_config.get('time_step_seconds', 10.0)
         self.simulation_duration = self.physics_config.get('simulation_duration_seconds', 1800.0)
         self.simulation_time = 0.0
-        
+        self.unsafe_episode = False
         # Parse satellites from config
         self.satellites = {}
         self._satellite_configs = {}
@@ -254,7 +254,10 @@ class ConfigurableOrbitalEnvironment:
         logger.info(f"  - Debris objects: {len(self.debris_objects)}")
         logger.info(f"  - Time step: {self.time_step}s")
         logger.info(f"  - Duration: {self.simulation_duration}s")
-    
+        print("="*60)
+        print("DEBUG: Rewards config from JSON:")
+        print(safe_get(self.config_dict, 'rewards', {}))
+        print("="*60)
     @property
     def current_satellite_state(self):
         """Get current state of the primary controllable satellite."""
@@ -457,6 +460,7 @@ class ConfigurableOrbitalEnvironment:
             self.debris_objects[debris_name]['position'] = pos
             self.debris_objects[debris_name]['velocity'] = vel
         
+        self.unsafe_episode = False
         return None, {}
     
     def step(self, action):
