@@ -3,7 +3,6 @@
   "environment": {
     "scenario_file": "leo_debris_avoidance.json",
     "max_debris_tracked": 20,
-    "collision_distance_km": 0.005,
     "near_miss_distance_km": 0.050,
     "episode_horizon": 1000,
     "render_mode": null
@@ -143,13 +142,13 @@
   "debris_fields": [
     {
       "name": "imminent_threat_cloud",
-      "num_objects": 40,
-      "altitude_range_km": [399.5, 400.5],
-      "inclination_range_deg": [51.4, 51.8],
-      "eccentricity_range": [0.0, 0.005],
-      "raan_range_deg": [0, 45],
-      "arg_periapsis_range_deg": [0, 90],
-      "mean_anomaly_range_deg": [0, 90],
+      "num_objects": 60,
+      "altitude_range_km": [395, 405],
+      "inclination_range_deg": [49, 54],
+      "eccentricity_range": [0.0, 0.008],
+      "raan_range_deg": [0, 180],
+      "arg_periapsis_range_deg": [0, 360],
+      "mean_anomaly_range_deg": [0, 360],
       "mass_range_kg": [10, 200],
       "collision_radius_range_km": [0.001, 0.004],
       "near_miss_multiplier": 10.0,
@@ -157,31 +156,31 @@
     },
     {
       "name": "crossing_trajectories",
-      "num_objects": 30,
-      "altitude_range_km": [399.8, 400.2],
-      "inclination_range_deg": [51.5, 51.7],
-      "eccentricity_range": [0.0, 0.008],
-      "raan_range_deg": [0, 30],
-      "arg_periapsis_range_deg": [0, 180],
-      "mean_anomaly_range_deg": [0, 180],
+      "num_objects": 40,
+      "altitude_range_km": [398, 402],
+      "inclination_range_deg": [50.5, 52.7],
+      "eccentricity_range": [0.0, 0.01],
+      "raan_range_deg": [0, 90],
+      "arg_periapsis_range_deg": [0, 360],
+      "mean_anomaly_range_deg": [0, 360],
       "mass_range_kg": [5, 150],
       "collision_radius_range_km": [0.0008, 0.003],
       "distribution_type": "realistic_density"
     },
     {
       "name": "dense_near_field",
-      "num_objects": 25,
-      "altitude_range_km": [399.9, 400.1],
-      "inclination_range_deg": [51.55, 51.65],
-      "eccentricity_range": [0.0, 0.003],
-      "raan_range_deg": [0, 20],
+      "num_objects": 35,
+      "altitude_range_km": [398.5, 401.5],
+      "inclination_range_deg": [50, 53],
+      "eccentricity_range": [0.0, 0.006],
+      "raan_range_deg": [0, 60],
       "arg_periapsis_range_deg": [0, 360],
       "mean_anomaly_range_deg": [0, 360],
       "mass_range_kg": [2, 80],
       "collision_radius_range_km": [0.0005, 0.002],
       "distribution_type": "swarm",
       "swarm_center_altitude_km": 400,
-      "swarm_radius_km": 2
+      "swarm_radius_km": 2.0
     }
   ],
   "static_debris": [
@@ -190,10 +189,10 @@
       "orbit": {
         "altitude_km": 400.0,
         "inclination_deg": 51.6,
-        "eccentricity": 0.001,
-        "raan_deg": 0,
+        "eccentricity": 0.002,
+        "raan_deg": 15,
         "arg_periapsis_deg": 0,
-        "mean_anomaly_deg": 10
+        "mean_anomaly_deg": 45
       },
       "mass_kg": 300,
       "drag_area_m2": 8,
@@ -205,12 +204,12 @@
     {
       "name": "DirectThreat_2",
       "orbit": {
-        "altitude_km": 400.0,
-        "inclination_deg": 51.6,
-        "eccentricity": 0.001,
-        "raan_deg": 0,
-        "arg_periapsis_deg": 0,
-        "mean_anomaly_deg": 350
+        "altitude_km": 402.0,
+        "inclination_deg": 50.5,
+        "eccentricity": 0.003,
+        "raan_deg": 30,
+        "arg_periapsis_deg": 90,
+        "mean_anomaly_deg": 135
       },
       "mass_kg": 250,
       "drag_area_m2": 6,
@@ -222,12 +221,12 @@
     {
       "name": "DirectThreat_3",
       "orbit": {
-        "altitude_km": 400.05,
-        "inclination_deg": 51.6,
-        "eccentricity": 0.002,
-        "raan_deg": 1,
-        "arg_periapsis_deg": 30,
-        "mean_anomaly_deg": 45
+        "altitude_km": 398.0,
+        "inclination_deg": 52.7,
+        "eccentricity": 0.004,
+        "raan_deg": 45,
+        "arg_periapsis_deg": 180,
+        "mean_anomaly_deg": 225
       },
       "mass_kg": 200,
       "drag_area_m2": 5,
@@ -235,6 +234,57 @@
       "max_thrust_n": 0,
       "fuel_capacity_kg": 0,
       "collision_radius_km": 0.002
+    },
+    {
+      "name": "DirectThreat_4",
+      "orbit": {
+        "altitude_km": 401.0,
+        "inclination_deg": 50.0,
+        "eccentricity": 0.005,
+        "raan_deg": 60,
+        "arg_periapsis_deg": 270,
+        "mean_anomaly_deg": 315
+      },
+      "mass_kg": 180,
+      "drag_area_m2": 5,
+      "is_controllable": false,
+      "max_thrust_n": 0,
+      "fuel_capacity_kg": 0,
+      "collision_radius_km": 0.002
+    },
+    {
+      "name": "DirectThreat_5",
+      "orbit": {
+        "altitude_km": 399.0,
+        "inclination_deg": 53.0,
+        "eccentricity": 0.006,
+        "raan_deg": 90,
+        "arg_periapsis_deg": 45,
+        "mean_anomaly_deg": 90
+      },
+      "mass_kg": 220,
+      "drag_area_m2": 7,
+      "is_controllable": false,
+      "max_thrust_n": 0,
+      "fuel_capacity_kg": 0,
+      "collision_radius_km": 0.0025
+    },
+    {
+      "name": "DirectThreat_6",
+      "orbit": {
+        "altitude_km": 403.0,
+        "inclination_deg": 49.5,
+        "eccentricity": 0.007,
+        "raan_deg": 120,
+        "arg_periapsis_deg": 135,
+        "mean_anomaly_deg": 270
+      },
+      "mass_kg": 190,
+      "drag_area_m2": 6,
+      "is_controllable": false,
+      "max_thrust_n": 0,
+      "fuel_capacity_kg": 0,
+      "collision_radius_km": 0.0028
     }
   ],
   "physics": {
@@ -276,12 +326,6 @@
     "include_j2_perturbation": true,
     "include_higher_order_gravity": true
   },
-  "collision_detection": {
-    "method": "spherical_with_prediction",
-    "collision_threshold_km": 0.005,
-    "conjunction_screening_km": 0.075,
-    "prediction_horizon_seconds": 300
-  },
   "observations": {
     "include_relative_positions": true,
     "include_relative_velocities": true,
@@ -292,19 +336,25 @@
     "observation_frequency_hz": 2.0,
     "prioritization_scheme": "threat_based"
   },
+  "collision_detection": {
+    "method": "spherical_with_prediction",
+    "collision_threshold_km": 1,
+    "conjunction_screening_km": 0.075,
+    "prediction_horizon_seconds": 300
+  },
   "rewards": {
-    "collision_penalty": -20.0,
-    "mission_success_reward": 1.0,
-    "fuel_cost_weight": -0.005,
+    "collision_penalty": -50.0,
+    "mission_success_reward": 10.0,
+    "fuel_cost_weight": 0.01,
     "survival_bonus": 0.01,
     "proximity_penalties": {
-		"critical_distance_km": 10,
-		"warning_distance_km": 50,
-		"safe_distance_km": 50.1,
-		"critical_penalty": -5.0,
-		"warning_penalty": -0.5,
-		"safe_bonus": 0.01
-		}
+      "critical_distance_km": 10,
+      "warning_distance_km": 50,
+      "safe_distance_km": 50.1,
+      "critical_penalty": -10.0,
+      "warning_penalty": -1.0,
+      "safe_bonus": 0.01
+    }
   },
   "control": {
     "max_delta_v_km_s": 0.001,

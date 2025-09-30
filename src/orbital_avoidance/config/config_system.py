@@ -52,6 +52,19 @@ class OrbitConfig:
 			epoch_mjd=self.epoch_mjd
 		)
 
+@dataclass
+class CollisionDetectionConfig:
+    method: str = "spherical_with_prediction"
+    collision_threshold_km: float = 0.005
+    conjunction_screening_km: float = 0.075
+    prediction_horizon_seconds: float = 300.0
+
+@dataclass
+class ControlConfig:
+    max_delta_v_km_s: float = 0.001
+    fuel_consumption_rate_kg_per_km_s: float = 100.0
+    thrust_vectoring: bool = True
+    reaction_wheel_torque_nm: float = 0.1
 
 @dataclass
 class SpacecraftConfig:
@@ -201,9 +214,10 @@ class SimulationConfig:
 	physics: PhysicsConfig = field(default_factory=PhysicsConfig)
 	rewards: RewardConfig = field(default_factory=RewardConfig)
 	observations: ObservationConfig = field(default_factory=ObservationConfig)
+	collision_detection: CollisionDetectionConfig = field(default_factory=CollisionDetectionConfig)
+	control: ControlConfig = field(default_factory=ControlConfig)
 	random_seed: Optional[int] = None
-	episode_horizon: Optional[int] = None 
-
+	episode_horizon: Optional[int] = None
 
 class ConfigurationLoader:
 	@staticmethod
@@ -288,12 +302,16 @@ class ConfigurationLoader:
 		physics = PhysicsConfig(**ConfigurationLoader._filter_supported_params(data.get('physics', {}), PhysicsConfig))
 		rewards = RewardConfig(**ConfigurationLoader._filter_supported_params(data.get('rewards', {}), RewardConfig))
 		observations = ObservationConfig(**ConfigurationLoader._filter_supported_params(data.get('observations', {}), ObservationConfig))
+		collision_detection = CollisionDetectionConfig(**ConfigurationLoader._filter_supported_params(data.get('collision_detection', {}), CollisionDetectionConfig))
+		control = ControlConfig(**ConfigurationLoader._filter_supported_params(data.get('control', {}), ControlConfig))
 		return SimulationConfig(
 			scenario_name=data.get('scenario_name', data.get('name', 'Unknown Scenario')),
 			description=data.get('description', ''),
 			satellites=satellites,
 			debris_fields=debris_fields,
 			static_debris=static_debris,
+			collision_detection=collision_detection,
+    		control=control,  
 			physics=physics,
 			rewards=rewards,
 			observations=observations,

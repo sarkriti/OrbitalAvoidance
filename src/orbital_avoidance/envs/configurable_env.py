@@ -341,10 +341,8 @@ class ConfigurableOrbitalEnvironment:
         """Convert a config object to dictionary format."""
         if hasattr(config, 'to_dict'):
             return config.to_dict()
-        
         # Extract key attributes from config object
         result = {}
-        
         # Handle satellites
         if hasattr(config, 'satellites'):
             satellites = config.satellites
@@ -372,7 +370,9 @@ class ConfigurableOrbitalEnvironment:
         # Handle physics config
         if hasattr(config, 'physics'):
             result['physics'] = config.physics
-        
+        # Handle collision detection
+        if hasattr(config, 'collision_detection'):
+            result['collision_detection'] = config.collision_detection if isinstance(config.collision_detection, dict) else config.collision_detection.__dict__
         # Handle environment config
         if hasattr(config, 'environment'):
             result['environment'] = config.environment if isinstance(config.environment, dict) else config.environment.__dict__
@@ -561,7 +561,6 @@ class ConfigurableOrbitalEnvironment:
     def _check_collisions(self):
         """Check for collisions between satellites and debris."""
         collision_config = safe_get(self.config_dict, 'collision_detection', {})
-        
         for sat_name, sat_data in self.satellites.items():
             sat_pos = sat_data['position']
             sat_config = sat_data['config']
