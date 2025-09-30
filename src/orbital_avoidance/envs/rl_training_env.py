@@ -94,11 +94,15 @@ class RLOrbitalEnvironment(gym.Env):
         self.step_count = 0
         self.collision_free_steps = 0
 
-        self.current_satellite_state: Optional[StateWrapper] = None
-        self.current_debris_states: List[StateWrapper] = []
+        # Store TRUE states (from base environment, no noise)
+        self.true_satellite_state: Optional[StateWrapper] = None
+        self.true_debris_states: List[StateWrapper] = []
+        
+        # Store NOISY states (for observations only)
+        self.noisy_satellite_state: Optional[StateWrapper] = None
+        self.noisy_debris_states: List[StateWrapper] = []
 
-        # Determine maximum episode steps based on config
-       # Determine maximum episode steps
+        # Determine maximum episode steps
         if self.config.episode_horizon is not None:
             self.max_episode_steps = self.config.episode_horizon
         else:
@@ -137,31 +141,37 @@ class RLOrbitalEnvironment(gym.Env):
             np.random.seed(seed)
 
         base_obs, _ = self._base_env.reset()
-        sat_dict = self._base_env.satellites[self.main_satellite_name]
-        self.current_satellite_state = StateWrapper(sat_dict)
         
-        # Apply initial state noise
+        # Store TRUE states from base environment
+        sat_dict = self._base_env.satellites[self.main_satellite_name]
+        self.true_satellite_state = StateWrapper(sat_dict)
+        self.true_debris_states = [StateWrapper(d) for d in self._base_env.debris_objects.values()]
+        
+        # Create NOISY copies for observations
+        self.noisy_satellite_state = StateWrapper(sat_dict)
+        self.noisy_debris_states = [StateWrapper(d) for d in self._base_env.debris_objects.values()]
+        
+        # Apply initial state noise to NOISY copies only
         if self.noise_manager.enabled:
             noisy_pos, noisy_vel = self.noise_manager.apply_initial_state_noise(
-                self.current_satellite_state.position_km.copy(),
-                self.current_satellite_state.velocity_km_s.copy()
+                self.true_satellite_state.position_km.copy(),
+                self.true_satellite_state.velocity_km_s.copy()
             )
-            self.current_satellite_state.position_km = noisy_pos
-            self.current_satellite_state.velocity_km_s = noisy_vel
-            # Update the base environment state if possible
-            # (This depends on your ConfigurableOrbitalEnvironment implementation)
-
-        self.current_debris_states = [StateWrapper(d) for d in self._base_env.debris_objects.values()]
-        
-        # Apply noise to debris initial states too
-        if self.noise_manager.enabled:
-            for debris_state in self.current_debris_states:
+            self.noisy_satellite_state.position_km = noisy_pos
+            self.noisy_satellite_state.velocity_km_s = noisy_vel
+            
+            # Apply noise to debris observations
+            for i, true_debris in enumerate(self.true_debris_states):
                 noisy_pos, noisy_vel = self.noise_manager.apply_initial_state_noise(
-                    debris_state.position_km.copy(),
-                    debris_state.velocity_km_s.copy()
+                    true_debris.position_km.copy(),
+                    true_debris.velocity_km_s.copy()
                 )
-                debris_state.position_km = noisy_pos
-                debris_state.velocity_km_s = noisy_vel
+                self.noisy_debris_states[i].position_km = noisy_pos
+                self.noisy_debris_states[i].velocity_km_s = noisy_vel
+        else:
+            # No noise - noisy states equal true states
+            self.noisy_satellite_state = StateWrapper(sat_dict)
+            self.noisy_debris_states = [StateWrapper(d) for d in self._base_env.debris_objects.values()]
 
         self.step_count = 0
         self.collision_free_steps = 0
@@ -169,7 +179,6 @@ class RLOrbitalEnvironment(gym.Env):
 
         return self._get_observation(), self._get_info()
 
-    # Modify the step method to add control and dynamics noise:
     def step(self, action: np.ndarray):
         action = np.clip(action, -1.0, 1.0)
         
@@ -177,63 +186,89 @@ class RLOrbitalEnvironment(gym.Env):
         noisy_action = self.noise_manager.apply_control_noise(action.copy())
         noisy_action = np.clip(noisy_action, -1.0, 1.0)  # Re-clip after noise
         
-        # Pass noisy action to base env
-        base_obs, reward_dummy, terminated_dummy, truncated_dummy, info_dummy = self._base_env.step(noisy_action)
+        # Pass noisy action to base env (simulates imperfect actuators)
+        base_obs, reward_dummy, terminated_dummy, truncated_dummy, info_base = self._base_env.step(noisy_action)
 
-        # Update state wrappers and apply dynamics noise
+        # Update TRUE state wrappers from base environment (ground truth)
         sat_dict = self._base_env.satellites[self.main_satellite_name]
-        self.current_satellite_state.update_from_dict(sat_dict)
+        self.true_satellite_state.update_from_dict(sat_dict)
         
-        if self.noise_manager.enabled:
-            noisy_pos, noisy_vel = self.noise_manager.apply_dynamics_noise(
-                self.current_satellite_state.position_km.copy(),
-                self.current_satellite_state.velocity_km_s.copy()
-            )
-            self.current_satellite_state.position_km = noisy_pos
-            self.current_satellite_state.velocity_km_s = noisy_vel
-
         for i, debris_dict in enumerate(self._base_env.debris_objects.values()):
-            if i < len(self.current_debris_states):
-                self.current_debris_states[i].update_from_dict(debris_dict)
-                if self.noise_manager.enabled:
+            if i < len(self.true_debris_states):
+                self.true_debris_states[i].update_from_dict(debris_dict)
+        
+        # Create NOISY observations by applying dynamics noise to TRUE states
+        if self.noise_manager.enabled:
+            # Satellite noisy observation
+            noisy_pos, noisy_vel = self.noise_manager.apply_dynamics_noise(
+                self.true_satellite_state.position_km.copy(),
+                self.true_satellite_state.velocity_km_s.copy()
+            )
+            self.noisy_satellite_state.position_km = noisy_pos
+            self.noisy_satellite_state.velocity_km_s = noisy_vel
+            self.noisy_satellite_state.fuel_remaining_kg = self.true_satellite_state.fuel_remaining_kg
+            
+            # Debris noisy observations
+            for i, true_debris in enumerate(self.true_debris_states):
+                if i < len(self.noisy_debris_states):
                     noisy_pos, noisy_vel = self.noise_manager.apply_dynamics_noise(
-                        self.current_debris_states[i].position_km.copy(),
-                        self.current_debris_states[i].velocity_km_s.copy()
+                        true_debris.position_km.copy(),
+                        true_debris.velocity_km_s.copy()
                     )
-                    self.current_debris_states[i].position_km = noisy_pos
-                    self.current_debris_states[i].velocity_km_s = noisy_vel
+                    self.noisy_debris_states[i].position_km = noisy_pos
+                    self.noisy_debris_states[i].velocity_km_s = noisy_vel
+        else:
+            # No noise - copy true states to noisy states
+            self.noisy_satellite_state.position_km = self.true_satellite_state.position_km.copy()
+            self.noisy_satellite_state.velocity_km_s = self.true_satellite_state.velocity_km_s.copy()
+            self.noisy_satellite_state.fuel_remaining_kg = self.true_satellite_state.fuel_remaining_kg
+            
+            for i, true_debris in enumerate(self.true_debris_states):
+                if i < len(self.noisy_debris_states):
+                    self.noisy_debris_states[i].position_km = true_debris.position_km.copy()
+                    self.noisy_debris_states[i].velocity_km_s = true_debris.velocity_km_s.copy()
 
-        reward = self.reward_function(action)  # Use original action for reward
+        # Calculate reward using TRUE collision detection from base environment
+        reward = self.reward_function(action, info_base)
 
-        terminated = self._check_collision()
+        # Use TRUE collision detection from base environment for termination
+        terminated = info_base.get('collisions', False)
         truncated = self.step_count >= self.max_episode_steps
 
         self.step_count += 1
         if not terminated:
             self.collision_free_steps += 1
 
-        # Apply observation noise to the returned observation
+        # Get observation with NOISY states (what the agent sees)
         observation = self._get_observation()
+        
+        # Apply additional observation noise if configured
         noisy_observation = self.noise_manager.apply_observation_noise(observation)
 
         return noisy_observation, reward, terminated, truncated, self._get_info()
 
     def _calculate_reference_orbit_from_state(self) -> OrbitElements:
-        pos = self.current_satellite_state.position_km
-        vel = self.current_satellite_state.velocity_km_s
+        # Use TRUE state for reference orbit calculation
+        pos = self.true_satellite_state.position_km
+        vel = self.true_satellite_state.velocity_km_s
         return self._base_env.engine.cartesian_to_orbit_elements(pos, vel, self.main_satellite.mass_kg)
 
     def _get_observation(self) -> np.ndarray:
+        """Build observation from NOISY states (what the agent perceives)."""
         obs = []
-        sat_pos = self.current_satellite_state.position_km
-        sat_vel = self.current_satellite_state.velocity_km_s
+        
+        # Use NOISY satellite state
+        sat_pos = self.noisy_satellite_state.position_km
+        sat_vel = self.noisy_satellite_state.velocity_km_s
         obs.extend(sat_pos.tolist())
         obs.extend(sat_vel.tolist())
 
-        fuel_norm = self.current_satellite_state.fuel_remaining_kg / self.initial_fuel
+        # Use TRUE fuel level (assume perfect fuel gauge)
+        fuel_norm = self.true_satellite_state.fuel_remaining_kg / self.initial_fuel
         time_norm = 1.0 - (self.step_count / self.max_episode_steps)
         obs.extend([fuel_norm, time_norm])
 
+        # Use NOISY debris states for relative observations
         closest = self._get_closest_debris(self.max_debris_tracked)
         for debris in closest:
             rel_pos = debris.position_km - sat_pos
@@ -246,14 +281,17 @@ class RLOrbitalEnvironment(gym.Env):
             normalized_miss = miss_distance / (sat_near_miss_km + debris_near_miss_km)
             
             obs.extend([*rel_pos, *rel_vel, miss_distance, ttc])
+        
+        # Pad with zeros for unused debris slots
         for _ in range(len(closest), self.max_debris_tracked):
-            obs.extend([0.0] * 8)  # FIXED: 8 values per debris (rel_pos(3) + rel_vel(3) + miss_distance + ttc)
+            obs.extend([0.0] * 8)  # 8 values per debris
 
         return np.array(obs, dtype=np.float32)
 
     def _get_closest_debris(self, max_count: int) -> List[StateWrapper]:
-        sat_pos = self.current_satellite_state.position_km
-        debris_with_dist = [(np.linalg.norm(d.position_km - sat_pos), d) for d in self.current_debris_states]
+        """Get closest debris using NOISY positions (what agent sees)."""
+        sat_pos = self.noisy_satellite_state.position_km
+        debris_with_dist = [(np.linalg.norm(d.position_km - sat_pos), d) for d in self.noisy_debris_states]
         debris_with_dist.sort(key=lambda x: x[0])
         return [d for _, d in debris_with_dist[:max_count]]
 
@@ -270,34 +308,22 @@ class RLOrbitalEnvironment(gym.Env):
         miss_distance = np.linalg.norm(rel_pos + rel_vel * t)
         return miss_distance, t
 
-    def _check_collision(self) -> bool:
-        """Check collision using km units consistently."""
-        sat_pos = self.current_satellite_state.position_km
-        sat_collision_radius_km = getattr(self.main_satellite, 'collision_radius_km', 0.001)  # 1m default = 0.001km
-        
-        for debris in self.current_debris_states:
-            distance = np.linalg.norm(debris.position_km - sat_pos)
-            debris_collision_radius_km = getattr(debris, 'collision_radius', 0.001)  # 1m default = 0.001km
-            
-            if distance < (sat_collision_radius_km + debris_collision_radius_km):
-                return True
-        return False
-
     def _create_reward_function(self) -> Callable:
         from orbital_avoidance.rewards.improved_rewards import create_improved_reward_function
         return create_improved_reward_function(self)
 
     def _get_info(self) -> Dict:
+        """Return info using TRUE states (ground truth for logging)."""
         return {
             'step_count': self.step_count,
-            'fuel_remaining_kg': self.current_satellite_state.fuel_remaining_kg,
-            'fuel_remaining_percent': self.current_satellite_state.fuel_remaining_kg / self.initial_fuel * 100,
+            'fuel_remaining_kg': self.true_satellite_state.fuel_remaining_kg,
+            'fuel_remaining_percent': self.true_satellite_state.fuel_remaining_kg / self.initial_fuel * 100,
             'collision_free_steps': self.collision_free_steps
         }
 
     def render(self, mode: str = 'human'):
         if mode == 'human':
-            print(f"Step {self.step_count}, Fuel {self.current_satellite_state.fuel_remaining_kg:.1f} kg")
+            print(f"Step {self.step_count}, Fuel {self.true_satellite_state.fuel_remaining_kg:.1f} kg")
 
     def close(self):
         if self._base_env:

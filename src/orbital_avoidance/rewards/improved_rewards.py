@@ -1,104 +1,211 @@
 """
-Improved reward functions for orbital avoidance environments.
-Now includes:
-- Rescaled collision penalty
-- Near-miss penalty (<50 km zone)
-- Per-step thrust cost instead of cumulative fuel usage
-- Balanced bonuses for station-keeping and safe flight
+PPO-optimized reward functions for orbital avoidance environments.
 
-ALL UNITS IN KILOMETERS FOR CONSISTENCY
+Features:
+- Proper reward scaling for PPO (collision: -50, per-step: ~0.01)
+- Proximity-based penalties with distance zones
+- Fuel efficiency incentives
+- Mission success bonuses
+- All units in kilometers for consistency
+
+Reward Philosophy:
+- Terminal penalties: -50 (collision)
+- Per-step penalties: -10 (critical proximity), -1 (warning proximity)
+- Per-step costs: ~0.01 (fuel, time)
+- Success bonus: +10
+- Expected range: -50 (immediate collision) to +15 (perfect episode)
 """
 
 from __future__ import annotations
 import numpy as np
-from typing import Dict, Callable, Any
+from typing import Dict, Callable, Any, Optional
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-def _improved_reward_config(env) -> Dict[str, Any]:
-    """Default config values for improved reward calculation."""
-    return {
-        "collision_penalty": -20.0,        # Scaled down from -100
-        "near_miss_distance_km": 0.050,    # Within 50 km = risky (50m = 0.050km)
-        "min_safe_distance_km": 0.005,     # 5 km collision zone (5m = 0.005km)
-
-        "step_penalty": -0.01,             # Small negative each step
-        "fuel_penalty": -0.1,              # Scales with thrust per step
-        "safe_flight_bonus": 0.05,         # Survive = small reward
-        "proximity_bonus": 0.2,            # Safely far from debris
-        "station_keeping_bonus": 0.1,      # Stay near reference orbit
-        "target_orbit_tolerance_km": 1.0,  # Station-keeping band
-    }
-
-
-def create_improved_reward_function(env) -> Callable[[Any], float]:
+def calculate_min_debris_distance(satellites: Dict, debris_objects: Dict) -> float:
     """
-    Factory: return a reward function bound to the given environment.
-    Reads config from env.reward_config if available, else defaults.
+    Calculate minimum distance from any satellite to any debris.
+    
+    Args:
+        satellites: Dictionary of satellite states with 'position' keys
+        debris_objects: Dictionary of debris states with 'position' keys
+        
+    Returns:
+        Minimum distance in kilometers, or inf if no debris/satellites
     """
+    if not satellites or not debris_objects:
+        return float('inf')
+    
+    min_dist = float('inf')
+    
+    for sat_name, sat_data in satellites.items():
+        sat_pos = sat_data['position']
+        
+        for debris_name, debris_data in debris_objects.items():
+            debris_pos = debris_data['position']
+            distance = np.linalg.norm(sat_pos - debris_pos)
+            min_dist = min(min_dist, distance)
+    
+    return min_dist
 
-    # Merge defaults with overrides
-    cfg = _improved_reward_config(env)
-    if env.reward_config:
-        cfg.update(env.reward_config)
 
-    def reward_fn(action) -> float:
-        total_reward = 0.0
-        sat = env.current_satellite_state
-        debris = env.current_debris_states
+def safe_reward_get(cfg, key, default=None):
+    """
+    Safely get value from either config object or dictionary.
+    
+    Args:
+        cfg: Either a dictionary or a config object
+        key: Key/attribute name to retrieve
+        default: Default value if not found
+        
+    Returns:
+        Retrieved value or default
+    """
+    if isinstance(cfg, dict):
+        return cfg.get(key, default)
+    else:
+        return getattr(cfg, key, default)
 
-        # 1. Collision penalty
-        if hasattr(env, "_check_collisions"):
-            collisions = env._check_collisions()
-        elif hasattr(env, "_check_collision"):
-            collisions = []
-            if env._check_collision():
-                collisions = [True]
+
+def create_ppo_optimized_reward_function(env) -> Callable[[Any, Dict], float]:
+    """
+    Factory: return a PPO-optimized reward function bound to the environment.
+    
+    Properly scaled for advantage estimation and value function learning.
+    Reads configuration from env.config_dict['rewards'] section.
+    
+    Args:
+        env: Environment instance with config_dict attribute
+        
+    Returns:
+        Reward function that takes (action, info) and returns float reward
+    """
+    
+    # Get rewards config from JSON - check multiple possible locations
+    rewards_cfg = {}
+    if hasattr(env, 'config_dict'):
+        rewards_cfg = safe_reward_get(env.config_dict, 'rewards', {})
+    elif hasattr(env, 'reward_config'):
+        rewards_cfg = env.reward_config
+    
+    # PPO-OPTIMIZED REWARD SCALES
+    # Terminal events (episode-ending)
+    collision_penalty = float(safe_reward_get(rewards_cfg, 'collision_penalty', -50.0))
+    mission_success_reward = float(safe_reward_get(rewards_cfg, 'mission_success_reward', 10.0))
+    
+    # Per-step costs (should sum to reasonable values over episode)
+    fuel_cost_weight = float(safe_reward_get(rewards_cfg, 'fuel_cost_weight', 0.01))
+    survival_bonus = float(safe_reward_get(rewards_cfg, 'survival_bonus', 0.0))
+    time_penalty = float(safe_reward_get(rewards_cfg, 'time_penalty', 0.001))  # Configurable now
+    
+    # Proximity penalties - get from config or scale from collision penalty
+    proximity_cfg = safe_reward_get(rewards_cfg, 'proximity_penalties', {})
+    
+    # Handle proximity_cfg being either dict or object
+    critical_distance_km = float(safe_reward_get(proximity_cfg, 'critical_distance_km', 0.008))  # 8m
+    warning_distance_km = float(safe_reward_get(proximity_cfg, 'warning_distance_km', 0.025))   # 25m
+    safe_distance_km = float(safe_reward_get(proximity_cfg, 'safe_distance_km', 0.075))         # 75m
+    
+    # Get penalties from config or calculate as percentage of collision penalty
+    critical_penalty = float(safe_reward_get(proximity_cfg, 'critical_penalty', collision_penalty * 0.2))  # Default: -10
+    warning_penalty = float(safe_reward_get(proximity_cfg, 'warning_penalty', collision_penalty * 0.02))   # Default: -1
+    safe_bonus = float(safe_reward_get(proximity_cfg, 'safe_bonus', 0.01))  # Small bonus for safety
+    
+    logger.info("=" * 50)
+    logger.info("PPO Reward Function Configuration")
+    logger.info("=" * 50)
+    logger.info(f"Collision penalty: {collision_penalty:.2f}")
+    logger.info(f"Critical proximity penalty (<{critical_distance_km*1000:.1f}m): {critical_penalty:.2f}")
+    logger.info(f"Warning proximity penalty (<{warning_distance_km*1000:.1f}m): {warning_penalty:.2f}")
+    logger.info(f"Safe distance bonus (>{safe_distance_km*1000:.1f}m): {safe_bonus:.3f}")
+    logger.info(f"Mission success reward: {mission_success_reward:.2f}")
+    logger.info(f"Survival bonus per step: {survival_bonus:.4f}")
+    logger.info(f"Fuel cost weight: {fuel_cost_weight:.4f}")
+    logger.info(f"Time penalty per step: {time_penalty:.4f}")
+    
+    # Calculate expected reward range
+    max_episode_reward = mission_success_reward + (survival_bonus + safe_bonus - time_penalty) * 1500
+    logger.info(f"Expected episode reward range: [{collision_penalty:.1f} to {max_episode_reward:.1f}]")
+    logger.info("=" * 50)
+    
+    def reward_fn(action: Optional[np.ndarray], info: Dict[str, Any]) -> float:
+        """
+        Calculate PPO-optimized reward for current step.
+        
+        Args:
+            action: Control action (can be None)
+            info: Dictionary containing:
+                - collisions: bool, whether collision occurred
+                - min_debris_distance_km: float, minimum distance to debris
+                - truncated: bool, whether episode hit time limit
+                - success: bool, whether episode completed successfully
+                
+        Returns:
+            Scalar reward value
+        """
+        
+        # Start with survival bonus (helps with early learning)
+        total_reward = survival_bonus
+        
+        # 1. TERMINAL COLLISION PENALTY - Episode ending event
+        if info.get('collisions', False):
+            return float(collision_penalty)
+        
+        # 2. PROXIMITY PENALTIES - Based on closest approach to debris
+        min_distance = info.get('min_debris_distance_km', float('inf'))
+        
+        if min_distance < critical_distance_km:
+            # Critical zone - very dangerous, large per-step penalty
+            total_reward += critical_penalty
+            
+        elif min_distance < warning_distance_km:
+            # Warning zone - scaled penalty based on distance
+            # Closer to critical = more penalty
+            scale = (warning_distance_km - min_distance) / (warning_distance_km - critical_distance_km)
+            total_reward += warning_penalty * (0.1 + 0.9 * scale)  # Min 10% of warning penalty
+            
+        elif min_distance < safe_distance_km:
+            # Transitional zone - very small penalty
+            scale = (safe_distance_km - min_distance) / (safe_distance_km - warning_distance_km)
+            total_reward -= warning_penalty * 0.1 * scale
+            
         else:
-            collisions = []
-
-        if collisions:
-            total_reward += cfg["collision_penalty"]
-
-        # 2. Step penalty
-        total_reward += cfg["step_penalty"]
-
-        # 3. Fuel usage penalty (per-step thrust cost)
-        if action is not None and sat is not None:
+            # Safe zone - small bonus for maintaining safe distance
+            total_reward += safe_bonus
+        
+        # 3. FUEL USAGE PENALTY - Proportional to thrust magnitude
+        if action is not None:
             thrust_mag = float(np.linalg.norm(action))
-            total_reward += cfg["fuel_penalty"] * thrust_mag
-
-        # 4. Safe flight bonus (if not collided)
-        if not collisions:
-            total_reward += cfg["safe_flight_bonus"]
-
-        # 5. Proximity penalties/bonuses - FIXED: Use proper position access and km units
-        if sat is not None and debris:
-            # Use proper StateWrapper position access
-            sat_pos = sat.position_km  # StateWrapper has position_km attribute
-            min_dist = min(np.linalg.norm(d.position_km - sat_pos) for d in debris)
-
-            if min_dist < cfg["min_safe_distance_km"]:
-                # Direct collision zone (already penalized above)
-                total_reward += cfg["collision_penalty"]
-
-            elif min_dist < cfg["near_miss_distance_km"]:
-                # Near-miss penalty scaled by distance
-                penalty_scale = 1.0 - (min_dist - cfg["min_safe_distance_km"]) / (
-                    cfg["near_miss_distance_km"] - cfg["min_safe_distance_km"]
-                )
-                total_reward -= penalty_scale * cfg["proximity_bonus"]
-
-            else:
-                # Safely far → reward
-                total_reward += cfg["proximity_bonus"]
-
-        # 6. Station keeping bonus (stay near reference orbit SMA)
-        if sat is not None and env.reference_orbit is not None:
-            ref_sma = env.reference_orbit.semi_major_axis_km
-            cur_sma = np.linalg.norm(sat.position_km)  # Current distance from Earth center
-            if abs(cur_sma - ref_sma) < cfg["target_orbit_tolerance_km"]:
-                total_reward += cfg["station_keeping_bonus"]
-
+            total_reward -= fuel_cost_weight * thrust_mag
+        
+        # 4. TIME PENALTY - Encourage efficiency (very small)
+        total_reward -= time_penalty
+        
+        # 5. MISSION SUCCESS BONUS - Only if episode completes successfully
+        if info.get('success', False):
+            total_reward += mission_success_reward
+        elif info.get('truncated', False) and not info.get('collisions', False):
+            # Also give success bonus if episode completes without collision
+            total_reward += mission_success_reward
+        
         return float(total_reward)
-
+    
     return reward_fn
+
+
+# Legacy function name for backward compatibility
+def create_improved_reward_function(env) -> Callable[[Any, Dict], float]:
+    """
+    Legacy function name - redirects to PPO-optimized version.
+    """
+    return create_ppo_optimized_reward_function(env)
+
+
+# Export public API
+__all__ = [
+    'create_ppo_optimized_reward_function',
+    'create_improved_reward_function',
+    'calculate_min_debris_distance'
+]

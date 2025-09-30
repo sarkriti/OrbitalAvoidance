@@ -41,6 +41,33 @@ def safe_get(config_obj, key, default=None):
         return getattr(config_obj, key, default)
 
 
+def calculate_min_debris_distance(satellites: Dict, debris_objects: Dict) -> float:
+    """
+    Calculate minimum distance from any satellite to any debris.
+    
+    Args:
+        satellites: Dictionary of satellite states with 'position' keys
+        debris_objects: Dictionary of debris states with 'position' keys
+        
+    Returns:
+        Minimum distance in kilometers, or inf if no debris/satellites
+    """
+    if not satellites or not debris_objects:
+        return float('inf')
+    
+    min_dist = float('inf')
+    
+    for sat_name, sat_data in satellites.items():
+        sat_pos = sat_data['position']
+        
+        for debris_name, debris_data in debris_objects.items():
+            debris_pos = debris_data['position']
+            distance = np.linalg.norm(sat_pos - debris_pos)
+            min_dist = min(min_dist, distance)
+    
+    return min_dist
+
+
 class SatelliteConfig:
     """Configuration for a satellite."""
     def __init__(self, config_obj):
@@ -218,12 +245,29 @@ class ConfigurableOrbitalEnvironment:
         for debris_data in static_debris:
             self._create_debris_object(debris_data)
         
+        # Initialize reward function from rewards module
+        from orbital_avoidance.rewards.improved_rewards import create_ppo_optimized_reward_function
+        self.reward_function = create_ppo_optimized_reward_function(self)
+        
         logger.info(f"ConfigurableOrbitalEnvironment initialized:")
         logger.info(f"  - Satellites: {len(self.satellites)}")
         logger.info(f"  - Debris objects: {len(self.debris_objects)}")
         logger.info(f"  - Time step: {self.time_step}s")
         logger.info(f"  - Duration: {self.simulation_duration}s")
     
+    @property
+    def current_satellite_state(self):
+        """Get current state of the primary controllable satellite."""
+        for sat_name, sat_data in self.satellites.items():
+            if sat_data['config'].is_controllable:
+                return sat_data
+        return None
+
+    @property
+    def current_debris_states(self):
+        """Get list of all current debris states."""
+        return list(self.debris_objects.values())
+        
     def _generate_debris_field(self, field_config):
         """Generate debris field based on configuration."""
         num_objects = safe_get(field_config, 'num_objects', 5)
@@ -339,8 +383,9 @@ class ConfigurableOrbitalEnvironment:
             result['control'] = config.control if isinstance(config.control, dict) else config.control.__dict__
         
         # Handle reward config
-        if hasattr(config, 'reward'):
-            result['reward'] = config.reward if isinstance(config.reward, dict) else config.reward.__dict__
+        if hasattr(config, 'reward') or hasattr(config, 'rewards'):
+            reward_cfg = getattr(config, 'reward', None) or getattr(config, 'rewards', None)
+            result['rewards'] = reward_cfg if isinstance(reward_cfg, dict) else reward_cfg.__dict__
         
         # Handle observations config
         if hasattr(config, 'observations'):
@@ -415,15 +460,27 @@ class ConfigurableOrbitalEnvironment:
         return None, {}
     
     def step(self, action):
-        """Step the physics simulation forward."""
+        """
+        Step the physics simulation forward by one time step.
+        
+        Args:
+            action: Control action array (typically 3D thrust vector, normalized -1 to 1)
+            
+        Returns:
+            observation: State observation (None for now - handled by wrapper)
+            reward: Scalar reward value
+            terminated: Boolean indicating if episode ended due to collision
+            truncated: Boolean indicating if episode ended due to time limit
+            info: Dictionary with episode information
+        """
         # Apply control action to controllable satellites
         for sat_name, sat_data in self.satellites.items():
             sat_config = sat_data['config']
-            if sat_config.is_controllable and len(action) >= 3:
+            if sat_config.is_controllable and action is not None and len(action) >= 3:
                 # Get control parameters from config
                 control_config = safe_get(self.config_dict, 'control', {})
                 
-                # FIXED: Control now properly in km/s
+                # Control limits in km/s
                 max_delta_v_km_s = safe_get(control_config, 'max_delta_v_km_s', 0.001)  # Default 1 m/s = 0.001 km/s
                 fuel_consumption_rate = safe_get(control_config, 'fuel_consumption_rate_kg_per_km_s', 100.0)  # kg per km/s
                 
@@ -454,33 +511,46 @@ class ConfigurableOrbitalEnvironment:
             self.debris_objects[debris_name]['position'] = pos
             self.debris_objects[debris_name]['velocity'] = vel
         
-        # Calculate reward based on config
-        reward_config = safe_get(self.config_dict, 'reward', {})
-        base_survival_reward = safe_get(reward_config, 'base_survival_reward', 1.0)
-        fuel_penalty_weight = safe_get(reward_config, 'fuel_penalty_weight', 0.1)
-        
-        reward = base_survival_reward
-        
-        # Apply fuel usage penalty
-        for sat_data in self.satellites.values():
-            if sat_data['config'].is_controllable:
-                fuel_used = sat_data['config'].fuel_capacity_kg - sat_data['fuel_remaining']
-                reward -= fuel_penalty_weight * fuel_used
+        # Calculate minimum distance to any debris
+        min_debris_distance = calculate_min_debris_distance(
+            self.satellites, 
+            self.debris_objects
+        )
         
         # Check for collisions
-        terminated = self._check_collisions()
+        collisions = self._check_collisions()
         
         # Check for episode completion based on time
         max_steps = int(self.simulation_duration / self.time_step)
         current_step = int(self.simulation_time / self.time_step)
         truncated = current_step >= max_steps
         
+        # Determine if mission was successful
+        success = truncated and not collisions
+        
+        # Build info dictionary for reward function and logging
         info = {
             'simulation_time': self.simulation_time,
-            'collisions': terminated,
+            'collisions': collisions,
+            'truncated': truncated,
+            'success': success,
+            'min_debris_distance_km': min_debris_distance,
             'step': current_step,
-            'max_steps': max_steps
+            'max_steps': max_steps,
+            'fuel_remaining': {name: sat['fuel_remaining'] for name, sat in self.satellites.items()}
         }
+        
+        # Calculate reward using the PPO-optimized reward function
+        reward = self.reward_function(action, info)
+        
+        # Episode terminates on collision
+        terminated = collisions
+        
+        # Log significant events
+        if collisions:
+            logger.warning(f"Collision at step {current_step}, distance: {min_debris_distance*1000:.2f}m")
+        elif min_debris_distance < 0.010:  # Less than 10m
+            logger.debug(f"Close approach at step {current_step}: {min_debris_distance*1000:.2f}m")
         
         return None, reward, terminated, truncated, info
     
@@ -518,5 +588,6 @@ class ConfigurableOrbitalEnvironment:
 __all__ = [
     'ConfigurableOrbitalEnvironment',
     'SatelliteConfig',
-    'DebrisConfig'
+    'DebrisConfig',
+    'calculate_min_debris_distance'
 ]

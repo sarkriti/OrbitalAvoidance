@@ -46,7 +46,7 @@ except ImportError:
 # Reward system (optional)
 # ---------------------------------------------------------
 try:
-    from .rewards.improved_rewards import ImprovedRewardFunction
+    from .rewards.improved_rewards import create_improved_reward_function, calculate_min_debris_distance
 except ImportError:
     ImprovedRewardFunction = None
 

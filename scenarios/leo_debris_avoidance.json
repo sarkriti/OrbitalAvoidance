@@ -13,47 +13,47 @@
     "observation_noise": {
       "enabled": true,
       "type": "gaussian",
-      "std_dev": 0.002,
+      "std_dev": 0.001,
       "bias": 0.0,
       "scaling_factors": {
-        "position": 0.7,
-        "velocity": 0.4,
-        "fuel": 0.02,
-        "debris_relative": 1.2
+        "position": 0.5,
+        "velocity": 0.3,
+        "fuel": 0.01,
+        "debris_relative": 0.8
       }
     },
     "dynamics_noise": {
       "enabled": true,
       "type": "gaussian",
-      "std_dev": 0.008,
+      "std_dev": 0.005,
       "scaling_factors": {
-        "position": 0.6,
-        "velocity": 0.08
+        "position": 0.4,
+        "velocity": 0.05
       }
     },
     "control_noise": {
       "enabled": true,
       "type": "gaussian",
-      "std_dev": 0.03,
+      "std_dev": 0.02,
       "multiplicative": true
     },
     "initial_state_noise": {
       "enabled": true,
-      "type": "gaussian", 
-      "std_dev": 0.08,
+      "type": "gaussian",
+      "std_dev": 0.05,
       "scaling_factors": {
-        "position": 0.7,
-        "velocity": 0.008
+        "position": 0.5,
+        "velocity": 0.005
       }
     },
     "environmental": {
       "atmospheric_density": {
         "enabled": true,
-        "uncertainty_fraction": 0.15
+        "uncertainty_fraction": 0.10
       },
       "solar_flux": {
         "enabled": true,
-        "uncertainty_fraction": 0.08
+        "uncertainty_fraction": 0.05
       }
     }
   },
@@ -67,18 +67,27 @@
       "stages": [
         {
           "timesteps": 2000000,
-          "debris_multiplier": 0.6,
-          "noise_multiplier": 0.7
+          "debris_multiplier": 0.3,
+          "noise_multiplier": 0.5,
+          "description": "Stage 1: Sparse debris, low noise"
         },
         {
-          "timesteps": 4000000,
-          "debris_multiplier": 0.8,
-          "noise_multiplier": 0.85
+          "timesteps": 3000000,
+          "debris_multiplier": 0.5,
+          "noise_multiplier": 0.7,
+          "description": "Stage 2: Moderate debris, medium noise"
         },
         {
-          "timesteps": 4000000,
+          "timesteps": 3000000,
+          "debris_multiplier": 0.75,
+          "noise_multiplier": 0.85,
+          "description": "Stage 3: Dense debris, high noise"
+        },
+        {
+          "timesteps": 2000000,
           "debris_multiplier": 1.0,
-          "noise_multiplier": 1.0
+          "noise_multiplier": 1.0,
+          "description": "Stage 4: Full complexity"
         }
       ]
     }
@@ -86,19 +95,23 @@
   "output": {
     "log_dir": "./logs",
     "save_dir": "./trained_model",
-    "experiment_name": "enhanced_orbital_rl"
+    "experiment_name": "realistic_orbital_rl_v1"
   },
-  "reward_function": "balanced",
+  "reward_function": "ppo_optimized",
   "ppo": {
-    "learning_rate": 2.5e-4,
+    "learning_rate": 3.0e-4,
     "n_steps": 4096,
     "batch_size": 512,
-    "n_epochs": 8,
-    "clip_range": 0.15,
-    "gae_lambda": 0.97,
-    "gamma": 0.9995,
-    "value_function_coeff": 0.5,
-    "entropy_coeff": 0.01
+    "n_epochs": 10,
+    "clip_range": 0.2,
+    "clip_range_vf": null,
+    "gae_lambda": 0.95,
+    "gamma": 0.999,
+    "vf_coef": 0.5,
+    "ent_coef": 0.01,
+    "max_grad_norm": 0.5,
+    "target_kl": 0.015,
+    "normalize_advantage": true
   },
   "satellites": [
     {
@@ -130,56 +143,45 @@
   "debris_fields": [
     {
       "name": "primary_leo_cloud",
-      "num_objects": 60,
+      "num_objects": 30,
       "altitude_range_km": [395, 405],
       "inclination_range_deg": [49, 54],
-      "eccentricity_range": [0.0, 0.03],
+      "eccentricity_range": [0.0, 0.025],
       "raan_range_deg": [0, 360],
       "arg_periapsis_range_deg": [0, 360],
       "mean_anomaly_range_deg": [0, 360],
-      "mass_range_kg": [3, 200],
-      "collision_radius_range_km": [0.0003, 0.004],
-      "near_miss_multiplier": 15.0,
+      "mass_range_kg": [5, 150],
+      "collision_radius_range_km": [0.0005, 0.003],
+      "near_miss_multiplier": 10.0,
       "distribution_type": "realistic_density"
     },
     {
       "name": "crossing_debris_belt",
-      "num_objects": 40,
+      "num_objects": 20,
       "altitude_range_km": [396, 404],
       "inclination_range_deg": [46, 50],
-      "eccentricity_range": [0.005, 0.035],
+      "eccentricity_range": [0.005, 0.03],
       "raan_range_deg": [60, 300],
       "arg_periapsis_range_deg": [0, 360],
       "mean_anomaly_range_deg": [0, 360],
-      "mass_range_kg": [5, 120],
-      "collision_radius_range_km": [0.0005, 0.003],
+      "mass_range_kg": [8, 100],
+      "collision_radius_range_km": [0.0006, 0.0025],
       "distribution_type": "clustered"
     },
     {
       "name": "dense_swarm",
-      "num_objects": 25,
+      "num_objects": 15,
       "altitude_range_km": [398, 402],
       "inclination_range_deg": [50.5, 52.5],
-      "eccentricity_range": [0.0, 0.015],
-      "mass_range_kg": [1, 50],
-      "collision_radius_range_km": [0.0002, 0.0015],
-      "distribution_type": "swarm",
-      "swarm_center_altitude_km": 400,
-      "swarm_radius_km": 12
-    },
-    {
-      "name": "high_velocity_fragments",
-      "num_objects": 20,
-      "altitude_range_km": [397, 403],
-      "inclination_range_deg": [48, 55],
-      "eccentricity_range": [0.02, 0.05],
+      "eccentricity_range": [0.0, 0.012],
       "raan_range_deg": [0, 360],
       "arg_periapsis_range_deg": [0, 360],
       "mean_anomaly_range_deg": [0, 360],
-      "mass_range_kg": [0.5, 25],
-      "collision_radius_range_km": [0.0001, 0.0008],
-      "distribution_type": "uniform",
-      "velocity_boost_factor": 1.3
+      "mass_range_kg": [2, 40],
+      "collision_radius_range_km": [0.0003, 0.0012],
+      "distribution_type": "swarm",
+      "swarm_center_altitude_km": 400,
+      "swarm_radius_km": 15
     }
   ],
   "static_debris": [
@@ -201,7 +203,7 @@
       "collision_radius_km": 0.002
     },
     {
-      "name": "StaticDebris_B", 
+      "name": "StaticDebris_B",
       "orbit": {
         "altitude_km": 398.5,
         "inclination_deg": 51.6,
@@ -216,23 +218,6 @@
       "max_thrust_n": 0,
       "fuel_capacity_kg": 0,
       "collision_radius_km": 0.0015
-    },
-    {
-      "name": "StaticDebris_C",
-      "orbit": {
-        "altitude_km": 399.8,
-        "inclination_deg": 51.8,
-        "eccentricity": 0.008,
-        "raan_deg": 90,
-        "arg_periapsis_deg": 270,
-        "mean_anomaly_deg": 45
-      },
-      "mass_kg": 300,
-      "drag_area_m2": 8,
-      "is_controllable": false,
-      "max_thrust_n": 0,
-      "fuel_capacity_kg": 0,
-      "collision_radius_km": 0.0025
     }
   ],
   "physics": {
@@ -246,8 +231,8 @@
       "max_step_seconds": 30
     },
     "gravity_model": {
-      "degree": 10,
-      "order": 10,
+      "degree": 8,
+      "order": 8,
       "model": "egm96"
     },
     "atmosphere_model": {
@@ -267,7 +252,7 @@
       "include_sun": true,
       "include_moon": true
     },
-    "time_step_seconds": 5,
+    "time_step_seconds": 10,
     "simulation_duration_seconds": 15000,
     "include_drag": true,
     "include_solar_radiation": true,
@@ -276,7 +261,7 @@
   },
   "collision_detection": {
     "method": "spherical_with_prediction",
-    "collision_threshold_km": 0.00001,
+    "collision_threshold_km": 0.002,
     "conjunction_screening_km": 0.075,
     "prediction_horizon_seconds": 300
   },
@@ -293,29 +278,22 @@
     "prioritization_scheme": "threat_based"
   },
   "rewards": {
-    "reward_type": "multi_objective_adaptive",
-    "collision_penalty": -1000.0,
-    "fuel_cost_weight": 0.08,
-    "safety_distance_km": 0.050,
-    "close_approach_penalty_weight": 8.0,
-    "mission_success_reward": 15.0,
-    "fuel_efficiency_bonus": 5.0,
+    "collision_penalty": -50.0,
+    "mission_success_reward": 10.0,
+    "fuel_cost_weight": 0.01,
+    "survival_bonus": 0.005,
     "proximity_penalties": {
       "critical_distance_km": 0.008,
       "warning_distance_km": 0.025,
       "safe_distance_km": 0.075,
-      "critical_penalty": -100.0,
-      "warning_penalty": -10.0,
-      "safe_bonus": 1.0
-    },
-    "temporal_penalties": {
-      "persistent_threat_multiplier": 1.5,
-      "evasion_success_bonus": 20.0
+      "critical_penalty": -10.0,
+      "warning_penalty": -1.0,
+      "safe_bonus": 0.01
     }
   },
   "control": {
-    "max_delta_v_km_s": 0.0015,
-    "fuel_consumption_rate_kg_per_km_s": 95.0,
+    "max_delta_v_km_s": 0.001,
+    "fuel_consumption_rate_kg_per_km_s": 100.0,
     "thrust_vectoring": true,
     "reaction_wheel_torque_nm": 0.1
   },
@@ -323,15 +301,15 @@
     "enable_episode_randomization": true,
     "randomize_initial_conditions": true,
     "randomize_debris_positions": true,
-    "randomize_debris_velocities": true,
+    "randomize_debris_velocities": false,
     "randomize_satellite_state": true,
     "randomize_environmental_conditions": true,
     "randomization_ranges": {
-      "altitude_variation_km": 5.0,
-      "inclination_variation_deg": 2.0,
-      "raan_variation_deg": 45.0,
-      "mean_anomaly_variation_deg": 360.0,
-      "debris_density_multiplier": [0.7, 1.3]
+      "altitude_variation_km": 3.0,
+      "inclination_variation_deg": 1.5,
+      "raan_variation_deg": 30.0,
+      "mean_anomaly_variation_deg": 180.0,
+      "debris_density_multiplier": [0.8, 1.2]
     },
     "seed_strategy": "random_each_episode"
   },
